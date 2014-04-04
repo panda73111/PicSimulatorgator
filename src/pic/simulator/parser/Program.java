@@ -1,5 +1,8 @@
 package pic.simulator.parser;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Program {
@@ -10,7 +13,7 @@ public class Program {
 	{	
 		program = new ArrayList<>();
 	}
-	public Program(String filename)
+	public Program(String filename) throws IOException
 	{
 		this();
 		loadProgramFromFile(filename);
@@ -18,18 +21,19 @@ public class Program {
 	
 	////////////////////////////////////////////////////////////////////////
 	
-    public void loadProgramFromFile(String filename)
+    public void loadProgramFromFile(String filename) throws IOException
     {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
+    	BufferedReader br = new BufferedReader(new FileReader(filename));
+        try {
+            String line = br.readLine();
+            while(line!=null)
+            {
+            	Command cmd = Command.newInstance(line);
+            	program.add(cmd);
+            }
+        } finally {
+            br.close();
+        }
 	}
     
     ////////////////////////////////////////////////////////////////////////

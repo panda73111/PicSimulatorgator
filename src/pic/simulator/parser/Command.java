@@ -1,15 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pic.simulator.parser;
 
-/**
- *
- * @author hudini
- */
-public class Command {
-    
+public abstract class Command
+{
+	private static final short argumentCount = 0;
+
+	public static Command newInstance(short command)
+	{
+		// TODO
+		return null;
+	}
+	public static Command newInstance(String command)
+	{
+		return newInstance(parseStringToCommand(command));
+	}
+	
+	private static short parseStringToCommand(String cmd)
+	{
+		// TODO
+		return 0;
+	}
+	
+	public static short getArgumentCount()
+	{
+		return argumentCount;
+	}
+	
 }

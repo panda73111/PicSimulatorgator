@@ -7,35 +7,31 @@ package pic.simulator;
 
 import pic.simulator.parser.*;
 
-/**
- *
- * @author hudini
- */
-public class Processor {
+public class Processor
+{
 
-    private int progCounter;
-    private Program picProgram;
-    private boolean isInterrupted;
+	private int progCounter;
+	private Program picProgram;
+	private boolean isInterrupted;
 
-    public Command fetch(int cmdIndex) {
-        return null;
-    }
+	public void executeProgram() {
+		while (progCounter < picProgram.length())
+		{
+			if (isInterrupted)
+			{
+				// TODO
+			}
+			Command cmd = fetch(progCounter);
+			execute(cmd);
+			progCounter++;
+			// TODO repaint
+		}
+	}
 
-    public void executeCmd(Command cmd) {
+	private Command fetch(int cmdIndex) {
+		return picProgram.getCommand(cmdIndex);
+	}
 
-    }
-
-    public void executeProg() {
-        while (progCounter < picProgram.length())
-        {
-            if (isInterrupted)
-            {
-                //TODO
-            }
-            Command cmd = fetch(progCounter);
-            executeCmd(cmd);
-            progCounter++;
-            //TODO repaint
-        }
-    }
+	private void execute(Command cmd) {
+	}
 }
