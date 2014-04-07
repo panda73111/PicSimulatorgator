@@ -6,17 +6,29 @@
 
 package pic.simulator;
 
+import java.io.IOException;
+
 
 /**
  *
  * @author hudini
  */
-public class PICSimulator {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+public class PICSimulator 
+{
+	/*
+	 * Argument is filename
+	 */
+    public static void main(String[] args) throws IOException 
+    {
+    	if(args.length != 1)
+    	{
+    		System.out.println("---Wrong number of arguments---");
+    		System.exit(1);
+    	}
+    	
+    	Processor processor = new Processor(args[0]);
+    	processor.executeProgram();
+    	System.out.println("---Execution terminated---");
     }
     
 }
