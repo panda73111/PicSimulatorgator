@@ -5,15 +5,26 @@
  */
 package pic.simulator;
 
+import java.io.IOException;
+
 import pic.simulator.parser.*;
 
 public class Processor
 {
 
-	private int progCounter;
-	private Program picProgram;
-	private boolean isInterrupted;
+	private int 			progCounter;
+	private Program 		picProgram;
+	private Memorycontrol 	memControl;
+	
+	private boolean 		isInterrupted;
 
+	public Processor(String programFileName) throws IOException
+	{
+		picProgram = new Program(programFileName);
+		memControl = new Memorycontrol(0xFF, (short)2);
+	}
+	
+	
 	public void executeProgram() {
 		while (progCounter < picProgram.length())
 		{
