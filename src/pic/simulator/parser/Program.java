@@ -31,12 +31,12 @@ public class Program
 				if (line.startsWith(" ") || line.length() < 9)
 					continue;
 
-				short lineNumber = Short.valueOf(line.substring(0, 4), 16);
+				short cmdNumber = Short.valueOf(line.substring(0, 4), 16);
 				short opcode = Short.valueOf(line.substring(5, 9), 16);
 
-				System.out.printf("line %4d - opcode 0x%04X\n", lineNumber, opcode);
-
-				Command cmd = Command.newInstance(opcode);
+				Command cmd = Command.newInstance(cmdNumber, opcode);
+				System.out.printf("line %4d - opcode 0x%04X - %s\n", cmdNumber, opcode, cmd.toString());
+				
 				program.add(cmd);
 			}
 		} finally
