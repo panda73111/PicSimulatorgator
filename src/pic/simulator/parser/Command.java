@@ -1,7 +1,6 @@
 package pic.simulator.parser;
 
-import javax.annotation.processing.Processor;
-
+import pic.simulator.Processor;
 import pic.simulator.parser.commands.*;
 
 public abstract class Command
@@ -110,7 +109,7 @@ public abstract class Command
 
 	public abstract short getArg1();
 
-	public abstract void execute(Processor proc);
+	public abstract void execute(Processor processor);
 
 	@Override
 	public String toString() {

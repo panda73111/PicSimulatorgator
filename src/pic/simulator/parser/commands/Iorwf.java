@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import javax.annotation.processing.Processor;
+import pic.simulator.Processor;
 
 import pic.simulator.parser.Command;
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pic.simulator;
 
 import java.io.IOException;
@@ -11,12 +6,13 @@ import pic.simulator.parser.*;
 
 public class Processor
 {
-
-	private int 			progCounter;
+	private int 			progCounterAddress	= SpecialFunctionRegister.PCL;
 	private Program 		picProgram;
 	private Memorycontrol 	memControl;
 	
-	private boolean 		isInterrupted;
+	public byte				workRegister		= 0x00;
+	
+	private boolean 		isInterrupted		= false;;
 
 	public Processor(String programFileName) throws IOException
 	{
@@ -26,15 +22,21 @@ public class Processor
 	
 	
 	public void executeProgram() {
-		while (progCounter < picProgram.length())
+		byte progCounter;
+
+		while ((progCounter = memControl.getAt(progCounterAddress)) < picProgram.length())
 		{
 			if (isInterrupted)
 			{
 				// TODO
 			}
+			
 			Command cmd = fetch(progCounter);
 			execute(cmd);
-			progCounter++;
+			
+			System.out.println("---Executed " + cmd.toString() + "---");
+			
+			memControl.setAt(progCounterAddress, (byte)(progCounter+1));
 			// TODO repaint
 		}
 	}
@@ -44,5 +46,6 @@ public class Processor
 	}
 
 	private void execute(Command cmd) {
+		cmd.execute(this);
 	}
 }
