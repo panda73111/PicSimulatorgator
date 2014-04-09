@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Return extends Command
 {
 	private static final short argumentCount = 0;
 	private static final short cycleCount = 2;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	public Return(int cmdNumber) {
 		 this.cmdNumber = cmdNumber;
@@ -28,8 +28,8 @@ public class Return extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		int val = proc.popStack();
+		proc.setAtAddress(SpecialFunctionRegister.PCL, (byte) val);
 	}
 
 	@Override

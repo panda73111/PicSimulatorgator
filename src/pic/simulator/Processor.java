@@ -48,6 +48,10 @@ public class Processor
 	private void execute(Command cmd) {
 		cmd.execute(this);
 	}
+	
+	
+	
+	
 	public byte getAtAddress(int address)
 	{
 		return memControl.getAt(address);
@@ -65,6 +69,20 @@ public class Processor
 		byte val = (byte) (memControl.getAt(address) | (1<<bit));
 		memControl.setAt(address, val);
 	}
+	
+
+	public void pushStack(int value)
+	{
+		memControl.push(value);
+	}
+	public int popStack()
+	{
+		return memControl.pop();
+	}
+	
+	
+	
+	
 	public void setStatusBit(short bit)
 	{
 		setBitAtAddress(SpecialFunctionRegister.STATUS, bit);

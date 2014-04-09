@@ -1,11 +1,13 @@
 package pic.simulator;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 public class Memorycontrol
 {
 	private byte[] 					memory;
 	private HashMap<Integer, SpecialFunctionRegister> 	specialFunctionRegisters;
+	private Stack<Integer> 			stack;
 	
 	private final int sfrLength				= 0x0C;
 	private final int unimplementedAreaBegin= 0x50;
@@ -128,5 +130,14 @@ public class Memorycontrol
 		
 		sfr = new SpecialFunctionRegister(0x00, 0x00);
 		specialFunctionRegisters.put(SpecialFunctionRegister.EECON2, sfr);
+	}
+	
+	public void push(int value)
+	{
+		stack.push(value);
+	}
+	public int pop()
+	{
+		return stack.pop();
 	}
 }
