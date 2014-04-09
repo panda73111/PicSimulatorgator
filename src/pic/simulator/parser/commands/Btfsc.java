@@ -7,7 +7,7 @@ import pic.simulator.parser.Command;
 public class Btfsc extends Command
 {
 	private static final short argumentCount = 2;
-	private static final short cycleCount = 1;
+	private static final short cycleCount = 2;
 	private int cmdNumber;
 
 	private short arg0, arg1;

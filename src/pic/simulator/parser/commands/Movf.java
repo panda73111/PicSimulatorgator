@@ -8,7 +8,7 @@ public class Movf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -32,7 +32,14 @@ public class Movf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		byte f = proc.getAtAddress(arg0);
+		
+		if(arg1==0)
+		{
+			proc.workRegister = f;
+		}
+		
+		affectZeroBit(proc, f);
 
 	}
 

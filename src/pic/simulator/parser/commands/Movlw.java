@@ -32,7 +32,8 @@ public class Movlw extends Command
 	@Override
 	public void execute(Processor proc) 
 	{
-		proc.workRegister=(byte) arg0;
+		byte result = (byte) arg0;
+		proc.workRegister = result;
 	}
 
 	@Override

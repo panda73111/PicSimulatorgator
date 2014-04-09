@@ -46,9 +46,7 @@ public class Addlw extends Command
 			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
 		if(setC)
 			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
-		if(newValue == 0)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
-			
+		affectZeroBit(proc, (byte)newValue);		
 	}
 
 	@Override

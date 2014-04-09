@@ -1,7 +1,6 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Andwf extends Command
@@ -41,8 +40,7 @@ public class Andwf extends Command
 		else
 			proc.setAtAddress(arg0, newValue);
 		
-		if(newValue==0)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+		affectZeroBit(proc, newValue);
 		
 	}
 

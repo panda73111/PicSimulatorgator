@@ -1,7 +1,6 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Iorlw extends Command
@@ -31,10 +30,11 @@ public class Iorlw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		proc.workRegister |= arg0;
-		if(proc.workRegister==0)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
-
+		byte val = (byte) (proc.workRegister | arg0);
+		
+		proc.workRegister = val;
+		
+		affectZeroBit(proc, val);
 	}
 
 	@Override

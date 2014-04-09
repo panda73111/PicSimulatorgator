@@ -8,7 +8,7 @@ public class Iorwf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -32,8 +32,16 @@ public class Iorwf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		byte f = proc.getAtAddress(arg0);
+		
+		byte val = (byte) (proc.workRegister | f);
 
+		if(arg1==0)
+			proc.workRegister = val;
+		else
+			proc.setAtAddress(arg0, val);
+		
+		affectZeroBit(proc, val);
 	}
 
 	@Override
