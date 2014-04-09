@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Andwf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 	
 	private short arg0, arg1;
 	
@@ -34,7 +34,15 @@ public class Andwf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		byte newValue = (byte) (proc.workRegister & proc.getAtAddress(arg0));
+		
+		if(arg1==0)
+			proc.workRegister = newValue;
+		else
+			proc.setAtAddress(arg0, newValue);
+		
+		if(newValue==0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
 		
 	}
 

@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Btfsc extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -31,9 +31,17 @@ public class Btfsc extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+	public void execute(Processor proc) 
+	{
+		byte val = proc.getAtAddress(arg0);
+		boolean bitIsSet = (val & (1<<arg1)) != 0;
+		
+		if(!bitIsSet)
+		{
+			byte pcl = proc.getAtAddress(SpecialFunctionRegister.PCL);
+			pcl++;
+			proc.setAtAddress(SpecialFunctionRegister.PCL, pcl);
+		}
 	}
 
 	@Override

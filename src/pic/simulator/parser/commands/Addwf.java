@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Addwf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 	
 	private short arg0, arg1;
 	
@@ -34,8 +34,27 @@ public class Addwf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+	public void execute(Processor proc) {	
+		byte val2 = proc.getAtAddress(arg0);
+		
+		int newValue	= ((int)proc.workRegister) + val2;
+		
+		boolean setDC 	= (((proc.workRegister&0x0F) + (val2&0x0F))&0x10) != 0;
+		boolean setC 	= (newValue&0x10000) != 0;
+		
+		if(arg1==0)
+			proc.workRegister=(byte) newValue;
+		else
+			proc.setAtAddress(arg0,(byte) newValue);
+			
+		
+		if(setDC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+		if(setC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+		if(newValue == 0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+	
 		
 	}
 

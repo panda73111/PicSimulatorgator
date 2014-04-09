@@ -8,7 +8,7 @@ public class Bcf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -32,8 +32,9 @@ public class Bcf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		byte val = proc.getAtAddress(arg0);
+		val &= 0xFF-(1<<arg1);
+		proc.setAtAddress(arg1, val);
 	}
 
 	@Override
