@@ -48,4 +48,12 @@ public class Processor
 	private void execute(Command cmd) {
 		cmd.execute(this);
 	}
+	public byte getAtAddress(int address)
+	{
+		return memControl.getAt(address);
+	}
+	public void setAtAddress(int address, byte value)
+	{
+		memControl.setAt(address, value);
+	}
 }
