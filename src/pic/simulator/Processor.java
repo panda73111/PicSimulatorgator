@@ -69,6 +69,12 @@ public class Processor
 		byte val = (byte) (memControl.getAt(address) | (1<<bit));
 		memControl.setAt(address, val);
 	}
+	public void clearBitAtAddress(int address, short bit)
+	{
+		byte val = getAtAddress(address);
+		val &= 0xFF-(1<<bit);
+		memControl.setAt(address, val);
+	}
 	
 
 	public void pushStack(int value)
@@ -82,9 +88,13 @@ public class Processor
 	
 	
 	
-	
+
 	public void setStatusBit(short bit)
 	{
 		setBitAtAddress(SpecialFunctionRegister.STATUS, bit);
+	}
+	public void clearStatusBit(short bit)
+	{
+		clearBitAtAddress(SpecialFunctionRegister.STATUS, bit);
 	}
 }

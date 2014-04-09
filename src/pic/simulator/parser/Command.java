@@ -1,6 +1,7 @@
 package pic.simulator.parser;
 
 import pic.simulator.Processor;
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.commands.*;
 
 public abstract class Command
@@ -98,7 +99,16 @@ public abstract class Command
 		}
 		return null;
 	}
-
+	
+	public void affectZeroBit(Processor proc, byte result)
+	{
+		if(result==0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+		else
+			proc.clearStatusBit(SpecialFunctionRegister.STATUS_Z);
+	}
+	
+	
 	public abstract short getArgumentCount();
 
 	public abstract short getCycleCount();
