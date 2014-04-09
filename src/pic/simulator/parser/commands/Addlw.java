@@ -14,7 +14,7 @@ public class Addlw extends Command
 	
 	public Addlw(int cmdNumber, short arg0)
 	{
-		this.cmdNumber = cmdNumber;
+		Addlw.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 	
@@ -34,7 +34,7 @@ public class Addlw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		proc.workRegister+=arg0;
 		
 	}
 

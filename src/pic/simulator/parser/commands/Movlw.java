@@ -31,7 +31,7 @@ public class Movlw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		proc.workRegister=(byte) arg0;
 
 	}
 
