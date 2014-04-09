@@ -11,7 +11,7 @@ public class Nop extends Command
 	private static int cmdNumber;
 
 	public Nop(int cmdNumber) {
-		 this.cmdNumber = cmdNumber;
+		 Nop.cmdNumber = cmdNumber;
 	}
 
 	public short getArgumentCount() {
@@ -27,9 +27,9 @@ public class Nop extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+	public void execute(Processor proc) 
+	{
+		// Nothing to do
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class Movlw extends Command
 	private short arg0;
 
 	public Movlw(int cmdNumber, short arg0) {
-		this.cmdNumber = cmdNumber;
+		Movlw.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 
@@ -30,9 +30,9 @@ public class Movlw extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(Processor proc) 
+	{
 		proc.workRegister=(byte) arg0;
-
 	}
 
 	@Override

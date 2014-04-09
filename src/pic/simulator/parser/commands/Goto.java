@@ -1,7 +1,7 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Goto extends Command
@@ -13,7 +13,7 @@ public class Goto extends Command
 	private short arg0;
 
 	public Goto(int cmdNumber, short arg0) {
-		this.cmdNumber = cmdNumber;
+		Goto.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 
@@ -31,8 +31,7 @@ public class Goto extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		proc.setAtAddress(SpecialFunctionRegister.PCL, (byte)arg0);
 	}
 
 	@Override

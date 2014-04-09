@@ -1,7 +1,7 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Andlw extends Command
@@ -13,7 +13,7 @@ public class Andlw extends Command
 	private short arg0;
 
 	public Andlw(int cmdNumber, short arg0) {
-		this.cmdNumber = cmdNumber;
+		Andlw.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 
@@ -30,9 +30,11 @@ public class Andlw extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+	public void execute(Processor proc) 
+	{
+		proc.workRegister &= arg0;
+		if(proc.workRegister==0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 
 	@Override
