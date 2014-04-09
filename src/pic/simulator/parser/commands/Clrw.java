@@ -1,7 +1,7 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Clrw extends Command
@@ -11,7 +11,7 @@ public class Clrw extends Command
 	private static int cmdNumber;
 
 	public Clrw(int cmdNumber) {
-		 this.cmdNumber = cmdNumber;
+		 Clrw.cmdNumber = cmdNumber;
 	}
 
 	public short getArgumentCount() {
@@ -28,8 +28,8 @@ public class Clrw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		proc.workRegister = 0;
+		proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 
 	@Override

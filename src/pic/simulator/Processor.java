@@ -56,4 +56,17 @@ public class Processor
 	{
 		memControl.setAt(address, value);
 	}
+	public boolean getBitAtAddress(int address, short bit)
+	{
+		return (memControl.getAt(address) & (1<<bit)) != 0;
+	}
+	public void setBitAtAddress(int address, short bit)
+	{
+		byte val = (byte) (memControl.getAt(address) | (1<<bit));
+		memControl.setAt(address, val);
+	}
+	public void setStatusBit(short bit)
+	{
+		setBitAtAddress(SpecialFunctionRegister.STATUS, bit);
+	}
 }

@@ -1,7 +1,7 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Addlw extends Command
@@ -34,8 +34,21 @@ public class Addlw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		proc.workRegister+=arg0;
 		
+		int newValue	= ((int)proc.workRegister) + arg0;
+		
+		boolean setDC 	= (((proc.workRegister&0x0F) + (arg0&0x0F))&0x10) != 0;
+		boolean setC 	= (newValue&0x10000) != 0;
+		
+		proc.workRegister=(byte) newValue;
+		
+		if(setDC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+		if(setC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+		if(newValue == 0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+			
 	}
 
 	@Override

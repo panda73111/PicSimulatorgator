@@ -33,6 +33,13 @@ public class SpecialFunctionRegister
 	// Nicer access
 	public static final int PCL			= PCL0;
 	public static final int STATUS		= STATUS0;
+
+	public static final short STATUS_C	= 0;
+	public static final short STATUS_DC	= 1;
+	public static final short STATUS_Z	= 2;
+	public static final short STATUS_PD	= 3;
+	public static final short STATUS_TO	= 4;
+	public static final short STATUS_RP0= 5;
 	
 	
 	
