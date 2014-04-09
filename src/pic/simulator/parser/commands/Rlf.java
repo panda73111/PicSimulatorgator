@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Rlf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -32,8 +32,13 @@ public class Rlf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		boolean setC = ((proc.workRegister & 0x80) != 0);
+		proc.workRegister <<= 1;
+		
+		if(setC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+		else
+			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
 	}
 
 	@Override

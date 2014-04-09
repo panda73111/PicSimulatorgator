@@ -30,7 +30,7 @@ public class Clrwdt extends Command
 	public void execute(Processor proc) {
 		proc.setStatusBit(SpecialFunctionRegister.STATUS_TO);
 		proc.setStatusBit(SpecialFunctionRegister.STATUS_PD);
-		// TODO: RESET Watchdog-timer
+		throw new  UnsupportedOperationException("Not yet implemented.");
 	}
 
 	@Override

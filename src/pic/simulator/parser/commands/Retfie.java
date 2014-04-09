@@ -8,7 +8,7 @@ public class Retfie extends Command
 {
 	private static final short argumentCount = 0;
 	private static final short cycleCount = 2;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	public Retfie(int cmdNumber) {
 		 this.cmdNumber = cmdNumber;
@@ -28,8 +28,7 @@ public class Retfie extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
-
+		throw new  UnsupportedOperationException("Not yet implemented.");
 	}
 
 	@Override
