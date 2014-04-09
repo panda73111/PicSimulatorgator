@@ -8,13 +8,13 @@ public class Addlw extends Command
 {
 	private static final short argumentCount = 1;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 	
 	private short arg0;
 	
 	public Addlw(int cmdNumber, short arg0)
 	{
-		Addlw.cmdNumber = cmdNumber;
+		this.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 	

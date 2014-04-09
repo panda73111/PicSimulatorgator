@@ -8,10 +8,10 @@ public class Nop extends Command
 {
 	private static final short argumentCount = 0;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	public Nop(int cmdNumber) {
-		 Nop.cmdNumber = cmdNumber;
+		 this.cmdNumber = cmdNumber;
 	}
 
 	public short getArgumentCount() {

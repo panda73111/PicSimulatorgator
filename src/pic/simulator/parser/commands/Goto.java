@@ -8,12 +8,12 @@ public class Goto extends Command
 {
 	private static final short argumentCount = 1;
 	private static final short cycleCount = 2;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0;
 
 	public Goto(int cmdNumber, short arg0) {
-		Goto.cmdNumber = cmdNumber;
+		this.cmdNumber = cmdNumber;
 		this.arg0 = arg0;
 	}
 

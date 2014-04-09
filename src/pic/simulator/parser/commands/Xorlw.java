@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Xorlw extends Command
 {
 	private static final short argumentCount = 1;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0;
 
@@ -31,7 +31,9 @@ public class Xorlw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		proc.workRegister ^= arg0;
+		if(proc.workRegister==0)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
 
 	}
 
