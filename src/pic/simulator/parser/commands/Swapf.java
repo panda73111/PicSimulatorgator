@@ -8,7 +8,7 @@ public class Swapf extends Command
 {
 	private static final short argumentCount = 2;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0, arg1;
 
@@ -32,8 +32,14 @@ public class Swapf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
+		byte f 		= proc.getAtAddress(arg0);		
+		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4));
 
+
+		if(arg1==0)
+			proc.workRegister=(byte) res;
+		else
+			proc.setAtAddress(arg0,(byte) res);
 	}
 
 	@Override

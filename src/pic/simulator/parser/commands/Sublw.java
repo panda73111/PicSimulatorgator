@@ -1,14 +1,14 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
 public class Sublw extends Command
 {
 	private static final short argumentCount = 1;
 	private static final short cycleCount = 1;
-	private static int cmdNumber;
+	private int cmdNumber;
 
 	private short arg0;
 
@@ -31,8 +31,28 @@ public class Sublw extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		// TODO Auto-generated method stub
 
+		int w 				= proc.workRegister;
+		int res				= w-arg0;
+		int resLowerNibble	= (w & 0x0F) - (arg0 & 0x0F);
+		
+		
+		boolean setC		= res < 0;
+		boolean setDC		= resLowerNibble < 0;
+		
+		proc.workRegister 	= (byte)res;
+		
+		affectZeroBit(proc, (byte) res);
+
+		if(setDC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+		else
+			proc.clearStatusBit(SpecialFunctionRegister.STATUS_DC);
+			
+		if(setC)
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+		else
+			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
 	}
 
 	@Override

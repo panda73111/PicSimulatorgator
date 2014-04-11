@@ -44,8 +44,14 @@ public class Addlw extends Command
 		
 		if(setDC)
 			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+		else
+			proc.clearStatusBit(SpecialFunctionRegister.STATUS_DC);
+			
 		if(setC)
 			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+		else
+			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+			
 		affectZeroBit(proc, (byte)newValue);		
 	}
 
