@@ -36,7 +36,7 @@ public class Processor
 			
 			System.out.println("---Executed " + cmd.toString() + "---");
 			
-			memControl.setAt(progCounterAddress, (byte)(progCounter+1));
+			memControl.setAt(progCounterAddress, (byte)(memControl.getAt(progCounterAddress)+1));
 			// TODO repaint
 		}
 	}
