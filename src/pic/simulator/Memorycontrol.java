@@ -68,7 +68,7 @@ public class Memorycontrol
 	private int getBank()
 	{
 		byte status = specialFunctionRegisters.get(SpecialFunctionRegister.STATUS0).getValue();
-		return status & 0b00010000;
+		return status & 0b00010000 >> 4;
 	}
 	
 	private void initSFR()
