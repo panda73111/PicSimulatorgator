@@ -140,4 +140,29 @@ public class Memorycontrol
 	{
 		return stack.pop();
 	}
+	
+	
+	public void printMemory()
+	{
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		
+		for(int i=sfrLength;i<unimplementedAreaBegin;i++)
+		{
+			if(i%12==0)
+				System.out.println();
+			
+			byte b = getAt(i);
+
+		    System.out.print(Integer.toHexString(b & 0xFF) + "H ");
+		}
+	}
 }

@@ -24,21 +24,38 @@ public class Processor
 	public void executeProgram() {
 		byte progCounter;
 
+		boolean doTimeMeasurement 	= true;
+		long startTime 				= System.currentTimeMillis();
+		long executionDuration		= 5000;
+		
+		
+		int instructionCounter 	= 0;
+		
 		while ((progCounter = memControl.getAt(progCounterAddress)) < picProgram.length())
 		{
+			if(doTimeMeasurement && System.currentTimeMillis()-startTime > executionDuration)
+				break;
+			
+			instructionCounter++;
+			
 			if (isInterrupted)
 			{
 				// TODO
 			}
+
 			
 			Command cmd = fetch(progCounter);
+			incrementPCL();
 			execute(cmd);
 			
-			System.out.println("---Executed " + cmd.toString() + "---");
+			//System.out.println("---Executed " + cmd.toString() + "---");
 			
-			memControl.setAt(progCounterAddress, (byte)(memControl.getAt(progCounterAddress)+1));
 			// TODO repaint
+			
+			//memControl.printMemory();
 		}
+		System.out.println(instructionCounter + " instructions in " + executionDuration/1000 + " second." );
+		System.out.println("Ca " + instructionCounter/(executionDuration/1000) + " instructions per second" );
 	}
 
 	private Command fetch(int cmdIndex) {
@@ -49,7 +66,10 @@ public class Processor
 		cmd.execute(this);
 	}
 	
-	
+	private void incrementPCL()
+	{
+		memControl.setAt(progCounterAddress, (byte)(memControl.getAt(progCounterAddress)+1));
+	}
 	
 	
 	public byte getAtAddress(int address)
