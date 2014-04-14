@@ -6,7 +6,10 @@
 
 package pic.simulator;
 
+import java.awt.EventQueue;
 import java.io.IOException;
+
+import pic.simulator.gui.MainFrame;
 
 
 /**
@@ -25,6 +28,19 @@ public class PICSimulator
     		System.out.println("---Wrong number of arguments---");
     		System.exit(1);
     	}
+    	
+    	/*EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try
+				{
+					MainFrame frame = new MainFrame();
+					frame.setVisible(true);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});*/
     	
     	Processor processor = new Processor(args[0]);
     	processor.executeProgram();
