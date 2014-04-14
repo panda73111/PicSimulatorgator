@@ -5,8 +5,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Tmr0 extends SpecialFunctionRegister
 {
-	Processor processor;
-	byte value;
+    private final Processor processor;
+    private byte value;
 
 	public Tmr0(Processor processor)
 	{

@@ -5,8 +5,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Eecon1 extends SpecialFunctionRegister
 {
-	Processor processor;
-	byte value;
+	private final Processor processor;
+	private byte value;
 
 	public Eecon1(Processor processor)
 	{

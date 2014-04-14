@@ -5,8 +5,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Eedata extends SpecialFunctionRegister
 {
-	Processor processor;
-	byte value;
+    private final Processor processor;
+    private byte value;
 	
 	public Eedata(Processor processor)
 	{

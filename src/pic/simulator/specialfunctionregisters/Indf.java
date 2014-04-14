@@ -5,8 +5,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Indf extends SpecialFunctionRegister
 {
-	Processor processor;
-	byte value;
+    private final Processor processor;
+    private byte value;
 
 	public Indf(Processor processor)
 	{

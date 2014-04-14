@@ -5,8 +5,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Trisa extends SpecialFunctionRegister
 {
-	Processor processor;
-	byte value;
+    private final Processor processor;
+    private byte value;
 
 	public Trisa(Processor processor)
 	{
