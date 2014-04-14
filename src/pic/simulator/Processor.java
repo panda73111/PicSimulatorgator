@@ -1,47 +1,47 @@
 package pic.simulator;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import pic.simulator.parser.*;
 
 public class Processor
 {
-    private int           progCounterAddress = SpecialFunctionRegister.PCL;
-    private Program       picProgram;
-    private Memorycontrol memControl;
-    private Pin[]         pins;
+    public byte                   workRegister       = 0x00;
 
-    public byte           workRegister       = 0x00;
-
-    private boolean       isInterrupted      = false;
+    private int                   progCounterAddress = SpecialFunctionRegister.PCL;
+    private Program               picProgram;
+    private Memorycontrol         memControl;
+    private HashMap<Integer, Pin> pins;
+    private boolean               isInterrupted      = false;
 
     public Processor(String programFileName) throws IOException
     {
         picProgram = new Program(programFileName);
         memControl = new Memorycontrol(this, 0xFF, (short) 2);
-        pins = new Pin[16];
-        
+        pins = new HashMap<Integer, Pin>();
+
         setupPins();
     }
 
     private void setupPins()
     {
-        pins[0] = new Pin("OSC1/CLKIN");
-        pins[1] = new Pin("OSC2/CLKOUTOSC2/CLKOUT");
-        pins[2] = new Pin("MCLR");
-        pins[3] = new IOPin("RA0");
-        pins[4] = new IOPin("RA1");
-        pins[5] = new IOPin("RA2");
-        pins[6] = new IOPin("RA3");
-        pins[7] = new IOPin("RA4/T0CKI");
-        pins[8] = new IOPin("RB0/INT");
-        pins[9] = new IOPin("RB1");
-        pins[10] = new IOPin("RB2");
-        pins[11] = new IOPin("RB3");
-        pins[12] = new IOPin("RB4");
-        pins[13] = new IOPin("RB5");
-        pins[14] = new IOPin("RB6");
-        pins[15] = new IOPin("RB7");
+        pins.put(Pin.OSC1, new Pin("OSC1/CLKIN"));
+        pins.put(Pin.OSC2, new Pin("OSC2/CLKOUTOSC2/CLKOUT"));
+        pins.put(Pin.MCLR, new Pin("MCLR"));
+        pins.put(Pin.RA0, new IOPin("RA0"));
+        pins.put(Pin.RA1, new IOPin("RA1"));
+        pins.put(Pin.RA2, new IOPin("RA2"));
+        pins.put(Pin.RA3, new IOPin("RA3"));
+        pins.put(Pin.RA4, new IOPin("RA4/T0CKI"));
+        pins.put(Pin.RB0, new IOPin("RB0/INT"));
+        pins.put(Pin.RB1, new IOPin("RB1"));
+        pins.put(Pin.RB2, new IOPin("RB2"));
+        pins.put(Pin.RB3, new IOPin("RB3"));
+        pins.put(Pin.RB4, new IOPin("RB4"));
+        pins.put(Pin.RB5, new IOPin("RB5"));
+        pins.put(Pin.RB6, new IOPin("RB6"));
+        pins.put(Pin.RB7, new IOPin("RB7"));
     }
 
     public void executeProgram()

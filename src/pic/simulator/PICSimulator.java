@@ -14,7 +14,7 @@ import pic.simulator.gui.MainFrame;
 
 /**
  *
- * @author hudini
+ * @author Herr Doktor Strunz
  */
 public class PICSimulator 
 {
