@@ -28,21 +28,21 @@ public class PICSimulator
     		System.out.println("---Wrong number of arguments---");
     		System.exit(1);
     	}
+    	final Processor processor = new Processor(args[0]);
     	
-    	/*EventQueue.invokeLater(new Runnable() {
+    	EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try
 				{
-					MainFrame frame = new MainFrame();
+					MainFrame frame = new MainFrame(processor);
 					frame.setVisible(true);
 				} catch (Exception e)
 				{
 					e.printStackTrace();
 				}
 			}
-		});*/
+		});
     	
-    	Processor processor = new Processor(args[0]);
     	processor.executeProgram();
     	System.out.println("---Execution terminated---");
     }

@@ -33,7 +33,7 @@ public class Swapf extends Command
 	@Override
 	public void execute(Processor proc) {
 		byte f 		= proc.getAtAddress(arg0);		
-		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4));
+		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4)); // Awesome!
 
 
 		if(arg1==0)
