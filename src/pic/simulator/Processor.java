@@ -17,7 +17,7 @@ public class Processor
 	public Processor(String programFileName) throws IOException
 	{
 		picProgram = new Program(programFileName);
-		memControl = new Memorycontrol(0xFF, (short)2);
+		memControl = new Memorycontrol(this, 0xFF, (short)2);
 	}
 	
 	
