@@ -1,6 +1,8 @@
 package pic.simulator.gui;
 
 import java.awt.GridLayout;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import pic.simulator.Memorycontrol;
 import pic.simulator.Processor;
+import pic.simulator.SpecialFunctionRegister;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements PicGUI
@@ -20,13 +23,12 @@ public class MainFrame extends JFrame implements PicGUI
 	private JTable gpTable;
 	private JTable sfrTable;
 	private Processor myProcessor;
-	
 
 	public MainFrame(Processor proc) {
 		myProcessor = proc;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -35,7 +37,7 @@ public class MainFrame extends JFrame implements PicGUI
 		DefaultTableModel tableModel = new DefaultTableModel(Memorycontrol.gpLength/gpTableColCount+1, gpTableColCount);
 		gpTable = new JTable(tableModel);
 
-		tableModel = new DefaultTableModel(Memorycontrol.sfrLength, 3);
+		tableModel = new DefaultTableModel(0, 3);
 		sfrTable = new JTable(tableModel);
 
 		contentPane.add(gpTable);
@@ -55,19 +57,52 @@ public class MainFrame extends JFrame implements PicGUI
 	
 	private void initSFRTable()
 	{
+		HashSet<SpecialFunctionRegister> sfr = myProcessor.getMemoryControl().getSFRSet();
+		Iterator<SpecialFunctionRegister> i = sfr.iterator();
+		int index = 0;
 		
+		while(i.hasNext())
+		{
+			SpecialFunctionRegister entry = i.next();
+
+			sfrTable.setValueAt(entry.getName(), index, 0);
+			index++;
+		}
 	}
 	private void repaintGpTable()
 	{
 		for(int i=0; i<Memorycontrol.gpLength; i++)
 		{
 			byte byteValue 		= myProcessor.getAtAddress(Memorycontrol.sfrLength+i);
-			String stringValue 	= Integer.toHexString(byteValue & 0xFF) + "H ";
-			gpTable.setValueAt(stringValue, i/gpTableColCount, i%gpTableColCount);
+			gpTable.setValueAt(byteToHex(byteValue), i/gpTableColCount, i%gpTableColCount);
 		}
 	}
 	private void repaintSFRTable()
 	{
+		
+		HashSet<SpecialFunctionRegister> sfr = myProcessor.getMemoryControl().getSFRSet();
+		
+
+		Iterator<SpecialFunctionRegister> i = sfr.iterator();
+		int index = 0;
+		
+		while(i.hasNext())
+		{
+			SpecialFunctionRegister entry = i.next();
+
+			sfrTable.setValueAt(byteToHex	(entry.getValue()), index, 1);
+			sfrTable.setValueAt(byteToBinary(entry.getValue()), index, 2);
+			index++;
+		}
+	}
+
+	private String byteToHex(byte byteValue)
+	{
+		return Integer.toHexString(byteValue & 0xFF) + "H ";
+	}
+	private String byteToBinary(byte byteValue)
+	{
+		return Integer.toBinaryString(byteValue & 0xFF) + "b";
 	}
 	
 	

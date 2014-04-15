@@ -1,25 +1,32 @@
 package pic.simulator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import pic.simulator.parser.*;
+import pic.simulator.gui.PicGUI;
+import pic.simulator.parser.Command;
+import pic.simulator.parser.Program;
 
 public class Processor
 {
-    public byte                   workRegister       = 0x00;
 
-    private int                   progCounterAddress = SpecialFunctionRegister.PCL;
     private Program               picProgram;
     private Memorycontrol         memControl;
+	private ArrayList<PicGUI> 	  guiHandler;
     private HashMap<Integer, Pin> pins;
+	
+	
+    private int                   progCounterAddress = SpecialFunctionRegister.PCL;
+    public byte                   workRegister       = 0x00;
     private boolean               isInterrupted      = false;
 
     public Processor(String programFileName) throws IOException
     {
         picProgram = new Program(programFileName);
-        memControl = new Memorycontrol(this, 0xFF, (short) 2);
+        memControl = new Memorycontrol(this);
         pins = new HashMap<Integer, Pin>();
+		guiHandler = new ArrayList<>();
 
         setupPins();
     }
@@ -48,7 +55,7 @@ public class Processor
     {
         byte progCounter;
 
-        boolean doTimeMeasurement = true;
+        boolean doTimeMeasurement = false;
         long startTime = System.currentTimeMillis();
         long executionDuration = 5000;
 
@@ -70,9 +77,9 @@ public class Processor
             incrementPCL();
             execute(cmd);
 
-            // System.out.println("---Executed " + cmd.toString() + "---");
-
-            // TODO repaint
+			System.out.println("---Executed " + cmd.toString() + "---");
+			
+			repaintGUI();
 
             // memControl.printMemory();
         }
@@ -142,4 +149,24 @@ public class Processor
     {
         clearBitAtAddress(SpecialFunctionRegister.STATUS, bit);
     }
+	
+	
+	public Memorycontrol getMemoryControl()
+	{
+		return memControl;
+	}
+	
+	
+	
+	public void repaintGUI()
+	{
+		for(PicGUI guiElement : guiHandler)
+		{
+			guiElement.repaintGUI();
+		}
+	}
+	public void registerGUIElement(PicGUI element)
+	{
+		guiHandler.add(element);
+	}
 }
