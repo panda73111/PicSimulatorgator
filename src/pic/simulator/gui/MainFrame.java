@@ -28,7 +28,7 @@ public class MainFrame extends JFrame implements PicGUI
 		myProcessor = proc;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 600);
+		setBounds(100, 100, 450, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,9 +57,13 @@ public class MainFrame extends JFrame implements PicGUI
 	
 	private void initSFRTable()
 	{
+		DefaultTableModel model = (DefaultTableModel)(sfrTable.getModel());
 		HashSet<SpecialFunctionRegister> sfr = myProcessor.getMemoryControl().getSFRSet();
+		
+		model.setRowCount(sfr.size()+1);
+		
 		Iterator<SpecialFunctionRegister> i = sfr.iterator();
-		int index = 0;
+		int index = 1;
 		
 		while(i.hasNext())
 		{
@@ -68,6 +72,8 @@ public class MainFrame extends JFrame implements PicGUI
 			sfrTable.setValueAt(entry.getName(), index, 0);
 			index++;
 		}
+		
+		sfrTable.setValueAt("Work", 0, 0);
 	}
 	private void repaintGpTable()
 	{
@@ -94,6 +100,9 @@ public class MainFrame extends JFrame implements PicGUI
 			sfrTable.setValueAt(byteToBinary(entry.getValue()), index, 2);
 			index++;
 		}
+
+		sfrTable.setValueAt(byteToHex	(myProcessor.workRegister), 0, 1);
+		sfrTable.setValueAt(byteToBinary(myProcessor.workRegister), 0, 2);
 	}
 
 	private String byteToHex(byte byteValue)
