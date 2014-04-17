@@ -45,14 +45,14 @@ public class Sublw extends Command
 		affectZeroBit(proc, (byte) res);
 
 		if(setDC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_DC);
 			
 		if(setC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_C);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_C);
 	}
 
 	@Override

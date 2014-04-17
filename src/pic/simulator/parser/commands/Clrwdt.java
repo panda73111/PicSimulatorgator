@@ -28,8 +28,8 @@ public class Clrwdt extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		proc.setStatusBit(SpecialFunctionRegister.STATUS_TO);
-		proc.setStatusBit(SpecialFunctionRegister.STATUS_PD);
+		proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_TO);
+		proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_PD);
 		throw new  UnsupportedOperationException("Not yet implemented.");
 	}
 

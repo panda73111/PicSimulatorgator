@@ -36,9 +36,9 @@ public class Rrf extends Command
 		proc.workRegister >>= 1;
 		
 		if(setC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_C);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_C);
 	}
 
 	@Override

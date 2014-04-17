@@ -33,19 +33,19 @@ public class Decfsz extends Command
 	@Override
 	public void execute(Processor proc) {
 		
-		byte f = proc.getAtAddress(arg0);
+		byte f = proc.getMemoryControl().getAt(arg0);
 		f--;
 		
 		if(arg1==0)
 			proc.workRegister = f;
 		else
-			proc.setAtAddress(arg0, f);
+			proc.getMemoryControl().setAt(arg0, f);
 
 		if(f==0)
 		{
-			byte pcl = proc.getAtAddress(SpecialFunctionRegister.PCL);
+			byte pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
 			pcl++;
-			proc.setAtAddress(SpecialFunctionRegister.PCL, pcl);
+			proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, pcl);
 		}
 	}
 

@@ -31,13 +31,13 @@ public class Decf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte val = proc.getAtAddress(arg0);
+		byte val = proc.getMemoryControl().getAt(arg0);
 		val--;
 
 		if(arg1==0)
 			proc.workRegister = val;
 		else
-			proc.setAtAddress(arg0, val);
+			proc.getMemoryControl().setAt(arg0, val);
 		
 		affectZeroBit(proc, val);
 	}

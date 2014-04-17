@@ -107,16 +107,47 @@ public class Memorycontrol
 
     
 	
-	public void push(int value)
+	public void pushStack(int value)
 	{
 		if(stack.size()>8)
 			throw new StackOverflowError("Stack overflow!");
 		stack.push(value);
 	}
-	public int pop()
+	public int popStack()
 	{
 		return stack.pop();
 	}
+	
+    
+    public boolean getBitAt(int address, short bit)
+    {
+        return (getAt(address) & (1 << bit)) != 0;
+    }
+
+    public void setBitAt(int address, short bit)
+    {
+        byte val = (byte) (getAt(address) | (1 << bit));
+        setAt(address, val);
+    }
+
+    public void clearBitAt(int address, short bit)
+    {
+        byte val = getAt(address);
+        val &= 0xFF - (1 << bit);
+        setAt(address, val);
+    }
+
+
+    public void setStatusBit(short bit)
+    {
+        setBitAt(SpecialFunctionRegister.STATUS, bit);
+    }
+
+    public void clearStatusBit(short bit)
+    {
+        clearBitAt(SpecialFunctionRegister.STATUS, bit);
+    }
+	
 	
 	public Collection<SpecialFunctionRegister> getSpecialFunctionRegisters()
 	{
@@ -204,32 +235,7 @@ public class Memorycontrol
 
 
 
-
-
-
-    public void printMemory()
-    {
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-        for (int i = sfrLength; i < unimplementedAreaBegin; i++)
-        {
-            if (i % 12 == 0)
-                System.out.println();
-
-            byte b = getAt(i);
-
-            System.out.print(Integer.toHexString(b & 0xFF) + "H ");
-        }
-    }
+    
     public HashSet<SpecialFunctionRegister> getSFRSet()
     {
     	return specialFunctionRegisterSet;

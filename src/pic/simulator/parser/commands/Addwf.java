@@ -35,7 +35,7 @@ public class Addwf extends Command
 
 	@Override
 	public void execute(Processor proc) {	
-		byte val2 = proc.getAtAddress(arg0);
+		byte val2 = proc.getMemoryControl().getAt(arg0);
 		
 		int newValue	= ((int)proc.workRegister) + val2;
 		
@@ -45,18 +45,18 @@ public class Addwf extends Command
 		if(arg1==0)
 			proc.workRegister=(byte) newValue;
 		else
-			proc.setAtAddress(arg0,(byte) newValue);
+			proc.getMemoryControl().setAt(arg0,(byte) newValue);
 			
 		
 		if(setDC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_DC);
 			
 		if(setC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_C);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_C);
 			
 
 		affectZeroBit(proc, (byte)newValue);	

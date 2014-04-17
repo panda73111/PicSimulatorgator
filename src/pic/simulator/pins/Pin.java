@@ -1,4 +1,4 @@
-package pic.simulator;
+package pic.simulator.pins;
 
 public class Pin
 {

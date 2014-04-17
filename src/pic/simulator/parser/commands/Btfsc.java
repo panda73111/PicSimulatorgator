@@ -33,14 +33,14 @@ public class Btfsc extends Command
 	@Override
 	public void execute(Processor proc) 
 	{
-		byte val = proc.getAtAddress(arg0);
+		byte val = proc.getMemoryControl().getAt(arg0);
 		boolean bitIsSet = (val & (1<<arg1)) != 0;
 		
 		if(!bitIsSet)
 		{
-			byte pcl = proc.getAtAddress(SpecialFunctionRegister.PCL);
+			byte pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
 			pcl++;
-			proc.setAtAddress(SpecialFunctionRegister.PCL, pcl);
+			proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, pcl);
 		}
 	}
 

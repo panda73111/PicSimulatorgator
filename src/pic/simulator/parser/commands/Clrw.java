@@ -29,7 +29,7 @@ public class Clrw extends Command
 	@Override
 	public void execute(Processor proc) {
 		proc.workRegister = 0;
-		proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+		proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 
 	@Override

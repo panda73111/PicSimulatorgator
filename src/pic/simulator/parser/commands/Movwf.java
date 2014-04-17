@@ -32,7 +32,7 @@ public class Movwf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		proc.setAtAddress(arg0, proc.workRegister);
+		proc.getMemoryControl().setAt(arg0, proc.workRegister);
 	}
 
 	@Override

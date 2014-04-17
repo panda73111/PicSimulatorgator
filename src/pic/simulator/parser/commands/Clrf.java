@@ -31,8 +31,8 @@ public class Clrf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		proc.setAtAddress(arg0, (byte) 0);
-		proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+		proc.getMemoryControl().setAt(arg0, (byte) 0);
+		proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 
 	@Override

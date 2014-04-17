@@ -28,8 +28,8 @@ public class Return extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		int val = proc.popStack();
-		proc.setAtAddress(SpecialFunctionRegister.PCL, (byte) val);
+		int val = proc.getMemoryControl().popStack();
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte) val);
 	}
 
 	@Override

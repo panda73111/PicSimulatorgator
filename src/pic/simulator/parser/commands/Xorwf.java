@@ -32,12 +32,12 @@ public class Xorwf extends Command
 	@Override
 	public void execute(Processor proc) {
 		
-		byte res = (byte) (proc.workRegister ^ proc.getAtAddress(arg0));
+		byte res = (byte) (proc.workRegister ^ proc.getMemoryControl().getAt(arg0));
 		
 		if(arg1==0)
 			proc.workRegister=(byte) res;
 		else
-			proc.setAtAddress(arg0,(byte) res);
+			proc.getMemoryControl().setAt(arg0,(byte) res);
 		
 		affectZeroBit(proc, res);
 
