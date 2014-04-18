@@ -2,6 +2,7 @@ package pic.simulator;
 
 import java.io.IOException;
 
+import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
 
@@ -12,6 +13,7 @@ public class Processor
     private Memorycontrol         memControl;
 	private GUIHandler 			  guiHandler;
     private PinHandler			  pinHandler;
+    private InterruptionHandler	  interruptionHandler;
 	
 	
     private int                   progCounterAddress = SpecialFunctionRegister.PCL;
@@ -22,9 +24,10 @@ public class Processor
     public Processor(String programFileName) throws IOException
     {
         picProgram 	= new Program(programFileName);
-        memControl 	= new Memorycontrol(this);
+        memControl 	= new PicMemorycontrol(this);
         pinHandler 	= new PinHandler();
 		guiHandler 	= new GUIHandler();
+		interruptionHandler = new InterruptionHandler(this);
     }
 
     public void executeProgram()
@@ -37,7 +40,7 @@ public class Processor
         {
             if (isInterrupted)
             {
-                // TODO
+            	Interruption interruption = interruptionHandler.getInterruption();
             }
 
             Command cmd = fetch(progCounter);
@@ -79,5 +82,9 @@ public class Processor
 	public GUIHandler getGuiHandler()
 	{
 		return guiHandler;
+	}
+	public Program getProgram()
+	{
+		return picProgram;
 	}
 }

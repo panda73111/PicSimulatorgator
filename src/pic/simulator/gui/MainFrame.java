@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pic.simulator.Memorycontrol;
+import pic.simulator.PicMemorycontrol;
 import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
@@ -44,7 +45,7 @@ public class MainFrame extends JFrame implements PicGUI
 
 		
 		
-		DefaultTableModel tableModel = new DefaultTableModel(Memorycontrol.gpLength/gpTableColCount+1, gpTableColCount);
+		DefaultTableModel tableModel = new DefaultTableModel(PicMemorycontrol.gpLength/gpTableColCount+1, gpTableColCount);
 		gpTable = new JTable(tableModel);
 
 		tableModel = new DefaultTableModel(0, 3);
@@ -114,22 +115,22 @@ public class MainFrame extends JFrame implements PicGUI
 	private void initSFRTable()
 	{
 		DefaultTableModel model = (DefaultTableModel)(sfrTable.getModel());
-		HashSet<SpecialFunctionRegister> sfr = myProcessor.getMemoryControl().getSFRSet();
+		HashSet<SpecialFunctionRegister> sfr = ((PicMemorycontrol)myProcessor.getMemoryControl()).getSFRSet();
 		
 		model.setRowCount(sfr.size()+1);
 	}
 	private void repaintGpTable()
 	{
-		for(int i=0; i<Memorycontrol.gpLength; i++)
+		for(int i=0; i<PicMemorycontrol.gpLength; i++)
 		{
-			byte byteValue 		= myProcessor.getMemoryControl().getAt(Memorycontrol.sfrLength+i);
+			byte byteValue 		= myProcessor.getMemoryControl().getAt(PicMemorycontrol.sfrLength+i);
 			gpTable.setValueAt(byteToHex(byteValue), i/gpTableColCount, i%gpTableColCount);
 		}
 	}
 	private void repaintSFRTable()
 	{
 		
-		HashSet<SpecialFunctionRegister> sfr = myProcessor.getMemoryControl().getSFRSet();
+		HashSet<SpecialFunctionRegister> sfr = ((PicMemorycontrol)myProcessor.getMemoryControl()).getSFRSet();
 		
 
 		Iterator<SpecialFunctionRegister> i = sfr.iterator();

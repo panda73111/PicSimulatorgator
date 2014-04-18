@@ -19,8 +19,6 @@ public class Program
 		loadProgramFromFile(filename);
 	}
 
-	// //////////////////////////////////////////////////////////////////////
-
 	public void loadProgramFromFile(String filename) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		try
@@ -45,7 +43,6 @@ public class Program
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////
 
 	public int length() {
 		return program.size();
