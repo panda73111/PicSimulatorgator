@@ -32,14 +32,14 @@ public class Iorwf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte f = proc.getAtAddress(arg0);
+		byte f = proc.getMemoryControl().getAt(arg0);
 		
 		byte val = (byte) (proc.workRegister | f);
 
 		if(arg1==0)
 			proc.workRegister = val;
 		else
-			proc.setAtAddress(arg0, val);
+			proc.getMemoryControl().setAt(arg0, val);
 		
 		affectZeroBit(proc, val);
 	}

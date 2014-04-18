@@ -103,9 +103,9 @@ public abstract class Command
 	public void affectZeroBit(Processor proc, byte result)
 	{
 		if(result==0)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_Z);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_Z);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 	
 	

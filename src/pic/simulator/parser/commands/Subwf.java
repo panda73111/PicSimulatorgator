@@ -34,7 +34,7 @@ public class Subwf extends Command
 	public void execute(Processor proc) {
 
 		int w 				= proc.workRegister;
-		int f				= proc.getAtAddress(arg0);
+		int f				= proc.getMemoryControl().getAt(arg0);
 		int res				= w-f;
 		int resLowerNibble	= (w & 0x0F) - (f & 0x0F);
 		
@@ -46,20 +46,20 @@ public class Subwf extends Command
 		if(arg1==0)
 			proc.workRegister=(byte) res;
 		else
-			proc.setAtAddress(arg0,(byte) res);
+			proc.getMemoryControl().setAt(arg0,(byte) res);
 		
 		
 		affectZeroBit(proc, (byte) res);
 
 		if(setDC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_DC);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_DC);
 			
 		if(setC)
-			proc.setStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_C);
 		else
-			proc.clearStatusBit(SpecialFunctionRegister.STATUS_C);
+			proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_C);
 	}
 
 	@Override

@@ -32,13 +32,13 @@ public class Comf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte val = proc.getAtAddress(arg0);
+		byte val = proc.getMemoryControl().getAt(arg0);
 		val^=0xFF;
 		
 		if(arg1==0)
 			proc.workRegister = val;
 		else
-			proc.setAtAddress(arg0, val);
+			proc.getMemoryControl().setAt(arg0, val);
 		
 		affectZeroBit(proc, val);
 	}

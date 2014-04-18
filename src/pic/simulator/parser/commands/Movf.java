@@ -32,7 +32,7 @@ public class Movf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte f = proc.getAtAddress(arg0);
+		byte f = proc.getMemoryControl().getAt(arg0);
 		
 		if(arg1==0)
 		{

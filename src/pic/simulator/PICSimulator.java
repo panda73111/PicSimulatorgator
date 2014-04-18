@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pic.simulator;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import pic.simulator.gui.MainFrame;
 
@@ -21,13 +18,16 @@ public class PICSimulator
 	/*
 	 * Argument is filename
 	 */
-    public static void main(String[] args) throws IOException 
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException 
     {
     	if(args.length != 1)
     	{
-    		System.out.println("---Wrong number of arguments---");
+    		System.err.println("---Wrong number of arguments---");
     		System.exit(1);
     	}
+    	
+    	UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+    	
     	final Processor processor = new Processor(args[0]);
     	
     	EventQueue.invokeLater(new Runnable() {
@@ -43,7 +43,7 @@ public class PICSimulator
 			}
 		});
     	
-    	processor.executeProgram();
+    	//processor.executeProgram();
     	System.out.println("---Execution terminated---");
     }
     

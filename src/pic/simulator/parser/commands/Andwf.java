@@ -33,12 +33,12 @@ public class Andwf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte newValue = (byte) (proc.workRegister & proc.getAtAddress(arg0));
+		byte newValue = (byte) (proc.workRegister & proc.getMemoryControl().getAt(arg0));
 		
 		if(arg1==0)
 			proc.workRegister = newValue;
 		else
-			proc.setAtAddress(arg0, newValue);
+			proc.getMemoryControl().setAt(arg0, newValue);
 		
 		affectZeroBit(proc, newValue);
 		

@@ -32,9 +32,9 @@ public class Bcf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte val = proc.getAtAddress(arg0);
+		byte val = proc.getMemoryControl().getAt(arg0);
 		val &= 0xFF-(1<<arg1);
-		proc.setAtAddress(arg1, val);
+		proc.getMemoryControl().setAt(arg1, val);
 	}
 
 	@Override

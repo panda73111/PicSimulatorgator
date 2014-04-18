@@ -32,9 +32,9 @@ public class Call extends Command
 	@Override
 	public void execute(Processor proc) 
 	{
-		int pcl = proc.getAtAddress(SpecialFunctionRegister.PCL);
-		proc.pushStack(pcl+1);
-		proc.setAtAddress(SpecialFunctionRegister.PCL, (byte) arg0);
+		int pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
+		proc.getMemoryControl().pushStack(pcl+1);
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte) arg0);
 	}
 
 	@Override

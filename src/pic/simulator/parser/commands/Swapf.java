@@ -32,14 +32,14 @@ public class Swapf extends Command
 
 	@Override
 	public void execute(Processor proc) {
-		byte f 		= proc.getAtAddress(arg0);		
+		byte f 		= proc.getMemoryControl().getAt(arg0);		
 		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4)); // Awesome!
 
 
 		if(arg1==0)
 			proc.workRegister=(byte) res;
 		else
-			proc.setAtAddress(arg0,(byte) res);
+			proc.getMemoryControl().setAt(arg0,(byte) res);
 	}
 
 	@Override
