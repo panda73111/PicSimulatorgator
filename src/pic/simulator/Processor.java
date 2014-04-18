@@ -13,10 +13,9 @@ public class Processor
 
     private Program               picProgram;
     private Memorycontrol         memControl;
-	private ArrayList<PicGUI> 	  guiHandler;
+    private ArrayList<PicGUI>     guiHandler;
     private HashMap<Integer, Pin> pins;
-	
-	
+
     private int                   progCounterAddress = SpecialFunctionRegister.PCL;
     public byte                   workRegister       = 0x00;
     private boolean               isInterrupted      = false;
@@ -26,7 +25,7 @@ public class Processor
         picProgram = new Program(programFileName);
         memControl = new Memorycontrol(this);
         pins = new HashMap<Integer, Pin>();
-		guiHandler = new ArrayList<>();
+        guiHandler = new ArrayList<>();
 
         setupPins();
     }
@@ -49,6 +48,36 @@ public class Processor
         pins.put(Pin.RB5, new IOPin("RB5"));
         pins.put(Pin.RB6, new IOPin("RB6"));
         pins.put(Pin.RB7, new IOPin("RB7"));
+    }
+
+    public boolean isPinSetInternally(int pin)
+    {
+        return pins.get(pin).isSetInternally();
+    }
+
+    public boolean isPinSetExternally(int pin)
+    {
+        return pins.get(pin).isSetExternally();
+    }
+
+    public void setPinInternally(int pin)
+    {
+        pins.get(pin).setInternally();
+    }
+
+    public void setPinExternally(int pin)
+    {
+        pins.get(pin).setExternally();
+    }
+
+    public void unsetPinInternally(int pin)
+    {
+        pins.get(pin).unsetInternally();
+    }
+
+    public void unsetPinExternally(int pin)
+    {
+        pins.get(pin).unsetExternally();
     }
 
     public void executeProgram()
@@ -77,9 +106,9 @@ public class Processor
             incrementPCL();
             execute(cmd);
 
-			System.out.println("---Executed " + cmd.toString() + "---");
-			
-			repaintGUI();
+            System.out.println("---Executed " + cmd.toString() + "---");
+
+            repaintGUI();
 
             // memControl.printMemory();
         }
@@ -149,24 +178,22 @@ public class Processor
     {
         clearBitAtAddress(SpecialFunctionRegister.STATUS, bit);
     }
-	
-	
-	public Memorycontrol getMemoryControl()
-	{
-		return memControl;
-	}
-	
-	
-	
-	public void repaintGUI()
-	{
-		for(PicGUI guiElement : guiHandler)
-		{
-			guiElement.repaintGUI();
-		}
-	}
-	public void registerGUIElement(PicGUI element)
-	{
-		guiHandler.add(element);
-	}
+
+    public Memorycontrol getMemoryControl()
+    {
+        return memControl;
+    }
+
+    public void repaintGUI()
+    {
+        for (PicGUI guiElement : guiHandler)
+        {
+            guiElement.repaintGUI();
+        }
+    }
+
+    public void registerGUIElement(PicGUI element)
+    {
+        guiHandler.add(element);
+    }
 }
