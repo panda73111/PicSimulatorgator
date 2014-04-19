@@ -1,6 +1,6 @@
 package pic.simulator.pins;
 
-public class Pin
+public abstract class Pin
 {
     public static final int OSC1 = 0;
     public static final int OSC2 = 1;
@@ -18,48 +18,47 @@ public class Pin
     public static final int RB5  = 13;
     public static final int RB6  = 14;
     public static final int RB7  = 15;
+    
+    public static final int LOW  = 0;
+    public static final int HIGH = 1;
+    public static final int HI_Z = 2;
 
-    private final String    name;
-    private boolean         pinIsHighExternally;
-    private boolean         pinIsHighInternally;
+    protected final String  name;
+    protected final int     id;
+    protected int           externalState;
+    protected int           internalState;
 
-    public Pin(String name)
+    public Pin(String name, int id)
     {
         this.name = name;
+        this.id = id;
     }
 
-    public boolean isSetInternally()
+    public int getInternalState()
     {
-        return pinIsHighInternally;
+        return internalState;
     }
 
-    public boolean isSetExternally()
+    public int getExternalState()
     {
-        return pinIsHighExternally;
+        return externalState;
     }
 
-    public void setInternally()
-    {
-        pinIsHighInternally = true;
-    }
+    public abstract void setInternally();
 
-    public void setExternally()
-    {
-        pinIsHighExternally = true;
-    }
+    public abstract void setExternally();
 
-    public void unsetInternally()
-    {
-        pinIsHighInternally = false;
-    }
+    public abstract void clearInternally();
 
-    public void unsetExternally()
-    {
-        pinIsHighExternally = false;
-    }
+    public abstract void clearExternally();
 
     public String getName()
     {
         return name;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 }
