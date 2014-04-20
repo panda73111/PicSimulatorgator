@@ -1,33 +1,77 @@
 package pic.simulator.specialfunctionregisters;
 
+import java.util.HashMap;
+
+import pic.simulator.PinHandler;
 import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
+import pic.simulator.pins.IOPin;
+import pic.simulator.pins.Pin;
 
 public class Porta extends SpecialFunctionRegister
 {
-    private final Processor processor;
-    private byte value;
+    private final HashMap<Integer, IOPin> pins;
+    private byte                          value;
 
-	public Porta(Processor processor)
-	{
-		this.processor = processor;
-		reset();
-	}
-	
-	@Override
-	public void setValue(byte value) {
-		this.value = value;
-	}
+    public Porta(Processor processor)
+    {
+        this.pins = new HashMap<Integer, IOPin>();
 
-	@Override
-	public byte getValue() {
-		return value;
-	}
+        PinHandler pinHandler = processor.getPinHandler();
 
-	@Override
-	public void reset() {
-		value = 0;
-	}
+        pins.put(Pin.RA0, (IOPin) pinHandler.getPin(Pin.RA0));
+        pins.put(Pin.RA1, (IOPin) pinHandler.getPin(Pin.RA1));
+        pins.put(Pin.RA2, (IOPin) pinHandler.getPin(Pin.RA2));
+        pins.put(Pin.RA3, (IOPin) pinHandler.getPin(Pin.RA3));
+        pins.put(Pin.RA4, (IOPin) pinHandler.getPin(Pin.RA4));
+        reset();
+    }
+
+    @Override
+    public void setValue(byte value)
+    {
+        this.value = (byte) (value & 0x1f);
+
+        if ((value & 0b00001) > 0)
+            pins.get(Pin.RA0).setInternally();
+        else
+            pins.get(Pin.RA0).clearInternally();
+
+        if ((value & 0b00010) > 0)
+            pins.get(Pin.RA1).setInternally();
+        else
+            pins.get(Pin.RA1).clearInternally();
+
+        if ((value & 0b00100) > 0)
+            pins.get(Pin.RA2).setInternally();
+        else
+            pins.get(Pin.RA2).clearInternally();
+
+        if ((value & 0b01000) > 0)
+            pins.get(Pin.RA3).setInternally();
+        else
+            pins.get(Pin.RA3).clearInternally();
+
+        if ((value & 0b10000) > 0)
+            pins.get(Pin.RA4).setInternally();
+        else
+            pins.get(Pin.RA4).clearInternally();
+    }
+
+    @Override
+    public byte getValue()
+    {
+        return value;
+    }
+
+    @Override
+    public void reset()
+    {
+        value = 0;
+
+        for (IOPin pin : pins.values())
+            pin.clearInternally();
+    }
 
     @Override
     public String getName()

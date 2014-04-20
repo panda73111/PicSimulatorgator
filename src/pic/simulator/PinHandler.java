@@ -7,7 +7,6 @@ import pic.simulator.pins.Pin;
 
 public class PinHandler
 {
-
     private HashMap<Integer, Pin> pins;
 
     public PinHandler()
@@ -18,32 +17,34 @@ public class PinHandler
 
     private void setupPins()
     {
-        pins.put(Pin.OSC1, new Pin("OSC1/CLKIN"));
-        pins.put(Pin.OSC2, new Pin("OSC2/CLKOUTOSC2/CLKOUT"));
-        pins.put(Pin.MCLR, new Pin("MCLR"));
-        pins.put(Pin.RA0, new IOPin("RA0"));
-        pins.put(Pin.RA1, new IOPin("RA1"));
-        pins.put(Pin.RA2, new IOPin("RA2"));
-        pins.put(Pin.RA3, new IOPin("RA3"));
-        pins.put(Pin.RA4, new IOPin("RA4/T0CKI"));
-        pins.put(Pin.RB0, new IOPin("RB0/INT"));
-        pins.put(Pin.RB1, new IOPin("RB1"));
-        pins.put(Pin.RB2, new IOPin("RB2"));
-        pins.put(Pin.RB3, new IOPin("RB3"));
-        pins.put(Pin.RB4, new IOPin("RB4"));
-        pins.put(Pin.RB5, new IOPin("RB5"));
-        pins.put(Pin.RB6, new IOPin("RB6"));
-        pins.put(Pin.RB7, new IOPin("RB7"));
+        pins.put(Pin.RA0, new IOPin("RA0", Pin.RA0));
+        pins.put(Pin.RA1, new IOPin("RA1", Pin.RA1));
+        pins.put(Pin.RA2, new IOPin("RA2", Pin.RA2));
+        pins.put(Pin.RA3, new IOPin("RA3", Pin.RA3));
+        pins.put(Pin.RA4, new IOPin("RA4/T0CKI", Pin.RA4));
+        pins.put(Pin.RB0, new IOPin("RB0/INT", Pin.RB0));
+        pins.put(Pin.RB1, new IOPin("RB1", Pin.RB1));
+        pins.put(Pin.RB2, new IOPin("RB2", Pin.RB2));
+        pins.put(Pin.RB3, new IOPin("RB3", Pin.RB3));
+        pins.put(Pin.RB4, new IOPin("RB4", Pin.RB4));
+        pins.put(Pin.RB5, new IOPin("RB5", Pin.RB5));
+        pins.put(Pin.RB6, new IOPin("RB6", Pin.RB6));
+        pins.put(Pin.RB7, new IOPin("RB7", Pin.RB7));
     }
 
-    public boolean isPinSetInternally(int pin)
+    public Pin getPin(int pin)
     {
-        return pins.get(pin).isSetInternally();
+        return pins.get(pin);
     }
 
-    public boolean isPinSetExternally(int pin)
+    public int getInternalPinState(int pin)
     {
-        return pins.get(pin).isSetExternally();
+        return pins.get(pin).getInternalState();
+    }
+
+    public int getExternalPinState(int pin)
+    {
+        return pins.get(pin).getExternalState();
     }
 
     public void setPinInternally(int pin)
@@ -56,13 +57,13 @@ public class PinHandler
         pins.get(pin).setExternally();
     }
 
-    public void unsetPinInternally(int pin)
+    public void setIOPinToInput(int pin)
     {
-        pins.get(pin).unsetInternally();
+        ((IOPin) pins.get(pin)).setToInput();
     }
 
-    public void unsetPinExternally(int pin)
+    public void setIOPinToOutput(int pin)
     {
-        pins.get(pin).unsetExternally();
+        ((IOPin) pins.get(pin)).setToOutput();
     }
 }
