@@ -154,7 +154,11 @@ public class PicMemorycontrol implements Memorycontrol
 		return specialFunctionRegisters.values();
 	}
 	
-
+	public SpecialFunctionRegister getSFR(int id)
+	{
+	    return specialFunctionRegisters.get(id);
+	}
+	
     private void initSFR()
     {
         SpecialFunctionRegister sfr = new Indf(processor);

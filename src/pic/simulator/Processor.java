@@ -5,6 +5,8 @@ import java.io.IOException;
 import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
+import pic.simulator.pins.Pin;
+import pic.simulator.specialfunctionregisters.Tmr0;
 
 public class Processor
 {
@@ -19,19 +21,29 @@ public class Processor
     public byte                 workRegister       = 0x00;
     private boolean             isInterrupted      = false;
     private boolean             isRunning          = false;
+    
+    private Tmr0                timer0;
+    private int cntPinPrevState;
 
     public Processor(String programFileName) throws IOException
     {
         picProgram = new Program(programFileName);
         pinHandler = new PinHandler();
-        memControl = new PicMemorycontrol(this);
+
+        PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
+
+        memControl = picMemCtrl;
         guiHandler = new GUIHandler();
         interruptionHandler = new InterruptionHandler(this);
+
+        timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
+        cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
     }
 
     public void executeProgram()
     {
         byte progCounter;
+        int cntPinCurState;
 
         isRunning = true;
 
@@ -45,6 +57,14 @@ public class Processor
             Command cmd = fetch(progCounter);
             incrementPCL();
             execute(cmd);
+
+            timer0.onTick();
+            cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
+            if (cntPinCurState != cntPinPrevState)
+            {
+                timer0.onPinChange(cntPinCurState);
+                cntPinPrevState = cntPinCurState;
+            }
 
             System.out.println("---Executed " + cmd.toString() + "---");
 
