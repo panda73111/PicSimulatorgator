@@ -25,78 +25,84 @@ import pic.simulator.specialfunctionregisters.Unimplemented;
 
 public class PicMemorycontrol implements Memorycontrol
 {
-    private byte[]                                    	memory;
-    private HashMap<Integer, SpecialFunctionRegister> 	specialFunctionRegisters;
-	private HashSet<SpecialFunctionRegister>			specialFunctionRegisterSet;
-    private Stack<Integer>                           	stack;
-    private Processor									processor;
-	public static final int sfrLength				= 0x0C;
-	public static final int unimplementedAreaBegin	= 0x50;
-	public static final int bankLength				= 0x80;
-	public static final int gpLength				= 0x43;
-	public static final int memoryLength			= 0xFF;
-	public static final short bankCount				= 2;
-	
-	public PicMemorycontrol(Processor proc)
-	{
-		this.memory 					= new byte[memoryLength];		
-		this.specialFunctionRegisters	= new HashMap<>();
-		this.specialFunctionRegisterSet = new HashSet<>();
-		this.stack						= new Stack<>();
-		this.processor					= proc;
-		initSFR();
-	}
-	
-	public void setAt(int address, byte value)
-	{
-		if(isSFR(address))
-		{
-			specialFunctionRegisters.get(address).setValue(value);
-			return;
-		}
-		
-		memory[address] = value;
-	}
-	public byte getAt(int address)
-	{
-		if(isSFR(address))
-			return specialFunctionRegisters.get(address).getValue();
-		if(isUnimplemented(address))
-			return 0;
-		
-		return memory[address + getActiveBank()*bankLength];
-	}
-	
-	private boolean isSFR(int address)
-	{
-		for(int i = 0; i < memory.length; i += bankLength)
-		{
-			if(i <= address && address < i+sfrLength)
-				return true;
-		}
-		return false;
-	}
-	private boolean isUnimplemented(int address)
-	{
-		for(int i = 0; i < memory.length; i += bankLength)
-		{
-			if(address >= i+unimplementedAreaBegin && address < i+bankLength)
-				return true;
-		}
-		return false;
-	}
+    private byte[]                                    memory;
+    private HashMap<Integer, SpecialFunctionRegister> specialFunctionRegisters;
+    private HashSet<SpecialFunctionRegister>          specialFunctionRegisterSet;
+    private Stack<Integer>                            stack;
+    private Processor                                 processor;
+    private Status                                    statusReg;
+    public static final int                           sfrLength              = 0x0C;
+    public static final int                           unimplementedAreaBegin = 0x50;
+    public static final int                           bankLength             = 0x80;
+    public static final int                           gpLength               = 0x43;
+    public static final int                           memoryLength           = 0xFF;
+    public static final short                         bankCount              = 2;
 
-	protected byte getFromMemoryAt(int address) 
-	{
-		return memory[address];
-	}
-	
-	private int getActiveBank()
-	{
-		byte status = specialFunctionRegisters.get(SpecialFunctionRegister.STATUS0).getValue();
-		return status & 0b00010000 >> 4;
-	}
-	
+    public PicMemorycontrol(Processor proc)
+    {
+        this.memory = new byte[memoryLength];
+        this.specialFunctionRegisters = new HashMap<>();
+        this.specialFunctionRegisterSet = new HashSet<>();
+        this.stack = new Stack<>();
+        this.processor = proc;
+
+        initSFR();
+
+        statusReg = (Status) getSFR(SpecialFunctionRegister.STATUS);
+    }
+
+    public void setAt(int address, byte value)
+    {
+        if (isSFR(address))
+        {
+            specialFunctionRegisters.get(address).setValue(value);
+            return;
+        }
+
+        memory[address] = value;
+    }
+
+    public byte getAt(int address)
+    {
+        if (isSFR(address))
+            return specialFunctionRegisters.get(address).getValue();
+        if (isUnimplemented(address))
+            return 0;
+
+        return memory[address + getActiveBank() * bankLength];
+    }
+
+    private boolean isSFR(int address)
+    {
+        for (int i = 0; i < memory.length; i += bankLength)
+        {
+            if (i <= address && address < i + sfrLength)
+                return true;
+        }
+        return false;
+    }
+
+    private boolean isUnimplemented(int address)
+    {
+        for (int i = 0; i < memory.length; i += bankLength)
+        {
+            if (address >= i + unimplementedAreaBegin && address < i + bankLength)
+                return true;
+        }
+        return false;
+    }
+
+    protected byte getFromMemoryAt(int address)
+    {
+        return memory[address];
+    }
+
+    private int getActiveBank()
+    {
+        byte status = specialFunctionRegisters.get(SpecialFunctionRegister.STATUS0).getValue();
+        return status & 0b00010000 >> 4;
+    }
+
     public PicMemorycontrol(Processor processor, int memorySize, short bankCount)
     {
         this.processor = processor;
@@ -105,20 +111,18 @@ public class PicMemorycontrol implements Memorycontrol
         initSFR();
     }
 
-    
-	
-	public void pushStack(int value)
-	{
-		if(stack.size()>8)
-			throw new StackOverflowError("Stack overflow!");
-		stack.push(value);
-	}
-	public int popStack()
-	{
-		return stack.pop();
-	}
-	
-    
+    public void pushStack(int value)
+    {
+        if (stack.size() > 8)
+            throw new StackOverflowError("Stack overflow!");
+        stack.push(value);
+    }
+
+    public int popStack()
+    {
+        return stack.pop();
+    }
+
     public boolean getBitAt(int address, short bit)
     {
         return (getAt(address) & (1 << bit)) != 0;
@@ -137,28 +141,26 @@ public class PicMemorycontrol implements Memorycontrol
         setAt(address, val);
     }
 
-
     public void setStatusBit(short bit)
     {
-        setBitAt(SpecialFunctionRegister.STATUS, bit);
+        statusReg.setBit(bit);
     }
 
     public void clearStatusBit(short bit)
     {
-        clearBitAt(SpecialFunctionRegister.STATUS, bit);
+        statusReg.clearBit(bit);
     }
-	
-	
-	public Collection<SpecialFunctionRegister> getSpecialFunctionRegisters()
-	{
-		return specialFunctionRegisters.values();
-	}
-	
-	public SpecialFunctionRegister getSFR(int id)
-	{
-	    return specialFunctionRegisters.get(id);
-	}
-	
+
+    public Collection<SpecialFunctionRegister> getSpecialFunctionRegisters()
+    {
+        return specialFunctionRegisters.values();
+    }
+
+    public SpecialFunctionRegister getSFR(int id)
+    {
+        return specialFunctionRegisters.get(id);
+    }
+
     private void initSFR()
     {
         SpecialFunctionRegister sfr = new Indf(processor);
@@ -166,16 +168,16 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.INDF1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Tmr0(processor);
+        sfr = new Tmr0(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.TMR0, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Pcl(processor);
+        sfr = new Pcl();
         specialFunctionRegisters.put(SpecialFunctionRegister.PCL0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.PCL1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Status(processor);
+        sfr = new Status();
         specialFunctionRegisters.put(SpecialFunctionRegister.STATUS0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.STATUS1, sfr);
         specialFunctionRegisterSet.add(sfr);
@@ -206,7 +208,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.EEADR, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Pclath(processor);
+        sfr = new Pclath(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.PCLATH0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.PCLATH1, sfr);
         specialFunctionRegisterSet.add(sfr);
@@ -216,7 +218,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.INTCON1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Optionreg(processor);
+        sfr = new Optionreg();
         specialFunctionRegisters.put(SpecialFunctionRegister.OPTION_REG, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -235,13 +237,15 @@ public class PicMemorycontrol implements Memorycontrol
         sfr = new Eecon2(processor);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON2, sfr);
         specialFunctionRegisterSet.add(sfr);
+
+        for (SpecialFunctionRegister sfr_ : specialFunctionRegisterSet)
+        {
+            sfr_.onMemInitFinished();
+        }
     }
 
-
-
-    
     public HashSet<SpecialFunctionRegister> getSFRSet()
     {
-    	return specialFunctionRegisterSet;
+        return specialFunctionRegisterSet;
     }
 }

@@ -1,38 +1,48 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Status extends SpecialFunctionRegister
 {
-    private final Processor processor;
     private byte value;
 
-	public Status(Processor processor)
-	{
-		this.processor = processor;
-		reset();
-	}
-	
-	@Override
-	public void setValue(byte value) {
-		this.value = value;
-	}
+    public Status()
+    {
+        reset();
+    }
 
-	@Override
-	public byte getValue() {
-		return value;
-	}
+    public void setBit(int bit)
+    {
+        value |= 1 << bit;
+    }
 
-	@Override
-	public void reset() {
-		value = 0;
-	}
+    public void clearBit(int bit)
+    {
+        value &= ~(1 << bit);
+    }
+
+    @Override
+    public void setValue(byte value)
+    {
+        // disallow setting bits 3 and 4 by the program 
+        this.value = (byte) (value & 0xE7);
+    }
+
+    @Override
+    public byte getValue()
+    {
+        return value;
+    }
+
+    @Override
+    public void reset()
+    {
+        value = 0;
+    }
 
     @Override
     public String getName()
     {
         return getClass().getSimpleName().toLowerCase();
     }
-
 }

@@ -6,6 +6,8 @@ import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
 import pic.simulator.pins.Pin;
+import pic.simulator.specialfunctionregisters.Pcl;
+import pic.simulator.specialfunctionregisters.Pclath;
 import pic.simulator.specialfunctionregisters.Tmr0;
 
 public class Processor
@@ -21,9 +23,11 @@ public class Processor
     public byte                 workRegister       = 0x00;
     private boolean             isInterrupted      = false;
     private boolean             isRunning          = false;
-    
+
+    private Pcl                 pcl;
+
     private Tmr0                timer0;
-    private int cntPinPrevState;
+    private int                 cntPinPrevState;
 
     public Processor(String programFileName) throws IOException
     {
@@ -35,6 +39,8 @@ public class Processor
         memControl = picMemCtrl;
         guiHandler = new GUIHandler();
         interruptionHandler = new InterruptionHandler(this);
+
+        pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
 
         timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
         cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
@@ -55,7 +61,7 @@ public class Processor
             }
 
             Command cmd = fetch(progCounter);
-            incrementPCL();
+            pcl.increment();
             execute(cmd);
 
             timer0.onTick();
@@ -81,11 +87,6 @@ public class Processor
     private void execute(Command cmd)
     {
         cmd.execute(this);
-    }
-
-    private void incrementPCL()
-    {
-        memControl.setAt(progCounterAddress, (byte) (memControl.getAt(progCounterAddress) + 1));
     }
 
     public void stopProgramExecution()
