@@ -1,55 +1,54 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Memorycontrol;
-import pic.simulator.Processor;
+import pic.simulator.PicMemorycontrol;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.pins.Pin;
 
 public class Tmr0 extends SpecialFunctionRegister
 {
-    private final Memorycontrol memCtrl;
-    private byte                value;
-    private int                 cyclesSinceWrite;
+    private final PicMemorycontrol memCtrl;
+    private Status                 statusReg;
+    private byte                   value;
+    private int                    cyclesSinceWrite;
 
-    public Tmr0(Processor processor)
+    public Tmr0(PicMemorycontrol memCtrl)
     {
-        this.memCtrl = processor.getMemoryControl();
+        this.memCtrl = memCtrl;
         reset();
     }
 
     public void onTick()
     {
-        byte status = memCtrl.getAt(SpecialFunctionRegister.STATUS);
-        if ((status & 0b10000) > 0)
-        {
-            // TMR0 operates as a counter
-            //TODO: counter operation
-        }
-        else
+        byte status = statusReg.getValue();
+        if ((status & 0b10000) == 0)
         {
             // TMR0 operates as a timer
             if (cyclesSinceWrite < 2)
-                // keep the value for 2 cycles after a write occured
+                // keep the value for 2 cycles after a write occurred
                 cyclesSinceWrite++;
             else
                 increment();
         }
     }
-    
+
     public void onPinChange(int newState)
     {
-        byte status = memCtrl.getAt(SpecialFunctionRegister.STATUS);
-        if ((status & 0b1000) > 0)
+        byte status = statusReg.getValue();
+        if ((status & 0b10000) > 0)
         {
-            // react to falling edge
-            if (newState == Pin.LOW)
-                increment();
-        }
-        else
-        {
-            // react to rising edge
-            if (newState == Pin.HIGH)
-                increment();
+            // TMR0 operates as a counter
+            if ((status & 0b1000) > 0)
+            {
+                // react to falling edge
+                if (newState == Pin.LOW)
+                    increment();
+            }
+            else
+            {
+                // react to rising edge
+                if (newState == Pin.HIGH)
+                    increment();
+            }
         }
     }
 
@@ -61,7 +60,7 @@ public class Tmr0 extends SpecialFunctionRegister
         }
         value++;
     }
-    
+
     @Override
     public void setValue(byte value)
     {
@@ -88,4 +87,9 @@ public class Tmr0 extends SpecialFunctionRegister
         return getClass().getSimpleName().toLowerCase();
     }
 
+    @Override
+    public void onMemInitFinished()
+    {
+        this.statusReg = (Status) memCtrl.getSFR(SpecialFunctionRegister.STATUS);
+    }
 }
