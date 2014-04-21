@@ -26,7 +26,7 @@ public class Optionreg extends SpecialFunctionRegister
 
 	@Override
 	public void reset() {
-		value = 0;
+		value = (byte) 0xFF;
 	}
 
     @Override
