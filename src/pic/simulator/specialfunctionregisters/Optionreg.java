@@ -1,16 +1,13 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Optionreg extends SpecialFunctionRegister
 {
-    private final Processor processor;
     private byte value;
 
-	public Optionreg(Processor processor)
+	public Optionreg()
 	{
-		this.processor = processor;
 		reset();
 	}
 	
@@ -34,5 +31,4 @@ public class Optionreg extends SpecialFunctionRegister
     {
         return getClass().getSimpleName().toLowerCase();
     }
-
 }
