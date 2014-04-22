@@ -5,6 +5,10 @@ import java.io.IOException;
 import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
+import pic.simulator.pins.Pin;
+import pic.simulator.specialfunctionregisters.Pcl;
+import pic.simulator.specialfunctionregisters.Pclath;
+import pic.simulator.specialfunctionregisters.Tmr0;
 
 public class Processor
 {
@@ -20,18 +24,32 @@ public class Processor
     private boolean             isInterrupted      = false;
     private boolean             isRunning          = false;
 
+    private Pcl                 pcl;
+
+    private Tmr0                timer0;
+    private int                 cntPinPrevState;
+
     public Processor(String programFileName) throws IOException
     {
         picProgram = new Program(programFileName);
         pinHandler = new PinHandler();
-        memControl = new PicMemorycontrol(this);
+
+        PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
+
+        memControl = picMemCtrl;
         guiHandler = new GUIHandler();
         interruptionHandler = new InterruptionHandler(this);
+
+        pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+
+        timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
+        cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
     }
 
     public void executeProgram()
     {
         byte progCounter;
+        int cntPinCurState;
 
         isRunning = true;
 
@@ -43,8 +61,16 @@ public class Processor
             }
 
             Command cmd = fetch(progCounter);
-            incrementPCL();
+            pcl.increment();
             execute(cmd);
+
+            timer0.onTick();
+            cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
+            if (cntPinCurState != cntPinPrevState)
+            {
+                timer0.onPinChange(cntPinCurState);
+                cntPinPrevState = cntPinCurState;
+            }
 
             System.out.println("---Executed " + cmd.toString() + "---");
 
@@ -61,11 +87,6 @@ public class Processor
     private void execute(Command cmd)
     {
         cmd.execute(this);
-    }
-
-    private void incrementPCL()
-    {
-        memControl.setAt(progCounterAddress, (byte) (memControl.getAt(progCounterAddress) + 1));
     }
 
     public void stopProgramExecution()
