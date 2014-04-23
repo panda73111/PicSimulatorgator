@@ -7,7 +7,6 @@ import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
 import pic.simulator.pins.Pin;
 import pic.simulator.specialfunctionregisters.Pcl;
-import pic.simulator.specialfunctionregisters.Pclath;
 import pic.simulator.specialfunctionregisters.Tmr0;
 
 public class Processor

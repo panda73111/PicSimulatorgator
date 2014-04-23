@@ -49,12 +49,26 @@ public class PinHandler
 
     public void setPinInternally(int pin)
     {
-        pins.get(pin).setInternally();
+    	Pin p = pins.get(pin);
+    	
+    	if(p != null)
+    		p.clearInternally();
     }
 
     public void setPinExternally(int pin)
     {
-        pins.get(pin).setExternally();
+    	Pin p = pins.get(pin);
+    	
+    	if(p != null)
+    		p.setExternally();
+    }
+    
+    public void clearPinExternally(int pin)
+    {
+    	Pin p = pins.get(pin);
+    	
+    	if(p != null)
+    		p.clearExternally();
     }
 
     public void setIOPinToInput(int pin)
