@@ -20,8 +20,9 @@ public class PinHandler
         pins.put(Pin.RA0, new IOPin("RA0", Pin.RA0));
         pins.put(Pin.RA1, new IOPin("RA1", Pin.RA1));
         pins.put(Pin.RA2, new IOPin("RA2", Pin.RA2));
-        pins.put(Pin.RA3, new IOPin("RA3", Pin.RA3));
+        pins.put(Pin.RA3, new IOPin("RA3", Pin.RA3));        
         pins.put(Pin.RA4, new IOPin("RA4/T0CKI", Pin.RA4));
+        
         pins.put(Pin.RB0, new IOPin("RB0/INT", Pin.RB0));
         pins.put(Pin.RB1, new IOPin("RB1", Pin.RB1));
         pins.put(Pin.RB2, new IOPin("RB2", Pin.RB2));
@@ -30,6 +31,10 @@ public class PinHandler
         pins.put(Pin.RB5, new IOPin("RB5", Pin.RB5));
         pins.put(Pin.RB6, new IOPin("RB6", Pin.RB6));
         pins.put(Pin.RB7, new IOPin("RB7", Pin.RB7));
+
+        pins.put(Pin.MCLR, new IOPin("MCLR", Pin.MCLR));
+        pins.put(Pin.CLKIN, new IOPin("CLKIN", Pin.CLKIN));
+        pins.put(Pin.CLKOUT, new IOPin("CLKOUT", Pin.CLKOUT));
     }
 
     public Pin getPin(int pin)
@@ -79,5 +84,10 @@ public class PinHandler
     public void setIOPinToOutput(int pin)
     {
         ((IOPin) pins.get(pin)).setToOutput();
+    }
+    
+    public int getPinCount()
+    {
+    	return pins.size();
     }
 }

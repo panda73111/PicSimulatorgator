@@ -143,6 +143,7 @@ public class MainFrame extends JFrame implements PicGUI {
 		repaintGpTable();
 		repaintSFRTable();
 		repaintProgram();
+		repaintIO();
 		super.repaint();
 	}
 
@@ -164,8 +165,6 @@ public class MainFrame extends JFrame implements PicGUI {
 	private void initProgram() {
 		Program prog = myProcessor.getProgram();
 
-		//programmTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		
 		DefaultTableModel model = (DefaultTableModel) (programmTable.getModel());
 		model.setColumnCount(2);
 		model.setRowCount(prog.length());
@@ -219,7 +218,12 @@ public class MainFrame extends JFrame implements PicGUI {
 		programmTable.clearSelection();
 		programmTable.addRowSelectionInterval(pcl, pcl);
 	}
-
+	private void repaintIO()
+	{
+		ioPanel.repaint(myProcessor);
+	}
+	
+	
 	private String byteToHex(byte byteValue) {
 		String hexString = Integer.toHexString(byteValue & 0xFF) + "H";
 		while (hexString.length() < 3) {

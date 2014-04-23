@@ -5,26 +5,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class IOButton extends JButton
 {
 	int ID;
-	final Icon checkedImage;
-	final Icon uncheckedImage;
+	private Icon checkedImage;
+	private Icon uncheckedImage;
 	boolean isChecked;
-	IOPanel parent;
+	private IOPanel parent;
 	
 	
-	public IOButton(Icon uncheckedImage, Icon checkedImage, int ID, IOPanel panel)
+	public IOButton(String imageName, int ID, IOPanel panel)
 	{
-		super(uncheckedImage);
-		this.checkedImage	= checkedImage;
-		this.uncheckedImage	= uncheckedImage;
+		super();
 		this.ID				= ID;
 		this.parent			= panel;
 		this.isChecked		= false;
+		
+		loadImages(imageName);
 		
 		setMargin(new Insets(0,0,0,0));
 
@@ -33,24 +34,30 @@ public class IOButton extends JButton
 		setBorderPainted(false);
 		
 		addActionListener(new ClickListener());
+		update();
 	}
+	private void loadImages(String imageName)
+	{
+		uncheckedImage 	= new ImageIcon(IOPanel.imagePath + IOPanel.lowPrefix  + imageName + IOPanel.imageExtension);
+		checkedImage 	= new ImageIcon(IOPanel.imagePath + IOPanel.highPrefix + imageName + IOPanel.imageExtension);
+	}
+	
 	
 	class ClickListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent arg0) {
-			if(isChecked)
-				setIcon(uncheckedImage);
-			else
-				setIcon(checkedImage);
-			
 			isChecked= !isChecked;
+			update();
 			parent.announceClick((IOButton)arg0.getSource());
 		}
 	}
 	
-	public boolean isChecked()
+	public void update()
 	{
-		return isChecked;
+		if(isChecked)
+			setIcon(checkedImage);
+		else
+			setIcon(uncheckedImage);
 	}
 
 }

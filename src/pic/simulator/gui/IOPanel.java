@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import pic.simulator.PinHandler;
+import pic.simulator.Processor;
+import pic.simulator.pins.Pin;
 
 @SuppressWarnings("serial")
 public class IOPanel extends JPanel
@@ -21,35 +23,25 @@ public class IOPanel extends JPanel
 	JPanel buttonPanel;
 	IOButton[] ioButtons = new IOButton[16];
 	PinHandler ioHandler;
+
+	static final String imagePath = "PinImages\\";
+	static final String imageExtension = ".png";
+
+	static final String lowPrefix = "L";
+	static final String highPrefix = "H";
 	
-	static final String bgImagePath = "PinImages\\bg.png";
-	static final String[] uncheckedButtonIconPaths = new String[]{
-		"PinImages\\L11.png", "PinImages\\L12.png", 
-		"PinImages\\L21.png", "PinImages\\L22.png",
-		"PinImages\\L31.png", "PinImages\\L32.png",
-		"PinImages\\L41.png", "PinImages\\L42.png",
-		"PinImages\\L51.png", "PinImages\\L52.png",
-		"PinImages\\L61.png", "PinImages\\L62.png",
-		"PinImages\\L71.png", "PinImages\\L72.png",
-		"PinImages\\L81.png", "PinImages\\L82.png"};
-	static final String[] checkedButtonIconPaths = new String[]{
-		"PinImages\\S11.png", "PinImages\\S12.png", 
-		"PinImages\\S21.png", "PinImages\\S22.png",
-		"PinImages\\S31.png", "PinImages\\S32.png",
-		"PinImages\\S41.png", "PinImages\\S42.png",
-		"PinImages\\S51.png", "PinImages\\S52.png",
-		"PinImages\\S61.png", "PinImages\\S62.png",
-		"PinImages\\S71.png", "PinImages\\S72.png",
-		"PinImages\\S81.png", "PinImages\\S82.png"};
+	static final String bgImageName = "bg";
+	static final int 	btCount		= 16;
+	static final int 	rlPinCount	= 18;
 	
-	static ImageIcon[] uncheckedButtonIcons = new ImageIcon[uncheckedButtonIconPaths.length];
-	static ImageIcon[] checkedButtonIcons = new ImageIcon[checkedButtonIconPaths.length];
+	static ImageIcon[] uncheckedButtonIcons = new ImageIcon[btCount];
+	static ImageIcon[] checkedButtonIcons 	= new ImageIcon[btCount];
 	
 	public IOPanel(PinHandler ioHandler)
 	{
 		this.ioHandler = ioHandler;
-		
-		loadImages();
+
+		bgImage = Toolkit.getDefaultToolkit().createImage(imagePath + bgImageName + imageExtension);
 		
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -59,28 +51,43 @@ public class IOPanel extends JPanel
 		buttonPanel = new JPanel(new GridLayout(8, 2, -4, 0));
 		buttonPanel.setOpaque(false);
 		
-		for(int i = 0; i <ioButtons.length; i++)
-		{
-			ioButtons[i] = new IOButton(uncheckedButtonIcons[i], checkedButtonIcons[i], i, this);
-			
-			buttonPanel.add(ioButtons[i]);
-			
-			if(i%2==0)
-				ioButtons[i].setHorizontalAlignment(JButton.RIGHT);
-			else
-				ioButtons[i].setHorizontalAlignment(JButton.LEFT);
-		}		
+		initButtons();
+		for(IOButton i : ioButtons)
+			buttonPanel.add(i);
+		
+		
 		add(buttonPanel);
 	}
 
-    private void loadImages() {
-		bgImage = Toolkit.getDefaultToolkit().createImage(bgImagePath);
+	private void initButtons()
+	{				
+		ioButtons[1] = createButton("RA1", Pin.RA1);
+		ioButtons[3] = createButton("RA0", Pin.RA0);
+		ioButtons[5] = createButton("CLKIN", Pin.CLKIN);
+		ioButtons[7] = createButton("CLKOUT", Pin.CLKOUT);
+		ioButtons[9] = createButton("RB7", Pin.RB7);
+		ioButtons[11] = createButton("RB6", Pin.RB6);
+		ioButtons[13] = createButton("RB5", Pin.RB5);
+		ioButtons[15] = createButton("RB4", Pin.RB4);
 		
-		for(int i=0; i < uncheckedButtonIconPaths.length; i++)
-		{
-			uncheckedButtonIcons[i] = new ImageIcon(uncheckedButtonIconPaths[i]);
-			checkedButtonIcons[i] = new ImageIcon(checkedButtonIconPaths[i]);
-		}
+		ioButtons[0] = createButton("RA2", Pin.RA2);
+		ioButtons[2] = createButton("RA3", Pin.RA3);
+		ioButtons[4] = createButton("RA4", Pin.RA4);
+		ioButtons[6] = createButton("MCLR", Pin.MCLR);
+		ioButtons[8] = createButton("RB0", Pin.RB0);
+		ioButtons[10] = createButton("RB1", Pin.RB1);
+		ioButtons[12] = createButton("RB2", Pin.RB2);
+		ioButtons[14] = createButton("RB3", Pin.RB3);
+	}
+	private IOButton createButton(String fileName, int ID)
+	{
+		IOButton b =  new IOButton(fileName, ID, this);
+		
+		if(ID > rlPinCount/2)
+			b.setHorizontalAlignment(JButton.LEFT);
+		else
+			b.setHorizontalAlignment(JButton.RIGHT);
+		return b;
 	}
 
 	@Override
@@ -99,5 +106,14 @@ public class IOPanel extends JPanel
     		ioHandler.setPinExternally(ioButton.ID);
     	else
     		ioHandler.clearPinExternally(ioButton.ID);
+    }
+    public void repaint(Processor proc)
+    {
+    	PinHandler p = proc.getPinHandler();
+    	for(int i=0; i<p.getPinCount(); i++)
+    	{
+    		int state = p.getPin(ioButtons[i].ID).getExternalState();
+    		ioButtons[i].isChecked = ( state != Pin.LOW);
+    	}
     }
 }
