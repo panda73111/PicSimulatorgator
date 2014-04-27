@@ -11,6 +11,12 @@ import pic.simulator.specialfunctionregisters.Tmr0;
 
 public class Processor
 {
+    // reset causes
+    public static final int     POWER_ON           = 0;
+    public static final int     MCLR               = 1;
+    public static final int     MCLR_IN_SLEEP      = 2;
+    public static final int     WDT                = 3;
+    public static final int     WDT_IN_SLEEP       = 4;
 
     private Program             picProgram;
     private Memorycontrol       memControl;
@@ -30,19 +36,9 @@ public class Processor
 
     public Processor(String programFileName) throws IOException
     {
+        Reset(POWER_ON);
+
         picProgram = new Program(programFileName);
-        pinHandler = new PinHandler();
-
-        PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
-
-        memControl = picMemCtrl;
-        guiHandler = new GUIHandler();
-        interruptionHandler = new InterruptionHandler(this);
-
-        pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
-
-        timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
-        cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
     }
 
     public void executeProgram()
@@ -91,6 +87,37 @@ public class Processor
     public void stopProgramExecution()
     {
         isRunning = false;
+    }
+
+    public void Reset(int cause)
+    {
+        switch (cause)
+        {
+            case POWER_ON:
+                // initialize everything
+                pinHandler = new PinHandler();
+                
+                PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
+                memControl = picMemCtrl;
+                
+                guiHandler = new GUIHandler();
+                
+                interruptionHandler = new InterruptionHandler(this);
+                
+                pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+                timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
+                
+                cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
+                break;
+            case MCLR:
+                break;
+            case MCLR_IN_SLEEP:
+                break;
+            case WDT:
+                break;
+            case WDT_IN_SLEEP:
+                break;
+        }
     }
 
     public Memorycontrol getMemoryControl()
