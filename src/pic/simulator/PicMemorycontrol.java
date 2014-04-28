@@ -31,16 +31,23 @@ public class PicMemorycontrol implements Memorycontrol
     private Stack<Integer>                            stack;
     private Processor                                 processor;
     private Status                                    statusReg;
-    public static final int                           sfrLength              = 0x0C;
-    public static final int                           unimplementedAreaBegin = 0x50;
-    public static final int                           bankLength             = 0x80;
+    
+    public static final int                           sfrBegin               = 0x00;
+    public static final int                           sfrLength              = 0x0B;
+    
+    public static final int							  gpBegin				 = 0x0C;
     public static final int                           gpLength               = 0x43;
-    public static final int                           memoryLength           = 0xFF;
+
+    public static final int                           unimplementedAreaBegin = 0x50;
+    public static final int                           unimplementedAreaLength= 0x2F;
+    
+    public static final int                           bankLength             = 0x80;
+    public static final int                           totalMemory            = 0xFF;
     public static final short                         bankCount              = 2;
 
     public PicMemorycontrol(Processor proc)
     {
-        this.memory = new byte[memoryLength];
+        this.memory = new byte[gpLength];
         this.specialFunctionRegisters = new HashMap<>();
         this.specialFunctionRegisterSet = new HashSet<>();
         this.stack = new Stack<>();
@@ -59,7 +66,7 @@ public class PicMemorycontrol implements Memorycontrol
             return;
         }
 
-        memory[address] = value;
+        memory[address-gpBegin] = value;
     }
 
     public byte getAt(int address)
@@ -69,7 +76,7 @@ public class PicMemorycontrol implements Memorycontrol
         if (isUnimplemented(address))
             return 0;
 
-        return memory[address + getActiveBank() * bankLength];
+        return memory[address-gpBegin];
     }
 
     private boolean isSFR(int address)
@@ -238,9 +245,9 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON2, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        for (SpecialFunctionRegister sfr_ : specialFunctionRegisterSet)
+        for (SpecialFunctionRegister currentSfr : specialFunctionRegisterSet)
         {
-            sfr_.onMemInitFinished();
+            currentSfr.onMemInitFinished();
         }
     }
 

@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import pic.simulator.PicPinHandler;
 import pic.simulator.PinHandler;
 import pic.simulator.Processor;
 import pic.simulator.pins.Pin;
@@ -48,7 +49,7 @@ public class IOPanel extends JPanel
 		
 		add(Box.createRigidArea(new Dimension(getWidth(), 10)));
 		
-		buttonPanel = new JPanel(new GridLayout(8, 2, -4, 0));
+		buttonPanel = new JPanel(new GridLayout(8, 2, -4, -5));
 		buttonPanel.setOpaque(false);
 		
 		initButtons();
@@ -114,6 +115,7 @@ public class IOPanel extends JPanel
     	{
     		int state = p.getPin(ioButtons[i].ID).getExternalState();
     		ioButtons[i].isChecked = ( state != Pin.LOW);
+    		ioButtons[i].update();
     	}
     }
 }

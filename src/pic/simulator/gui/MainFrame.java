@@ -121,6 +121,8 @@ public class MainFrame extends JFrame implements PicGUI {
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				myProcessor.stopProgramExecution();
+				myProcessor.Reset(Processor.POWER_ON);
+				repaintGUI();
 			}
 		});
 		btnStop.addActionListener(new ActionListener() {
@@ -183,8 +185,7 @@ public class MainFrame extends JFrame implements PicGUI {
 
 	private void repaintGpTable() {
 		for (int i = 0; i < PicMemorycontrol.gpLength; i++) {
-			byte byteValue = myProcessor.getMemoryControl().getAt(
-					PicMemorycontrol.sfrLength + i);
+			byte byteValue = myProcessor.getMemoryControl().getAt(PicMemorycontrol.gpBegin + i);
 			gpTable.setValueAt(byteToHex(byteValue), i / gpTableColCount, i
 					% gpTableColCount);
 		}

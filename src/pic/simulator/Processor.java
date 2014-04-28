@@ -21,7 +21,7 @@ public class Processor
     private Program             picProgram;
     private Memorycontrol       memControl;
     private GUIHandler          guiHandler;
-    private PinHandler          pinHandler;
+    private PinHandler       	pinHandler;
     private InterruptionHandler interruptionHandler;
 
     public  byte                workRegister       = 0x00;
@@ -100,7 +100,7 @@ public class Processor
         {
             case POWER_ON:
                 // initialize everything
-                pinHandler = new PinHandler();
+                pinHandler = new PicPinHandler(this);
                 
                 workRegister = 0;
                 
