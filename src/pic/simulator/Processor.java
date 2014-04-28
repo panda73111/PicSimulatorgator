@@ -24,8 +24,7 @@ public class Processor
     private PinHandler          pinHandler;
     private InterruptionHandler interruptionHandler;
 
-    private int                 progCounterAddress = SpecialFunctionRegister.PCL;
-    public byte                 workRegister       = 0x00;
+    public  byte                workRegister       = 0x00;
     private boolean             isInterrupted      = false;
     private boolean             isRunning          = false;
 
@@ -43,19 +42,18 @@ public class Processor
 
     public void executeProgram()
     {
-        byte progCounter;
         int cntPinCurState;
 
         isRunning = true;
 
-        while (isRunning && (progCounter = memControl.getAt(progCounterAddress)) < picProgram.length())
+        while (isRunning && pcl.get13BitValue() < picProgram.length())
         {
             if (isInterrupted)
             {
                 Interruption interruption = interruptionHandler.getInterruption();
             }
 
-            Command cmd = fetch(progCounter);
+            Command cmd = fetch(pcl.get13BitValue());
             pcl.increment();
             execute(cmd);
 
@@ -96,6 +94,8 @@ public class Processor
             case POWER_ON:
                 // initialize everything
                 pinHandler = new PinHandler();
+                
+                workRegister = 0;
                 
                 PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
                 memControl = picMemCtrl;
