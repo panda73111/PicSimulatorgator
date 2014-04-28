@@ -1,39 +1,40 @@
 package pic.simulator.pins;
 
+import pic.simulator.Processor;
+
 public class MclrPin extends Pin
 {
-
-    public MclrPin(String name, int id)
+    private final Processor processor;
+    
+    public MclrPin(String name, int id, Processor processor)
     {
         super(name, id);
+        
+        this.processor = processor;
+        this.externalState = Pin.HIGH;
     }
 
     @Override
     public void setInternally()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void setExternally()
     {
-        // TODO Auto-generated method stub
-
+        externalState = Pin.HIGH;
     }
 
     @Override
     public void clearInternally()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void clearExternally()
     {
-        // TODO Auto-generated method stub
-
+        externalState = Pin.LOW;
+        processor.Reset(processor.IsSleeping() ? Processor.MCLR_IN_SLEEP : Processor.MCLR);
     }
 
 }

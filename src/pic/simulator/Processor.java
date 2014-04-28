@@ -28,6 +28,7 @@ public class Processor
     public byte                 workRegister       = 0x00;
     private boolean             isInterrupted      = false;
     private boolean             isRunning          = false;
+    private boolean             isSleeping         = false;
 
     private Pcl                 pcl;
 
@@ -89,6 +90,11 @@ public class Processor
         isRunning = false;
     }
 
+    public boolean IsSleeping()
+    {
+        return isSleeping;
+    }
+    
     public void Reset(int cause)
     {
         switch (cause)
