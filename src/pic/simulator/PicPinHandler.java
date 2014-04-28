@@ -3,6 +3,7 @@ package pic.simulator;
 import java.util.HashMap;
 
 import pic.simulator.pins.IOPin;
+import pic.simulator.pins.MclrPin;
 import pic.simulator.pins.Pin;
 
 public class PicPinHandler implements PinHandler
@@ -32,7 +33,7 @@ public class PicPinHandler implements PinHandler
         pins.put(Pin.RB6, new IOPin("RB6", Pin.RB6));
         pins.put(Pin.RB7, new IOPin("RB7", Pin.RB7));
 
-        pins.put(Pin.MCLR, new IOPin("MCLR", Pin.MCLR));
+        pins.put(Pin.MCLR, new MclrPin("MCLR", Pin.MCLR, proc));
         pins.put(Pin.CLKIN, new IOPin("CLKIN", Pin.CLKIN));
         pins.put(Pin.CLKOUT, new IOPin("CLKOUT", Pin.CLKOUT));
     }
