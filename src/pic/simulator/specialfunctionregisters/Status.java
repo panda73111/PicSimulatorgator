@@ -37,7 +37,7 @@ public class Status extends SpecialFunctionRegister
     @Override
     public void reset()
     {
-        value = 0;
+        value = 0b11000;
     }
 
     @Override

@@ -37,7 +37,8 @@ public class Processor
     public Processor(String programFileName) throws IOException
     {
         Reset(POWER_ON);
-
+        
+        guiHandler = new GUIHandler();
         picProgram = new Program(programFileName);
     }
 
@@ -105,8 +106,6 @@ public class Processor
                 
                 PicMemorycontrol picMemCtrl = new PicMemorycontrol(this);
                 memControl = picMemCtrl;
-                
-                guiHandler = new GUIHandler();
                 
                 interruptionHandler = new InterruptionHandler(this);
                 
