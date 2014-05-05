@@ -34,7 +34,7 @@ public class MclrPin extends Pin
     public void clearExternally()
     {
         externalState = Pin.LOW;
-        processor.Reset(processor.IsSleeping() ? Processor.MCLR_IN_SLEEP : Processor.MCLR);
+        processor.Reset(processor.isSleeping() ? Processor.MCLR_IN_SLEEP : Processor.MCLR);
     }
 
 }

@@ -20,7 +20,7 @@ public class PICSimulator
 	 */
     public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException 
     {
-    	if(args.length != 1)
+    	if(args.length > 1)
     	{
     		System.err.println("---Wrong number of arguments---");
     		System.exit(1);
@@ -28,8 +28,12 @@ public class PICSimulator
     	
     	UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     	
-    	final Processor processor = new Processor(args[0]);
-    	
+    	final Processor processor;
+    	if(args.length==1)
+    		processor = new Processor(args[0]);
+    	else
+    		processor = new Processor();
+    		
     	EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try

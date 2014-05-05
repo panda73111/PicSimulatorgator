@@ -39,16 +39,30 @@ public class Processor
     private Tmr0                timer0;
     private int                 cntPinPrevState;
 
-    public Processor(String programFileName) throws IOException
+    public Processor()
     {
-        Reset(POWER_ON);
+        pinHandler = new PicPinHandler(this);
+        memControl = new PicMemorycontrol(this);
+        
+    	Reset(POWER_ON);
 
         guiHandler = new GUIHandler();
+    }
+    
+    public Processor(String programFileName) throws IOException
+    {
+    	this();
         picProgram = new Program(programFileName);
     }
 
     public void executeProgram()
     {
+    	if(picProgram == null)
+    	{
+    		System.err.println("Kein Porgramm geladen.");
+    		return;	
+    	}
+    	
         int cntPinCurState;
 
         isRunning = true;
@@ -75,6 +89,12 @@ public class Processor
             System.out.println("---Executed " + cmd.toString() + "---");
 
             guiHandler.repaintGUI();
+            try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         isRunning = false;
     }
@@ -89,12 +109,17 @@ public class Processor
         cmd.execute(this);
     }
 
+    public void loadProgram(String filename) throws IOException
+    {
+    	picProgram = new Program(filename);
+    }
+    
     public void stopProgramExecution()
     {
         isRunning = false;
     }
 
-    public boolean IsSleeping()
+    public boolean isSleeping()
     {
         return isSleeping;
     }
@@ -112,12 +137,12 @@ public class Processor
         {
             case POWER_ON:
                 // initialize everything
-                pinHandler = new PicPinHandler(this);
 
                 workRegister = 0;
 
                 memControl = picMemCtrl;
-
+                memControl.clearGP();
+                
                 interruptionHandler = new InterruptionHandler(this);
 
                 pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);

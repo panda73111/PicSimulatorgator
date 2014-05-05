@@ -85,5 +85,11 @@ public interface Memorycontrol {
 	 *            The bit to be cleared
 	 */
 	public void clearStatusBit(short bit);
+	
+	
+	/**
+	 * Clears the complete general purpose registers
+	 */
+	public void clearGP();
 
 }
