@@ -1,7 +1,6 @@
 package pic.simulator.specialfunctionregisters;
 
 import pic.simulator.PicMemorycontrol;
-import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Eecon1 extends SpecialFunctionRegister

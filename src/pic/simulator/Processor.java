@@ -32,6 +32,7 @@ public class Processor
 
     private Tmr0                timer0;
     private int                 cntPinPrevState;
+    private short               configurationWord;
 
     public Processor()
     {
