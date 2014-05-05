@@ -31,30 +31,41 @@ import pic.simulator.parser.Program;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements PicGUI {
 	private static final int gpTableColCount = 8;
-
+	
+	Thread processorThread;
+	private Processor myProcessor;
+	
 	private JPanel mainPanel;
 	private JTable gpTable;
 	private JTable sfrTable;
-	private Processor myProcessor;
 	
-	private JButton btnStart;
-	private JButton btnStop;
+	
 	private JButton btnReset;
-	private JButton btnOpenProgram;
-	
+	private JButton btnOpenProgram;	
 	private JPanel buttonPanel;
+	
+	private JPanel programmPanel;
+	private JPanel debugButtonPanel;
 	private JTable programmTable;
+	private JScrollPane scrollPane;
+
+	private JButton btnStop;
+	private JButton btnStep;
+	private JButton btnStart;
+	
 	private JPanel contentPanel;
+	
 	private JLabel stackLabel;
 	private JPanel stackPanel;
 	private JTable stackTable;
+	
 	private IOPanel ioPanel;
 
-	private JScrollPane scrollPane;
 
 	public MainFrame(Processor proc) {
 		myProcessor = proc;
 
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 
@@ -72,16 +83,13 @@ public class MainFrame extends JFrame implements PicGUI {
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 3, 0, 10));
 
-		btnStart = new JButton("Start");
-		btnStop = new JButton("Stop");
 		btnReset = new JButton("Reset");
 		btnOpenProgram = new JButton("Öffnen");
-		
-		buttonPanel.add(btnStart);
-		buttonPanel.add(btnStop);
-		buttonPanel.add(btnReset);
-		buttonPanel.add(btnOpenProgram);
 
+		buttonPanel.add(btnOpenProgram);
+		buttonPanel.add(btnReset);
+
+		
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		initButtonEvents();
@@ -92,6 +100,8 @@ public class MainFrame extends JFrame implements PicGUI {
 		
 		if (proc != null) // This is done to make the GUI designer work
 			proc.getGuiHandler().registerGUIElement(this);
+		
+		btnReset.getActionListeners()[0].actionPerformed(null);
 	}
 
 	private void configureContentPanel() {
@@ -131,18 +141,35 @@ public class MainFrame extends JFrame implements PicGUI {
 
 		contentPanel.add(upperPanel, BorderLayout.CENTER);
 
+		programmPanel = new JPanel();
+		programmPanel.setLayout(new BorderLayout());
+		
+		debugButtonPanel = new JPanel();
+		debugButtonPanel.setLayout(new GridLayout(3, 1));
+
+		btnStart = new JButton("Start");
+		btnStop = new JButton("Stop");
+		btnStep = new JButton("Schritt");
+
+		debugButtonPanel.add(btnStart);
+		debugButtonPanel.add(btnStop);
+		debugButtonPanel.add(btnStep);
+		
 		programmTable = new JTable(new DefaultTableModel(10, 2));
 		scrollPane = new JScrollPane(programmTable);
-		scrollPane.setPreferredSize(new Dimension(contentPanel.getWidth(), 200));
-		scrollPane.setMaximumSize(new Dimension(contentPanel.getWidth(), 200));
+		programmPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), 200));
+		programmPanel.setMinimumSize(new Dimension(contentPanel.getWidth(), 200));
 
-		contentPanel.add(scrollPane, BorderLayout.SOUTH);
+		programmPanel.add(debugButtonPanel, BorderLayout.EAST);
+		programmPanel.add(scrollPane, BorderLayout.CENTER);
+		contentPanel.add(programmPanel, BorderLayout.SOUTH);
 	}
 
 	private void initButtonEvents(){
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				myProcessor.stopProgramExecution();
+				processorThread = null;
 				myProcessor.Reset(Processor.POWER_ON);
 				repaintGUI();
 			}
@@ -150,15 +177,18 @@ public class MainFrame extends JFrame implements PicGUI {
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				myProcessor.stopProgramExecution();
+				processorThread= null;
 			}
 		});
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Thread() {
-					public void run() {
-						myProcessor.executeProgram();
-					}
-				}.start();
+				processorThread = new Thread(myProcessor);
+				processorThread.start();
+			}
+		});
+		btnStep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				myProcessor.executeNextCommand();
 			}
 		});
 		final MainFrame frame = this;
@@ -183,7 +213,7 @@ public class MainFrame extends JFrame implements PicGUI {
 				}
 			}
 		});
-	}
+}
 
 	public void repaintGUI() {
 		repaintGpTable();
@@ -207,24 +237,25 @@ public class MainFrame extends JFrame implements PicGUI {
 		sfrTable.setEnabled(false);
 	}
 
-	private void initProgram() {
+	private void initProgram()
+	{
+		DefaultTableModel model = (DefaultTableModel) (programmTable.getModel());
+		model.setColumnCount(2);
+		model.setColumnIdentifiers(new String[] { "Linenumber", "Command" });
+		programmTable.getColumnModel().getColumn(0).setWidth(50);
+
+		programmTable.setEnabled(false);
+		
 		Program prog = myProcessor.getProgram();
 		if(prog == null)
 			return;
-		
-		DefaultTableModel model = (DefaultTableModel) (programmTable.getModel());
-		model.setColumnCount(2);
+
 		model.setRowCount(prog.length());
-		model.setColumnIdentifiers(new String[] { "Linenumber", "Command" });
 
 		for (int i = 0; i < prog.length(); i++) {
 			programmTable.setValueAt(i, i, 0);
 			programmTable.setValueAt(prog.getCommand(i).toString(), i, 1);
 		}
-
-		programmTable.getColumnModel().getColumn(0).setPreferredWidth(2);
-		programmTable.setEnabled(false);
-
 	}
 	private void initStack()
 	{
@@ -296,7 +327,7 @@ public class MainFrame extends JFrame implements PicGUI {
 		
 		ColorCellRenderer.colorIndex = s.size();
 		
-		for(int i=0; i < s.size(); i++)
+		for(int i=0; i < s.size() && i < PicMemorycontrol.maxStackSize; i++)
 		{
 			stackTable.setValueAt(new Integer(s.get(i)).toString(), i, 0);
 		}
