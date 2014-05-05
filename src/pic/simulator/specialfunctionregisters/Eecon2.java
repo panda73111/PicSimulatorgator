@@ -1,26 +1,41 @@
 package pic.simulator.specialfunctionregisters;
 
+import pic.simulator.PicMemorycontrol;
 import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Eecon2 extends SpecialFunctionRegister
 {
-    private final Processor processor;
-    private byte            value;
-    private boolean         writeAllowed;
+    private final PicMemorycontrol memCtrl;
+    private Eecon1                 eecon1;
+    private byte                   value;
+    private boolean                writeAllowed;
 
-    public Eecon2(Processor processor)
+    public Eecon2(PicMemorycontrol memCtrl)
     {
-        this.processor = processor;
+        this.memCtrl = memCtrl;
         reset();
+    }
+
+    public boolean isWriteAllowed()
+    {
+        return writeAllowed;
     }
 
     @Override
     public void setValue(byte value)
     {
+        // write sequence has to be 0x55, 0xAA
         writeAllowed = false;
-        if (this.value == 0x55 && value == 0xAA)
-            writeAllowed = true;
+        if (this.value == 0x55)
+        {
+            if (value == 0xAA)
+                writeAllowed = true;
+            else
+                eecon1.onWriteError();
+        }
+        else if (value != 0x55)
+            eecon1.onWriteError();
         this.value = value;
     }
 
@@ -43,4 +58,10 @@ public class Eecon2 extends SpecialFunctionRegister
         return getClass().getSimpleName().toLowerCase();
     }
 
+    @Override
+    public void onMemInitFinished()
+    {
+        eecon1 = (Eecon1) memCtrl.getSFR(SpecialFunctionRegister.EECON1);
+        super.onMemInitFinished();
+    }
 }
