@@ -64,6 +64,7 @@ public class PicMemorycontrol implements Memorycontrol {
 
 	public static final int bankLength = 0x80;
 	public static final int totalMemory = 0xFF;
+	public static final int maxStackSize = 8;
 	public static final short bankCount = 2;
 
 	public PicMemorycontrol(Processor proc) {
@@ -152,7 +153,7 @@ public class PicMemorycontrol implements Memorycontrol {
 	
 
 	public void pushStack(int value) {
-		if (stack.size() > 8)
+		if (stack.size() > maxStackSize)
 			throw new StackOverflowError("Stack overflow!");
 		stack.push(value);
 	}
@@ -278,5 +279,15 @@ public class PicMemorycontrol implements Memorycontrol {
 	 */
 	public HashSet<SpecialFunctionRegister> getSFRSet() {
 		return specialFunctionRegisterSet;
+	}
+	
+	public Stack<Integer> getStack()
+	{
+		return stack;
+	}
+	
+	public void clearGP()
+	{
+		memory = new byte[gpLength];
 	}
 }
