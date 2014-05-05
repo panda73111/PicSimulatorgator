@@ -68,6 +68,8 @@ public class PicMemorycontrol implements Memorycontrol
     public static final int                           maxStackSize            = 8;
     public static final short                         bankCount               = 2;
 
+    private final byte[]                              eepromData              = new byte[64];
+
     public PicMemorycontrol(Processor proc)
     {
         this.memory = new byte[gpLength];
@@ -250,11 +252,11 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.NONE1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eedata(processor);
+        sfr = new Eedata();
         specialFunctionRegisters.put(SpecialFunctionRegister.EEDATA, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eeadr(processor);
+        sfr = new Eeadr();
         specialFunctionRegisters.put(SpecialFunctionRegister.EEADR, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -280,11 +282,11 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.TRISB, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eecon1(processor);
+        sfr = new Eecon1(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eecon2(processor);
+        sfr = new Eecon2(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON2, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -312,5 +314,29 @@ public class PicMemorycontrol implements Memorycontrol
     public void clearGP()
     {
         memory = new byte[gpLength];
+    }
+
+    public void reset()
+    {
+        for (SpecialFunctionRegister sfr : specialFunctionRegisterSet)
+        {
+            sfr.reset();
+        }
+    }
+
+    public byte getEepromByte(int index)
+    {
+        if (index < 0 || index > eepromData.length)
+            throw new IllegalArgumentException();
+
+        return eepromData[index];
+    }
+
+    public void setEepromByte(int index, byte value)
+    {
+        if (index < 0 || index > eepromData.length)
+            throw new IllegalArgumentException();
+
+        eepromData[index] = value;
     }
 }
