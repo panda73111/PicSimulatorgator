@@ -6,13 +6,7 @@ import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
 import pic.simulator.pins.Pin;
-import pic.simulator.specialfunctionregisters.Intcon;
-import pic.simulator.specialfunctionregisters.Optionreg;
-import pic.simulator.specialfunctionregisters.Pcl;
-import pic.simulator.specialfunctionregisters.Status;
-import pic.simulator.specialfunctionregisters.Tmr0;
-import pic.simulator.specialfunctionregisters.Trisa;
-import pic.simulator.specialfunctionregisters.Trisb;
+import pic.simulator.specialfunctionregisters.*;
 
 public class Processor
 {
@@ -140,6 +134,7 @@ public class Processor
 
                 workRegister = 0;
 
+                picMemCtrl.reset();
                 memControl = picMemCtrl;
                 memControl.clearGP();
                 

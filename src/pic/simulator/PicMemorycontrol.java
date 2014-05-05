@@ -297,4 +297,12 @@ public class PicMemorycontrol implements Memorycontrol
     {
         memory = new byte[gpLength];
     }
+    
+    public void reset()
+    {
+        for (SpecialFunctionRegister sfr : specialFunctionRegisterSet)
+        {
+            sfr.reset();
+        }
+    }
 }
