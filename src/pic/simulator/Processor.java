@@ -14,7 +14,7 @@ import pic.simulator.specialfunctionregisters.Tmr0;
 import pic.simulator.specialfunctionregisters.Trisa;
 import pic.simulator.specialfunctionregisters.Trisb;
 
-public class Processor
+public class Processor implements Runnable
 {
     // reset causes
     public static final int     POWER_ON      = 0;
@@ -29,6 +29,7 @@ public class Processor
     private PinHandler          pinHandler;
     private InterruptionHandler interruptionHandler;
 
+    public long					cmdDelay	  = 10;
     public byte                 workRegister  = 0x00;
     private boolean             isInterrupted = false;
     private boolean             isRunning     = false;
@@ -63,7 +64,6 @@ public class Processor
     		return;	
     	}
     	
-        int cntPinCurState;
 
         isRunning = true;
 
@@ -78,27 +78,43 @@ public class Processor
             pcl.increment();
             execute(cmd);
 
-            timer0.onTick();
-            cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
-            if (cntPinCurState != cntPinPrevState)
-            {
-                timer0.onPinChange(cntPinCurState);
-                cntPinPrevState = cntPinCurState;
-            }
+            timerTick();
 
             System.out.println("---Executed " + cmd.toString() + "---");
 
             guiHandler.repaintGUI();
             try {
-				Thread.sleep(10);
+				Thread.sleep(cmdDelay);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
         isRunning = false;
     }
 
+	private void timerTick() {
+		int cntPinCurState;
+		timer0.onTick();
+		cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
+		if (cntPinCurState != cntPinPrevState)
+		{
+		    timer0.onPinChange(cntPinCurState);
+		    cntPinPrevState = cntPinCurState;
+		}
+	}
+	public void executeNextCommand()
+	{
+		if(pcl.get13BitValue() < picProgram.length())
+		{
+			Command cmd = fetch(pcl.get13BitValue());
+            pcl.increment();
+            execute(cmd);
+            timerTick();
+            guiHandler.repaintGUI();
+		}
+	}
+
+    
     private Command fetch(int cmdIndex)
     {
         return picProgram.getCommand(cmdIndex);
@@ -122,6 +138,10 @@ public class Processor
     public boolean isSleeping()
     {
         return isSleeping;
+    }
+    public boolean isRunning()
+    {
+    	return isRunning;
     }
 
     public void Reset(int cause)
@@ -201,4 +221,9 @@ public class Processor
     {
         return picProgram;
     }
+
+	@Override
+	public void run() {
+		executeProgram();
+	}
 }

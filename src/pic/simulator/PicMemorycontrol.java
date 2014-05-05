@@ -1,14 +1,30 @@
 package pic.simulator;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
-import pic.simulator.specialfunctionregisters.*;
+import pic.simulator.specialfunctionregisters.Eeadr;
+import pic.simulator.specialfunctionregisters.Eecon1;
+import pic.simulator.specialfunctionregisters.Eecon2;
+import pic.simulator.specialfunctionregisters.Eedata;
+import pic.simulator.specialfunctionregisters.Fsr;
+import pic.simulator.specialfunctionregisters.Indf;
+import pic.simulator.specialfunctionregisters.Intcon;
+import pic.simulator.specialfunctionregisters.Optionreg;
+import pic.simulator.specialfunctionregisters.Pcl;
+import pic.simulator.specialfunctionregisters.Pclath;
+import pic.simulator.specialfunctionregisters.Porta;
+import pic.simulator.specialfunctionregisters.Portb;
+import pic.simulator.specialfunctionregisters.Status;
+import pic.simulator.specialfunctionregisters.Tmr0;
+import pic.simulator.specialfunctionregisters.Trisa;
+import pic.simulator.specialfunctionregisters.Trisb;
+import pic.simulator.specialfunctionregisters.Unimplemented;
 
 /**
- * @author Lorenzo Toso An implementation of the Memorycontrol-interface that
+ * @author Lorenzo Toso 
+ * 		An implementation of the Memorycontrol-interface that
  *         describes the memory-unit of the PIC16f84.
  */
 public class PicMemorycontrol implements Memorycontrol
