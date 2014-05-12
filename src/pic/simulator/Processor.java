@@ -33,6 +33,7 @@ public class Processor implements Runnable
 
     private Tmr0                timer0;
     private int                 cntPinPrevState;
+    private short               configurationWord;
 
     public Processor()
     {

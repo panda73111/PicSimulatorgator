@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -310,6 +311,10 @@ public class MainFrame extends JFrame implements PicGUI {
 				SpecialFunctionRegister.PCL);
 		programmTable.clearSelection();
 		programmTable.addRowSelectionInterval(pcl, pcl);
+		
+		Rectangle rect = 
+		        programmTable.getCellRect(pcl, 0, true);
+		programmTable.scrollRectToVisible(rect);
 	}
 
 	private void repaintIO() {

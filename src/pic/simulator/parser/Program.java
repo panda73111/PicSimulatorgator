@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class Program
 {
-
 	private ArrayList<Command> program;
 
 	public Program() {
