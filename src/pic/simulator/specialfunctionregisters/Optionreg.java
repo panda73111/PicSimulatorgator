@@ -4,6 +4,8 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Optionreg extends SpecialFunctionRegister
 {
+	public static final short INTEDG = 6;
+	
     private byte value;
 
 	public Optionreg()

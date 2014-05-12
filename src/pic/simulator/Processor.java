@@ -33,12 +33,13 @@ public class Processor implements Runnable
 
     private Tmr0                timer0;
     private int                 cntPinPrevState;
-    private short               configurationWord;
-
+    
+    
     public Processor()
     {
         pinHandler = new PicPinHandler(this);
         memControl = new PicMemorycontrol(this);
+        interruptionHandler = new InterruptionHandler(this);
         
     	Reset(POWER_ON);
 
@@ -67,6 +68,8 @@ public class Processor implements Runnable
             if (isInterrupted)
             {
                 Interruption interruption = interruptionHandler.getInterruption();
+                interruption.executeInterruption();
+                continue;
             }
 
             Command cmd = fetch(pcl.get13BitValue());
@@ -216,6 +219,11 @@ public class Processor implements Runnable
     public Program getProgram()
     {
         return picProgram;
+    }
+    
+    public InterruptionHandler getInterruptionHandler()
+    {
+        return interruptionHandler;
     }
 
 	@Override

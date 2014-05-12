@@ -25,7 +25,7 @@ public class Status extends SpecialFunctionRegister
     public void setValue(byte value)
     {
         // disallow setting bits 3 and 4 by the program 
-        this.value = (byte) (value & 0xE7);
+        this.value = (byte) ((this.value & 0x18 ) | (value & 0xE7));
     }
 
     @Override

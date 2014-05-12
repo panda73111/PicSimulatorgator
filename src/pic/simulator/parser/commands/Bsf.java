@@ -34,7 +34,7 @@ public class Bsf extends Command
 	public void execute(Processor proc) {
 		byte val = proc.getMemoryControl().getAt(arg0);
 		val |= (1<<arg1);
-		proc.getMemoryControl().setAt(arg1, val);
+		proc.getMemoryControl().setAt(arg0, val);
 
 	}
 

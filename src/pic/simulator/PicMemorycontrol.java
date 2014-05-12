@@ -111,12 +111,9 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private boolean isSFR(int address)
     {
-        for (int i = 0; i < memory.length; i += bankLength)
-        {
-            if (i <= address && address < i + sfrLength)
-                return true;
-        }
-        return false;
+    	while(address > bankLength)
+    		address -= bankLength;
+    	return address <= (sfrBegin + sfrLength);
     }
 
     /**
@@ -220,7 +217,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.INDF1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Tmr0(this);
+        sfr = new Tmr0(this, processor.getInterruptionHandler());
         specialFunctionRegisters.put(SpecialFunctionRegister.TMR0, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -282,7 +279,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.TRISB, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eecon1(this);
+        sfr = new Eecon1(processor, this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON1, sfr);
         specialFunctionRegisterSet.add(sfr);
 

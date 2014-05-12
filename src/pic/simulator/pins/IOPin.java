@@ -2,7 +2,7 @@ package pic.simulator.pins;
 
 public class IOPin extends Pin
 {
-    private boolean isInput;
+    protected boolean isInput;
 
     public IOPin(String name, int id)
     {

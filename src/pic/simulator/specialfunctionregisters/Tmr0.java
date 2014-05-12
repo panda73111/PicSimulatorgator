@@ -1,26 +1,31 @@
 package pic.simulator.specialfunctionregisters;
 
+import pic.simulator.InterruptionHandler;
 import pic.simulator.PicMemorycontrol;
 import pic.simulator.SpecialFunctionRegister;
+import pic.simulator.interrupts.Interruption;
 import pic.simulator.pins.Pin;
 
 public class Tmr0 extends SpecialFunctionRegister
 {
+	private final InterruptionHandler interruptionHandler;
     private final PicMemorycontrol memCtrl;
     private Status                 statusReg;
     private byte                   value;
     private int                    cyclesSinceWrite;
 
-    public Tmr0(PicMemorycontrol memCtrl)
+    public Tmr0(PicMemorycontrol memCtrl, InterruptionHandler interruptionHandler)
     {
         this.memCtrl = memCtrl;
+        this.interruptionHandler = interruptionHandler;
+        
         reset();
     }
 
     public void onTick()
     {
         byte status = statusReg.getValue();
-        if ((status & 0b10000) == 0)
+        if ((status & 0b00010000) == 0)
         {
             // TMR0 operates as a timer
             if (cyclesSinceWrite < 2)
@@ -56,7 +61,7 @@ public class Tmr0 extends SpecialFunctionRegister
     {
         if (value == 0xFF)
         {
-            //TODO: TMR0 overflow interrupt
+        	interruptionHandler.causeInterruption(Interruption.TIMER0);
         }
         value++;
     }

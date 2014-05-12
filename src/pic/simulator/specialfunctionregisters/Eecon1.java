@@ -1,17 +1,21 @@
 package pic.simulator.specialfunctionregisters;
 
 import pic.simulator.PicMemorycontrol;
+import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
+import pic.simulator.interrupts.Interruption;
 
 public class Eecon1 extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
+    private final Processor		   proc;
     private Eecon2                 eecon2;
     private byte                   value;
 
-    public Eecon1(PicMemorycontrol memCtrl)
+    public Eecon1(Processor proc, PicMemorycontrol memCtrl)
     {
         this.memCtrl = memCtrl;
+        this.proc = proc;
         reset();
     }
 
@@ -47,7 +51,7 @@ public class Eecon1 extends SpecialFunctionRegister
                 // write successful, clear WR bits
                 // TODO: timer to delay the write process
                 this.value &= ~0b10;
-                // TODO: EEPROM write interrupt
+                proc.getInterruptionHandler().causeInterruption(Interruption.EEPROM);
             }
             else
             {

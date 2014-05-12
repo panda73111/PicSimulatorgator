@@ -19,5 +19,11 @@ public class InterruptionHandler
 	{
 		return interruptionQueue.poll();
 	}
+	
+	public void causeInterruption(int interruptionID)
+	{
+		Interruption interrupt = new Interruption(myProcessor, interruptionID);
+		interruptionQueue.add(interrupt);
+	}
 
 }
