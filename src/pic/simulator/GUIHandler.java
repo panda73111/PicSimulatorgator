@@ -18,16 +18,17 @@ public class GUIHandler {
 	public GUIHandler() {
 		guiObjects = new ArrayList<>();
 	}
-
+	
 	
 	/**
-	 * Repaints all registered gui-elements
+	 * Repaints all registered gui-elements after a Command has been executed
 	 */
 	public void repaintGUI() {
 		for (PicGUI guiElement : guiObjects) {
 			guiElement.repaintGUI();
 		}
 	}
+	
 
 	/**
 	 * Registers a gui-element

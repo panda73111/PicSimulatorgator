@@ -3,10 +3,8 @@ package pic.simulator.gui;
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
 public class ColorCellRenderer implements TableCellRenderer {

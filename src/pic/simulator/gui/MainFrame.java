@@ -1,6 +1,7 @@
 package pic.simulator.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
@@ -10,19 +11,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,7 +34,6 @@ import pic.simulator.PicMemorycontrol;
 import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Program;
-import pic.simulator.specialfunctionregisters.Pcl;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements PicGUI
@@ -39,7 +42,6 @@ public class MainFrame extends JFrame implements PicGUI
 
 	Thread processorThread;
 	private Processor myProcessor;
-	private HashMap<Short, Boolean> breakPointMap;
 	
 	private JPanel mainPanel;
 	private JTable gpTable;
@@ -64,14 +66,21 @@ public class MainFrame extends JFrame implements PicGUI
 	private JPanel stackPanel;
 	private JTable stackTable;
 
+	private JPanel runtimePanel;
+	private JLabel runtimeLabel;
+	private JLabel cycleLabel;
+	private JFormattedTextField quarzTextField;
+	private JButton applyButton;
+	
 	private IOPanel ioPanel;
 
+	
 	public MainFrame(Processor proc)
 	{
 		myProcessor = proc;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 600);
+		setBounds(100, 100, 1100, 600);
 
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -100,9 +109,8 @@ public class MainFrame extends JFrame implements PicGUI
 		initSFRTable();
 		initProgram();
 		initStack();
-		
-		breakPointMap = new HashMap<Short, Boolean>();
-
+		initRuntimeCounter();
+			
 		if (proc != null) // This is done to make the GUI designer work
 			proc.getGuiHandler().registerGUIElement(this);
 
@@ -143,6 +151,25 @@ public class MainFrame extends JFrame implements PicGUI
 		stackPanel.setMaximumSize(new Dimension(100, 200));
 		upperPanel.add(stackPanel);
 
+		
+		runtimePanel = new JPanel();
+		runtimePanel.setLayout(new GridLayout(2,3, 5, 5));
+		runtimePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		quarzTextField = new JFormattedTextField(new DecimalFormat("####.########"));;
+		quarzTextField.setHorizontalAlignment(JTextField.RIGHT);
+		applyButton = new JButton("Übernehmen");
+
+		runtimeLabel = new JLabel();
+		cycleLabel = new JLabel();
+
+		runtimePanel.add(runtimeLabel);
+		runtimePanel.add(quarzTextField);
+		runtimePanel.add(new JLabel("MHz"));
+		runtimePanel.add(cycleLabel);
+		runtimePanel.add(applyButton);
+		upperPanel.add(runtimePanel);
+		
 		contentPanel.add(upperPanel, BorderLayout.CENTER);
 
 		programmPanel = new JPanel();
@@ -230,6 +257,14 @@ public class MainFrame extends JFrame implements PicGUI
 				}
 			}
 		});
+		applyButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				repaintRuntimeCounter();
+			}
+		});
 	}
 
 	public void repaintGUI()
@@ -239,8 +274,29 @@ public class MainFrame extends JFrame implements PicGUI
 		repaintProgram();
 		repaintIO();
 		repaintStack();
-		handleBreakPoint();
+		repaintRuntimeCounter();
 		super.repaint();
+	}
+
+	private void initRuntimeCounter()
+	{
+		quarzTextField.setValue(4);
+		repaintRuntimeCounter();
+	}
+	
+	private void repaintRuntimeCounter()
+	{   
+		double quarz = 4;
+		try
+		{
+			quarz = new Double(quarzTextField.getText());
+		}
+		catch(Exception e)
+		{
+		}
+        cycleLabel.setText(" " + myProcessor.getCycleCount() + " Zyklen");        
+        runtimeLabel.setText(" " + (quarz/4)*myProcessor.getCycleCount() + " \u00B5s");
+        
 	}
 
 	private void initGPTable()
@@ -292,12 +348,12 @@ public class MainFrame extends JFrame implements PicGUI
 					if(oldVal.endsWith("B"))
 					{
 						target.setValueAt(oldVal.substring(0, oldVal.length()-1), row, 0);
-						breakPointMap.put((short) row, false);
+						myProcessor.removeBreakPoint(row);
 					}
 					else
 					{
 						target.setValueAt(oldVal + "B", row, 0);
-						breakPointMap.put((short) row, true);
+						myProcessor.addBreakPoint(row);
 					}
 				}
 			}
@@ -401,18 +457,6 @@ public class MainFrame extends JFrame implements PicGUI
 			byteString = "0" + byteString;
 		}
 		return byteString;
-	}
-	
-	private void handleBreakPoint()
-	{
-		PicMemorycontrol picMemCtrl = (PicMemorycontrol) myProcessor.getMemoryControl();
-        Pcl pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
-        
-        short row = pcl.get13BitValue();
-        
-        Boolean bool = breakPointMap.get(row);
-        if(bool != null && breakPointMap.get(row))
-        	myProcessor.stopProgramExecution();
 	}
 
 }

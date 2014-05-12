@@ -1,12 +1,19 @@
 package pic.simulator;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import pic.simulator.interrupts.Interruption;
 import pic.simulator.parser.Command;
 import pic.simulator.parser.Program;
 import pic.simulator.pins.Pin;
-import pic.simulator.specialfunctionregisters.*;
+import pic.simulator.specialfunctionregisters.Intcon;
+import pic.simulator.specialfunctionregisters.Optionreg;
+import pic.simulator.specialfunctionregisters.Pcl;
+import pic.simulator.specialfunctionregisters.Status;
+import pic.simulator.specialfunctionregisters.Tmr0;
+import pic.simulator.specialfunctionregisters.Trisa;
+import pic.simulator.specialfunctionregisters.Trisb;
 
 public class Processor implements Runnable
 {
@@ -23,7 +30,10 @@ public class Processor implements Runnable
     private PinHandler          pinHandler;
     private InterruptionHandler interruptionHandler;
 
-    public long					cmdDelay	  = 10;
+    private HashSet<Integer>	breakPointSet;
+    
+    private long				cycleCount	  = 0;
+    public long					cmdDelay	  = 0;
     public byte                 workRegister  = 0x00;
     private boolean             isInterrupted = false;
     private boolean             isRunning     = false;
@@ -37,6 +47,8 @@ public class Processor implements Runnable
     
     public Processor()
     {
+    	breakPointSet = new HashSet<Integer>();
+    	
         pinHandler = new PicPinHandler(this);
         memControl = new PicMemorycontrol(this);
         interruptionHandler = new InterruptionHandler(this);
@@ -71,8 +83,12 @@ public class Processor implements Runnable
                 interruption.executeInterruption();
                 continue;
             }
-
+            
             Command cmd = fetch(pcl.get13BitValue());
+            
+            if(cmd == null)		//case: Breakpoint
+            	continue;
+            
             pcl.increment();
             execute(cmd);
 
@@ -115,12 +131,18 @@ public class Processor implements Runnable
     
     private Command fetch(int cmdIndex)
     {
+    	if(breakPointSet.contains(cmdIndex))
+    	{
+    		stopProgramExecution();
+    		return null;
+    	}
         return picProgram.getCommand(cmdIndex);
     }
 
     private void execute(Command cmd)
     {
         cmd.execute(this);
+        cycleCount += cmd.getCycleCount();
     }
 
     public void loadProgram(String filename) throws IOException
@@ -156,6 +178,7 @@ public class Processor implements Runnable
             case POWER_ON:
                 // initialize everything
 
+            	cycleCount = 0;
                 workRegister = 0;
 
                 picMemCtrl.reset();
@@ -201,6 +224,11 @@ public class Processor implements Runnable
         }
     }
 
+    public long getCycleCount()
+    {
+    	return cycleCount;
+    }
+    
     public Memorycontrol getMemoryControl()
     {
         return memControl;
@@ -226,6 +254,15 @@ public class Processor implements Runnable
         return interruptionHandler;
     }
 
+    public void addBreakPoint(int address)
+    {
+    	breakPointSet.add(address);
+    }
+    public void removeBreakPoint(int address)
+    {
+    	breakPointSet.remove(address);
+    }
+    
 	@Override
 	public void run() {
 		executeProgram();

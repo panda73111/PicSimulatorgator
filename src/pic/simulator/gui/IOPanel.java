@@ -12,7 +12,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import pic.simulator.PicPinHandler;
 import pic.simulator.PinHandler;
 import pic.simulator.Processor;
 import pic.simulator.pins.Pin;
@@ -114,7 +113,7 @@ public class IOPanel extends JPanel
     	for(int i=0; i<p.getPinCount(); i++)
     	{
     		int state = p.getPin(ioButtons[i].ID).getExternalState();
-    		ioButtons[i].isChecked = ( state != Pin.LOW);
+    		ioButtons[i].isChecked = ( state == Pin.HIGH);
     		ioButtons[i].update();
     	}
     }
