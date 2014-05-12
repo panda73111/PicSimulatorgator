@@ -1,8 +1,9 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.Processor;
-
+import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
+import pic.simulator.specialfunctionregisters.Intcon;
 
 public class Retfie extends Command
 {
@@ -27,8 +28,11 @@ public class Retfie extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		throw new  UnsupportedOperationException("Not yet implemented.");
+	public void execute(Processor proc) 
+	{
+		int val = proc.getMemoryControl().popStack();
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte) val);
+		proc.getMemoryControl().setBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE);
 	}
 
 	@Override

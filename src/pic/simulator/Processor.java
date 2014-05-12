@@ -54,7 +54,7 @@ public class Processor implements Runnable
     {
     	if(picProgram == null)
     	{
-    		System.err.println("Kein Porgramm geladen.");
+    		System.err.println("Kein Programm geladen.");
     		return;	
     	}
     	
