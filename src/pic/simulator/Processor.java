@@ -53,7 +53,7 @@ public class Processor implements Runnable
         memControl = new PicMemorycontrol(this);
         interruptionHandler = new InterruptionHandler(this);
         
-    	Reset(POWER_ON);
+    	//Reset(POWER_ON); already done by MainFrame
 
         guiHandler = new GUIHandler();
     }
@@ -182,7 +182,6 @@ public class Processor implements Runnable
                 workRegister = 0;
 
                 picMemCtrl.reset();
-                memControl = picMemCtrl;
                 memControl.clearGP();
                 
                 interruptionHandler = new InterruptionHandler(this);
