@@ -11,7 +11,7 @@ public class Tmr0 extends SpecialFunctionRegister
     private final InterruptionHandler interruptionHandler;
     private final PicMemorycontrol    memCtrl;
     private Optionreg                 optionReg;
-    private byte                      value;
+    private short                     value;
     private int                       cyclesSinceWrite;
 
     public Tmr0(PicMemorycontrol memCtrl, InterruptionHandler interruptionHandler)
@@ -61,9 +61,11 @@ public class Tmr0 extends SpecialFunctionRegister
     {
         if (value == 0xFF)
         {
+            value = 0;
             interruptionHandler.causeInterruption(Interruption.TIMER0);
         }
-        value++;
+        else
+            value++;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class Tmr0 extends SpecialFunctionRegister
     @Override
     public byte getValue()
     {
-        return value;
+        return (byte) value;
     }
 
     @Override
