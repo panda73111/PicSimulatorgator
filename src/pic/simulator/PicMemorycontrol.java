@@ -23,8 +23,7 @@ import pic.simulator.specialfunctionregisters.Trisb;
 import pic.simulator.specialfunctionregisters.Unimplemented;
 
 /**
- * @author Lorenzo Toso 
- * 		An implementation of the Memorycontrol-interface that
+ * @author Lorenzo Toso An implementation of the Memorycontrol-interface that
  *         describes the memory-unit of the PIC16f84.
  */
 public class PicMemorycontrol implements Memorycontrol
@@ -70,6 +69,8 @@ public class PicMemorycontrol implements Memorycontrol
 
     private final byte[]                              eepromData              = new byte[64];
 
+    private Status                                    statusReg;
+
     public PicMemorycontrol(Processor proc)
     {
         this.memory = new byte[gpLength];
@@ -85,7 +86,8 @@ public class PicMemorycontrol implements Memorycontrol
     {
         if (isSFR(address))
         {
-            specialFunctionRegisters.get(address).setValue(value);
+            int sfrAddress = address | (getActiveBank() << 7);
+            specialFunctionRegisters.get(sfrAddress).setValue(value);
             return;
         }
 
@@ -95,7 +97,10 @@ public class PicMemorycontrol implements Memorycontrol
     public byte getAt(int address)
     {
         if (isSFR(address))
-            return specialFunctionRegisters.get(address).getValue();
+        {
+            int sfrAddress = address | (getActiveBank() << 7);
+            return specialFunctionRegisters.get(sfrAddress).getValue();
+        }
         if (isUnimplemented(address))
             return 0;
 
@@ -111,9 +116,9 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private boolean isSFR(int address)
     {
-    	while(address > bankLength)
-    		address -= bankLength;
-    	return address <= (sfrBegin + sfrLength);
+        while (address > bankLength)
+            address -= bankLength;
+        return address <= (sfrBegin + sfrLength);
     }
 
     /**
@@ -157,9 +162,8 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private int getActiveBank()
     {
-        byte status = specialFunctionRegisters.get(
-                SpecialFunctionRegister.STATUS0).getValue();
-        return status & 0b00010000 >> 4;
+        byte status = statusReg.getValue();
+        return (status & 0b100000) >> 5;
     }
 
     public void pushStack(int value)
@@ -229,6 +233,7 @@ public class PicMemorycontrol implements Memorycontrol
         sfr = new Status();
         specialFunctionRegisters.put(SpecialFunctionRegister.STATUS0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.STATUS1, sfr);
+        statusReg = (Status) sfr;
         specialFunctionRegisterSet.add(sfr);
 
         sfr = new Fsr(processor);
