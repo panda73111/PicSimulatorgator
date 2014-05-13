@@ -30,10 +30,10 @@ public class Processor implements Runnable
     private PinHandler          pinHandler;
     private InterruptionHandler interruptionHandler;
 
-    private HashSet<Integer>	breakPointSet;
-    
-    private long				cycleCount	  = 0;
-    public long					cmdDelay	  = 0;
+    private HashSet<Integer>    breakPointSet;
+
+    private long                cycleCount    = 0;
+    public long                 cmdDelay      = 0;
     public byte                 workRegister  = 0x00;
     private boolean             isInterrupted = false;
     private boolean             isRunning     = false;
@@ -43,52 +43,53 @@ public class Processor implements Runnable
 
     private Tmr0                timer0;
     private int                 cntPinPrevState;
-    
-    
+
     public Processor()
     {
-    	breakPointSet = new HashSet<Integer>();
-    	
+        breakPointSet = new HashSet<Integer>();
+
         pinHandler = new PicPinHandler(this);
-        memControl = new PicMemorycontrol(this);
         interruptionHandler = new InterruptionHandler(this);
-        
-    	//Reset(POWER_ON); already done by MainFrame
+        memControl = new PicMemorycontrol(this);
+
+        // Reset(POWER_ON); already done by MainFrame
 
         guiHandler = new GUIHandler();
     }
-    
+
     public Processor(String programFileName) throws IOException
     {
-    	this();
+        this();
         picProgram = new Program(programFileName);
     }
 
     public void executeProgram()
     {
-    	if(picProgram == null)
-    	{
-    		System.err.println("Kein Programm geladen.");
-    		return;	
-    	}
-    	
+        if (picProgram == null)
+        {
+            System.err.println("Kein Programm geladen.");
+            return;
+        }
 
         isRunning = true;
 
         while (isRunning && pcl.get13BitValue() < picProgram.length())
         {
-            if (isInterrupted)
+            if (interruptionHandler.hasInterruption())
             {
+                isInterrupted = true; // TODO: Do we need isInterrupted for
+                                      // anything?
                 Interruption interruption = interruptionHandler.getInterruption();
                 interruption.executeInterruption();
+                isInterrupted = false;
                 continue;
             }
-            
+
             Command cmd = fetch(pcl.get13BitValue());
-            
-            if(cmd == null)		//case: Breakpoint
-            	continue;
-            
+
+            if (cmd == null) // case: Breakpoint
+                continue;
+
             pcl.increment();
             execute(cmd);
 
@@ -97,45 +98,49 @@ public class Processor implements Runnable
             System.out.println("---Executed " + cmd.toString() + "---");
 
             guiHandler.repaintGUI();
-            try {
-				Thread.sleep(cmdDelay);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+            try
+            {
+                Thread.sleep(cmdDelay);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
         isRunning = false;
     }
 
-	private void timerTick() {
-		int cntPinCurState;
-		timer0.onTick();
-		cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
-		if (cntPinCurState != cntPinPrevState)
-		{
-		    timer0.onPinChange(cntPinCurState);
-		    cntPinPrevState = cntPinCurState;
-		}
-	}
-	public void executeNextCommand()
-	{
-		if(pcl.get13BitValue() < picProgram.length())
-		{
-			Command cmd = fetch(pcl.get13BitValue());
+    private void timerTick()
+    {
+        int cntPinCurState;
+        timer0.onTick();
+        cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
+        if (cntPinCurState != cntPinPrevState)
+        {
+            timer0.onPinChange(cntPinCurState);
+            cntPinPrevState = cntPinCurState;
+        }
+    }
+
+    public void executeNextCommand()
+    {
+        if (pcl.get13BitValue() < picProgram.length())
+        {
+            Command cmd = fetch(pcl.get13BitValue());
             pcl.increment();
             execute(cmd);
             timerTick();
             guiHandler.repaintGUI();
-		}
-	}
+        }
+    }
 
-    
     private Command fetch(int cmdIndex)
     {
-    	if(breakPointSet.contains(cmdIndex))
-    	{
-    		stopProgramExecution();
-    		return null;
-    	}
+        if (breakPointSet.contains(cmdIndex))
+        {
+            stopProgramExecution();
+            return null;
+        }
         return picProgram.getCommand(cmdIndex);
     }
 
@@ -147,9 +152,9 @@ public class Processor implements Runnable
 
     public void loadProgram(String filename) throws IOException
     {
-    	picProgram = new Program(filename);
+        picProgram = new Program(filename);
     }
-    
+
     public void stopProgramExecution()
     {
         isRunning = false;
@@ -159,9 +164,10 @@ public class Processor implements Runnable
     {
         return isSleeping;
     }
+
     public boolean isRunning()
     {
-    	return isRunning;
+        return isRunning;
     }
 
     public void Reset(int cause)
@@ -178,13 +184,13 @@ public class Processor implements Runnable
             case POWER_ON:
                 // initialize everything
 
-            	cycleCount = 0;
+                cycleCount = 0;
                 workRegister = 0;
 
                 picMemCtrl.reset();
                 memControl.clearGP();
-                
-                interruptionHandler = new InterruptionHandler(this);
+
+                interruptionHandler.reset();
 
                 pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
                 timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
@@ -225,9 +231,9 @@ public class Processor implements Runnable
 
     public long getCycleCount()
     {
-    	return cycleCount;
+        return cycleCount;
     }
-    
+
     public Memorycontrol getMemoryControl()
     {
         return memControl;
@@ -247,7 +253,7 @@ public class Processor implements Runnable
     {
         return picProgram;
     }
-    
+
     public InterruptionHandler getInterruptionHandler()
     {
         return interruptionHandler;
@@ -255,15 +261,17 @@ public class Processor implements Runnable
 
     public void addBreakPoint(int address)
     {
-    	breakPointSet.add(address);
+        breakPointSet.add(address);
     }
+
     public void removeBreakPoint(int address)
     {
-    	breakPointSet.remove(address);
+        breakPointSet.remove(address);
     }
-    
-	@Override
-	public void run() {
-		executeProgram();
-	}
+
+    @Override
+    public void run()
+    {
+        executeProgram();
+    }
 }
