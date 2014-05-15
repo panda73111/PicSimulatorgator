@@ -1,6 +1,5 @@
 package pic.simulator;
 
-import pic.simulator.interrupts.Interruption;
 
 public class Watchdog
 {
@@ -33,7 +32,7 @@ public class Watchdog
         if (millisPassed >= millisToPass)
         {
             millisLeft = 0.0d;
-            proc.Reset(proc.isSleeping() ? Processor.WDT_IN_SLEEP : Processor.WDT);
+            proc.reset(proc.isSleeping() ? Processor.WDT_IN_SLEEP : Processor.WDT);
             ticks = 0;
             return;
         }

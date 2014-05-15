@@ -29,10 +29,27 @@ public class Interruption implements Comparable<Interruption>
 
     public void executeInterruption()
     {
+        if (!isGloballyEnabled())
+        {
+            if (cause == RB0 && isEnabled())
+            {
+                // just wake up and continue execution
+                proc.wakeup();
+                setFlagBit();
+            }
+            return;
+        }
         if (!isEnabled())
             return;
 
+        if (cause == RB0)
+        {
+            // wake up and jump to the interrupt vector
+            proc.wakeup();
+        }
+
         setFlagBit();
+
         PicMemorycontrol mem = (PicMemorycontrol) proc.getMemoryControl();
 
         mem.setBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE);
@@ -41,11 +58,13 @@ public class Interruption implements Comparable<Interruption>
         pcl.set13BitValue((short) 0x0004);
     }
 
+    public boolean isGloballyEnabled()
+    {
+        return proc.getMemoryControl().getBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE);
+    }
+
     public boolean isEnabled()
     {
-        if (!proc.getMemoryControl().getBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE))
-            return false;
-
         short enableBit = 0;
         switch (cause)
         {

@@ -85,6 +85,13 @@ public class Processor implements Runnable
                 continue;
             }
 
+            if (isSleeping)
+            {
+                // let the watchdog wakeup the processor
+                watchdog.onTick();
+                continue;
+            }
+
             Command cmd = fetch(pcl.get13BitValue());
 
             if (cmd == null) // case: Breakpoint
@@ -194,7 +201,7 @@ public class Processor implements Runnable
         return isRunning;
     }
 
-    public void Reset(int cause)
+    public void reset(int cause)
     {
         PicMemorycontrol picMemCtrl = (PicMemorycontrol) memControl;
         Status statusReg = (Status) picMemCtrl.getSFR(SpecialFunctionRegister.STATUS);
@@ -252,8 +259,20 @@ public class Processor implements Runnable
             case WDT_IN_SLEEP:
                 statusReg.clearBit(3);
                 statusReg.clearBit(4);
+                wakeup();
                 break;
         }
+    }
+
+    public void sleep()
+    {
+        isSleeping = true;
+        watchdog.reset();
+    }
+
+    public void wakeup()
+    {
+        isSleeping = false;
     }
 
     public long getCycleCount()
