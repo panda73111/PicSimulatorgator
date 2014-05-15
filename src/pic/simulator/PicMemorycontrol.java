@@ -135,8 +135,7 @@ public class PicMemorycontrol implements Memorycontrol
 
         for (int i = 0; i < memory.length; i += bankLength)
         {
-            if (address >= i + unimplementedAreaBegin
-                    && address < i + bankLength)
+            if (address >= i + unimplementedAreaBegin && address < i + bankLength)
                 return true;
         }
         return false;
@@ -216,7 +215,7 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private void initSFR()
     {
-        SpecialFunctionRegister sfr = new Indf(processor);
+        SpecialFunctionRegister sfr = new Indf(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.INDF0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.INDF1, sfr);
         specialFunctionRegisterSet.add(sfr);
@@ -236,7 +235,7 @@ public class PicMemorycontrol implements Memorycontrol
         statusReg = (Status) sfr;
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Fsr(processor);
+        sfr = new Fsr();
         specialFunctionRegisters.put(SpecialFunctionRegister.FSR0, sfr);
         specialFunctionRegisters.put(SpecialFunctionRegister.FSR1, sfr);
         specialFunctionRegisterSet.add(sfr);
@@ -291,11 +290,6 @@ public class PicMemorycontrol implements Memorycontrol
         sfr = new Eecon2(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON2, sfr);
         specialFunctionRegisterSet.add(sfr);
-
-        for (SpecialFunctionRegister currentSfr : specialFunctionRegisterSet)
-        {
-            currentSfr.onMemInitFinished();
-        }
     }
 
     /**

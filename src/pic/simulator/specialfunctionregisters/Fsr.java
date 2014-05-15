@@ -1,16 +1,13 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Processor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Fsr extends SpecialFunctionRegister
 {
-    private final Processor processor;
     private byte value;
 
-	public Fsr(Processor processor)
+	public Fsr()
 	{
-		this.processor = processor;
 		reset();
 	}
 	

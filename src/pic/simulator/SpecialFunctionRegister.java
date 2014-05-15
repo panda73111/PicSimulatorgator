@@ -35,6 +35,8 @@ public abstract class SpecialFunctionRegister
     public static final int   PCLATH     = PCLATH0;
     public static final int   STATUS     = STATUS0;
     public static final int   INTCON     = INTCON0;
+    public static final int   INDF       = INDF0;
+    public static final int   FSR        = FSR0;
 
     public static final short STATUS_C   = 0;
     public static final short STATUS_DC  = 1;

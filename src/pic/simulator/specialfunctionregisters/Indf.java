@@ -1,33 +1,36 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Processor;
+import pic.simulator.PicMemorycontrol;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Indf extends SpecialFunctionRegister
 {
-    private final Processor processor;
-    private byte value;
+    private final PicMemorycontrol memCtrl;
 
-	public Indf(Processor processor)
-	{
-		this.processor = processor;
-		reset();
-	}
-	
-	@Override
-	public void setValue(byte value) {
-		this.value = value;
-	}
+    public Indf(PicMemorycontrol memCtrl)
+    {
+        this.memCtrl = memCtrl;
+        reset();
+    }
 
-	@Override
-	public byte getValue() {
-		return value;
-	}
+    @Override
+    public void setValue(byte value)
+    {
+        byte targetAddr = memCtrl.getAt(INDF);
+        memCtrl.setAt(targetAddr, value);
+    }
 
-	@Override
-	public void reset() {
-		value = 0;
-	}
+    @Override
+    public byte getValue()
+    {
+        byte targetAddr = memCtrl.getAt(INDF);
+        return memCtrl.getAt(targetAddr);
+    }
+
+    @Override
+    public void reset()
+    {
+    }
 
     @Override
     public String getName()
