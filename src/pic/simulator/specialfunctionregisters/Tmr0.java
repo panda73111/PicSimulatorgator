@@ -12,6 +12,7 @@ public class Tmr0 extends SpecialFunctionRegister
     private final PicMemorycontrol    memCtrl;
     private short                     value;
     private int                       cyclesSinceWrite;
+    private int                       prescalerSkippedTicks;
 
     public Tmr0(PicMemorycontrol memCtrl, InterruptionHandler interruptionHandler)
     {
@@ -31,6 +32,18 @@ public class Tmr0 extends SpecialFunctionRegister
             if (cyclesSinceWrite < 2)
                 // keep the value for 2 cycles after a write occurred
                 cyclesSinceWrite++;
+            else if ((options & 0b1000) == 0)
+            {
+                // the Prescaler is assigned to Tmr0
+                int divisor = (int) Math.pow(2, (options & 0b111) + 1);
+                if (prescalerSkippedTicks + 1 >= divisor)
+                {
+                    increment();
+                    prescalerSkippedTicks = 0;
+                }
+                else
+                    prescalerSkippedTicks++;
+            }
             else
                 increment();
         }
