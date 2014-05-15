@@ -50,8 +50,4 @@ public abstract class SpecialFunctionRegister
     public abstract void reset();
 
     public abstract String getName();
-
-    public void onMemInitFinished()
-    {
-    }
 }

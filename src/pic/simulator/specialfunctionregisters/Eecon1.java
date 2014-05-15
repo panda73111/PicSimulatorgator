@@ -8,8 +8,7 @@ import pic.simulator.interrupts.Interruption;
 public class Eecon1 extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
-    private final Processor		   proc;
-    private Eecon2                 eecon2;
+    private final Processor        proc;
     private byte                   value;
 
     public Eecon1(Processor proc, PicMemorycontrol memCtrl)
@@ -37,6 +36,7 @@ public class Eecon1 extends SpecialFunctionRegister
         if ((value & 0b110) == 0b110)
         {
             // WR and WREN bits set
+            Eecon2 eecon2 = (Eecon2) memCtrl.getSFR(SpecialFunctionRegister.EECON2);
             if (eecon2.isWriteAllowed())
             {
                 // clear WRERR bit
@@ -82,11 +82,5 @@ public class Eecon1 extends SpecialFunctionRegister
     public String getName()
     {
         return getClass().getSimpleName().toLowerCase();
-    }
-
-    @Override
-    public void onMemInitFinished()
-    {
-        eecon2 = (Eecon2) memCtrl.getSFR(SpecialFunctionRegister.EECON2);
     }
 }

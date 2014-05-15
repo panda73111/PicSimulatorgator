@@ -6,7 +6,6 @@ import pic.simulator.SpecialFunctionRegister;
 public class Eecon2 extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
-    private Eecon1                 eecon1;
     private byte                   value;
     private boolean                writeAllowed;
 
@@ -24,6 +23,7 @@ public class Eecon2 extends SpecialFunctionRegister
     @Override
     public void setValue(byte value)
     {
+        Eecon1 eecon1 = (Eecon1) memCtrl.getSFR(SpecialFunctionRegister.EECON1);
         // write sequence has to be 0x55, 0xAA
         writeAllowed = false;
         if (this.value == 0x55)
@@ -55,12 +55,5 @@ public class Eecon2 extends SpecialFunctionRegister
     public String getName()
     {
         return getClass().getSimpleName().toLowerCase();
-    }
-
-    @Override
-    public void onMemInitFinished()
-    {
-        eecon1 = (Eecon1) memCtrl.getSFR(SpecialFunctionRegister.EECON1);
-        super.onMemInitFinished();
     }
 }

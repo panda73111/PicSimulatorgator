@@ -10,7 +10,6 @@ public class Tmr0 extends SpecialFunctionRegister
 {
     private final InterruptionHandler interruptionHandler;
     private final PicMemorycontrol    memCtrl;
-    private Optionreg                 optionReg;
     private short                     value;
     private int                       cyclesSinceWrite;
 
@@ -24,6 +23,7 @@ public class Tmr0 extends SpecialFunctionRegister
 
     public void onTick()
     {
+        Optionreg optionReg = (Optionreg) memCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
         byte options = optionReg.getValue();
         if ((options & 0b10000) == 0)
         {
@@ -38,6 +38,7 @@ public class Tmr0 extends SpecialFunctionRegister
 
     public void onPinChange(int newState)
     {
+        Optionreg optionReg = (Optionreg) memCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
         byte options = optionReg.getValue();
         if ((options & 0b10000) > 0)
         {
@@ -92,11 +93,5 @@ public class Tmr0 extends SpecialFunctionRegister
     public String getName()
     {
         return getClass().getSimpleName().toLowerCase();
-    }
-
-    @Override
-    public void onMemInitFinished()
-    {
-        this.optionReg = (Optionreg) memCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
     }
 }

@@ -6,7 +6,6 @@ import pic.simulator.SpecialFunctionRegister;
 public class Pclath extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
-    private Pcl                    pcl;
 
     public Pclath(PicMemorycontrol memCtrl)
     {
@@ -17,6 +16,7 @@ public class Pclath extends SpecialFunctionRegister
     @Override
     public void setValue(byte value)
     {
+        Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
         short oldPclVal = pcl.get13BitValue();
         short newPclVal = (short) ((value << 8) | (oldPclVal & 0xFF));
         pcl.set13BitValue(newPclVal);
@@ -39,11 +39,4 @@ public class Pclath extends SpecialFunctionRegister
     {
         return getClass().getSimpleName().toLowerCase();
     }
-
-    @Override
-    public void onMemInitFinished()
-    {
-        pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
-    }
-
 }
