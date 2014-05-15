@@ -38,8 +38,8 @@ public class Tmr0 extends SpecialFunctionRegister
                 int divisor = (int) Math.pow(2, (options & 0b111) + 1);
                 if (prescalerSkippedTicks + 1 >= divisor)
                 {
-                    increment();
                     prescalerSkippedTicks = 0;
+                    increment();
                 }
                 else
                     prescalerSkippedTicks++;
