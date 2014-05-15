@@ -1,5 +1,6 @@
 package pic.simulator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
@@ -309,7 +310,7 @@ public class PicMemorycontrol implements Memorycontrol
 
     public void clearGP()
     {
-        memory = new byte[gpLength];
+        Arrays.fill(memory, (byte) 0);
     }
 
     public void reset()

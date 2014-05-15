@@ -1,30 +1,34 @@
 package pic.simulator;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import pic.simulator.interrupts.Interruption;
 
 public class Watchdog
 {
+    public static final int lifetimeMillis = 80;
+
     private final Processor processor;
-    private final Timer     timer;
-    private final TimerTask task;
+    private int             ticks;
 
     public Watchdog(Processor processor)
     {
         this.processor = processor;
-        this.timer = new Timer();
-        this.task = new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-
-            }
-        };
     }
 
-    public void start(long delay)
+    public void onTick()
     {
-        timer.schedule(task, delay);
+        double millisPassed = 0.004d / processor.getFrequency() * ticks;
+
+        if (millisPassed >= lifetimeMillis)
+        {
+            processor.getInterruptionHandler().causeInterruption(Interruption.WDT);
+            ticks = 0;
+        }
+        else
+            ticks++;
+    }
+
+    public void reset()
+    {
+        ticks = 0;
     }
 }

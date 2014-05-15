@@ -12,6 +12,7 @@ public class Interruption implements Comparable<Interruption>
     public static final int RB0    = 1;
     public static final int PORTB  = 2;
     public static final int EEPROM = 3;
+    public static final int WDT    = 4;
 
     private int             cause;
     private Processor       proc;
@@ -61,6 +62,8 @@ public class Interruption implements Comparable<Interruption>
             case EEPROM:
                 enableBit = Intcon.EEPROM_ENABLE;
                 break;
+            case WDT:
+                return proc.isWdtEnabled();
         }
         return (proc.getMemoryControl().getBitAt(SpecialFunctionRegister.INTCON, enableBit));
     }

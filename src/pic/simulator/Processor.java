@@ -29,18 +29,18 @@ public class Processor implements Runnable
     private GUIHandler          guiHandler;
     private PinHandler          pinHandler;
     private InterruptionHandler interruptionHandler;
+    private Watchdog            watchdog;
 
     private HashSet<Integer>    breakPointSet;
 
     private long                cycleCount    = 0;
     public long                 cmdDelay      = 0;
     public byte                 workRegister  = 0x00;
-    private boolean             isInterrupted = false;
     private boolean             isRunning     = false;
     private boolean             isSleeping    = false;
-
+    private double              frequency     = 4.0f; // in MHz
+    private boolean             wdtEnabled;
     private Pcl                 pcl;
-
     private Tmr0                timer0;
     private int                 cntPinPrevState;
 
@@ -55,6 +55,7 @@ public class Processor implements Runnable
         // Reset(POWER_ON); already done by MainFrame
 
         guiHandler = new GUIHandler();
+        wdtEnabled = true; // TODO: make a GUI option for setWdtState()
     }
 
     public Processor(String programFileName) throws IOException
@@ -72,16 +73,14 @@ public class Processor implements Runnable
         }
 
         isRunning = true;
+        watchdog.reset();
 
         while (isRunning && pcl.get13BitValue() < picProgram.length())
         {
             if (interruptionHandler.hasInterruption())
             {
-                isInterrupted = true; // TODO: Do we need isInterrupted for
-                                      // anything?
                 Interruption interruption = interruptionHandler.getInterruption();
                 interruption.executeInterruption();
-                isInterrupted = false;
                 continue;
             }
 
@@ -110,10 +109,34 @@ public class Processor implements Runnable
         isRunning = false;
     }
 
+    public void setWdtState(boolean enabled)
+    {
+        wdtEnabled = enabled;
+    }
+
+    public boolean isWdtEnabled()
+    {
+        return wdtEnabled;
+    }
+
+    public double getFrequency()
+    {
+        return frequency;
+    }
+
+    public void setFrequency(double frequency)
+    {
+        if (frequency <= 0)
+            throw new IllegalArgumentException("frequency");
+
+        this.frequency = frequency;
+    }
+
     private void timerTick()
     {
         int cntPinCurState;
         timer0.onTick();
+        watchdog.onTick();
         cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
         if (cntPinCurState != cntPinPrevState)
         {
@@ -189,8 +212,8 @@ public class Processor implements Runnable
 
                 picMemCtrl.reset();
                 memControl.clearGP();
-
                 interruptionHandler.reset();
+                watchdog.reset();
 
                 pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
                 timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
@@ -203,6 +226,7 @@ public class Processor implements Runnable
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
+                trisbReg.reset();
                 break;
             case MCLR_IN_SLEEP:
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
@@ -212,6 +236,7 @@ public class Processor implements Runnable
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
+                trisbReg.reset();
                 break;
             case WDT:
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
@@ -221,6 +246,7 @@ public class Processor implements Runnable
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
+                trisbReg.reset();
                 break;
             case WDT_IN_SLEEP:
                 statusReg.clearBit(3);
@@ -257,6 +283,11 @@ public class Processor implements Runnable
     public InterruptionHandler getInterruptionHandler()
     {
         return interruptionHandler;
+    }
+
+    public Watchdog getWatchdog()
+    {
+        return watchdog;
     }
 
     public void addBreakPoint(int address)
