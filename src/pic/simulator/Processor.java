@@ -51,6 +51,7 @@ public class Processor implements Runnable
         pinHandler = new PicPinHandler(this);
         interruptionHandler = new InterruptionHandler(this);
         memControl = new PicMemorycontrol(this);
+        watchdog = new Watchdog(this);
 
         // Reset(POWER_ON); already done by MainFrame
 

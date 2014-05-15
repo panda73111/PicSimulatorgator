@@ -16,14 +16,24 @@ public class Indf extends SpecialFunctionRegister
     @Override
     public void setValue(byte value)
     {
-        byte targetAddr = memCtrl.getAt(INDF);
+        byte targetAddr = memCtrl.getAt(FSR);
+        if (targetAddr == SpecialFunctionRegister.INDF)
+        {
+            // prevent stack overflow
+            return;
+        }
         memCtrl.setAt(targetAddr, value);
     }
 
     @Override
     public byte getValue()
     {
-        byte targetAddr = memCtrl.getAt(INDF);
+        byte targetAddr = memCtrl.getAt(FSR);
+        if (targetAddr == SpecialFunctionRegister.INDF)
+        {
+            // prevent stack overflow
+            return 0;
+        }
         return memCtrl.getAt(targetAddr);
     }
 
