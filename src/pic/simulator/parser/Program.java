@@ -32,7 +32,7 @@ public class Program
 				short opcode = Short.valueOf(line.substring(5, 9), 16);
 
 				Command cmd = Command.newInstance(cmdNumber, opcode);
-				System.out.printf("line %4d - opcode 0x%04X - %s\n", cmdNumber, opcode, cmd.toString());
+				//System.out.printf("line %4d - opcode 0x%04X - %s\n", cmdNumber, opcode, cmd.toString());
 				
 				program.add(cmd);
 			}

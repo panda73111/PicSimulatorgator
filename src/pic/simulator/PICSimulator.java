@@ -48,7 +48,7 @@ public class PICSimulator
 		});
     	
     	//processor.executeProgram();
-    	System.out.println("---Execution terminated---");
+    	//System.out.println("---Execution terminated---");
     }
     
 }

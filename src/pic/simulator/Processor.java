@@ -95,7 +95,7 @@ public class Processor implements Runnable
 
             timerTick();
 
-            System.out.println("---Executed " + cmd.toString() + "---");
+            //System.out.println("---Executed " + cmd.toString() + "---");
 
             guiHandler.repaintGUI();
             try
