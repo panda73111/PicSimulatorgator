@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import pic.simulator.interrupts.Interruption;
 import pic.simulator.specialfunctionregisters.Eeadr;
 import pic.simulator.specialfunctionregisters.Eecon1;
 import pic.simulator.specialfunctionregisters.Eecon2;
@@ -50,7 +51,7 @@ public class PicMemorycontrol implements Memorycontrol
     /**
      * A pointer to the processor class this memory unit belongs to.
      */
-    private PicProcessor                                 processor;
+    private PicProcessor                              processor;
 
     // These are just a bunch of constants for the PIC
 
@@ -170,10 +171,10 @@ public class PicMemorycontrol implements Memorycontrol
     {
         if (stack.size() > maxStackSize)
         {
-        	processor.getGuiHandler().showError("Stackoverflow", "Stackoverflow");
-        	processor.stopProgramExecution();
-        	processor.reset(PicProcessor.POWER_ON);
-        	return false;
+            processor.getGuiHandler().showError("Stackoverflow", "Stackoverflow");
+            processor.stopProgramExecution();
+            processor.reset(PicProcessor.POWER_ON);
+            return false;
         }
         stack.push(value);
         return true;
@@ -290,7 +291,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.TRISB, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eecon1(processor, this);
+        sfr = new Eecon1(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -341,5 +342,34 @@ public class PicMemorycontrol implements Memorycontrol
             throw new IllegalArgumentException();
 
         eepromData[index] = value;
+    }
+
+    public void tryEepromWrite()
+    {
+        Eecon1 eecon1 = (Eecon1) getSFR(SpecialFunctionRegister.EECON1);
+        byte eecon1Val = eecon1.getValue();
+        // check for write attempt
+        if ((eecon1Val & 0b110) == 0b110)
+        {
+            // WR and WREN bits set
+            Eecon2 eecon2 = (Eecon2) getSFR(SpecialFunctionRegister.EECON2);
+            if (eecon2.isWriteAllowed())
+            {
+                // clear WRERR bit
+                eecon1Val &= ~0b1000;
+                // set WR bit, writing is in progress
+                eecon1Val |= 0b10;
+
+                byte adr = getAt(SpecialFunctionRegister.EEADR);
+                byte data = getAt(SpecialFunctionRegister.EEDATA);
+                setEepromByte(adr, data);
+
+                // write successful, clear WR bits
+                // TODO: timer to delay the write process
+                eecon1Val &= ~0b10;
+                eecon1.setValue(eecon1Val);
+                processor.getInterruptionHandler().causeInterruption(Interruption.EEPROM);
+            }
+        }
     }
 }
