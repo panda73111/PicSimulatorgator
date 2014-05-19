@@ -2,6 +2,8 @@ package pic.simulator;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import pic.simulator.gui.PicGUI;
 
 /**
@@ -45,6 +47,12 @@ public class GUIHandler {
 	public void unregisterGUIElement(PicGUI element)
 	{
 		guiObjects.remove(element);
+	}
+
+
+	public void showError(String title, String error)
+	{
+		JOptionPane.showMessageDialog(null, title, error, JOptionPane.ERROR_MESSAGE);
 	}
 
 }

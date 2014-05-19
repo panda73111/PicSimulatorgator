@@ -53,7 +53,8 @@ public class Interruption implements Comparable<Interruption>
         PicMemorycontrol mem = (PicMemorycontrol) proc.getMemoryControl();
 
         mem.setBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE);
-        mem.pushStack(proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL));
+        if(!mem.pushStack(proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL)))
+        	return;
         Pcl pcl = (Pcl) mem.getSFR(SpecialFunctionRegister.PCL);
         pcl.set13BitValue((short) 0x0004);
     }

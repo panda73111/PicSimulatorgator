@@ -30,7 +30,7 @@ public interface Memorycontrol {
 	 * @param value
 	 *            The value that is supposed to be pushed to the stack.
 	 */
-	public void pushStack(int value);
+	public boolean pushStack(int value);
 
 	/**
 	 * Pops the top value from the stack.

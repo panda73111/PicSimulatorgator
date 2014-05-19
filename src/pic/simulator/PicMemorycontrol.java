@@ -166,11 +166,17 @@ public class PicMemorycontrol implements Memorycontrol
         return (status & 0b100000) >> 5;
     }
 
-    public void pushStack(int value)
+    public boolean pushStack(int value)
     {
         if (stack.size() > maxStackSize)
-            throw new StackOverflowError("Stack overflow!");
+        {
+        	processor.getGuiHandler().showError("Stackoverflow", "Stackoverflow");
+        	processor.stopProgramExecution();
+        	processor.reset(PicProcessor.POWER_ON);
+        	return false;
+        }
         stack.push(value);
+        return true;
     }
 
     public int popStack()

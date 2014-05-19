@@ -56,13 +56,18 @@ public class PicProcessor implements Processor
         // Reset(POWER_ON); already done by MainFrame
 
         guiHandler = new GUIHandler();
-        wdtEnabled = true; // TODO: make a GUI option for setWdtState()
+        wdtEnabled = true; 
     }
 
     public PicProcessor(String programFileName) throws IOException
     {
         this();
         picProgram = new Program(programFileName);
+    }
+    public PicProcessor(Program p)
+    {
+        this();
+        picProgram = p;
     }
 
     public void executeProgram()
@@ -215,7 +220,8 @@ public class PicProcessor implements Processor
         Optionreg optionReg = (Optionreg) picMemCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
         Trisa trisaReg = (Trisa) picMemCtrl.getSFR(SpecialFunctionRegister.TRISA);
         Trisb trisbReg = (Trisb) picMemCtrl.getSFR(SpecialFunctionRegister.TRISB);
-
+        Pcl pcl = (Pcl)picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+        
         switch (cause)
         {
             case POWER_ON:
@@ -229,8 +235,8 @@ public class PicProcessor implements Processor
                 interruptionHandler.reset();
                 watchdog.reset();
 
-                pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
-                timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
+                this.pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+                this.timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
 
                 cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
                 break;
