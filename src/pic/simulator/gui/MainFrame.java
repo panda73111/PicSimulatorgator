@@ -305,8 +305,9 @@ public class MainFrame extends JFrame implements PicGUI
                 {
                     try
                     {
+                    	resetProcessor();
                         myProcessor.loadProgram(filename);
-                        initProgram();
+                        initProgram();                        
                     }
                     catch (IOException e)
                     {

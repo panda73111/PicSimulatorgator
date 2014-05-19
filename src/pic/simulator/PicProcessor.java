@@ -56,7 +56,7 @@ public class PicProcessor implements Processor
         // Reset(POWER_ON); already done by MainFrame
 
         guiHandler = new GUIHandler();
-        wdtEnabled = true; // TODO: make a GUI option for setWdtState()
+        wdtEnabled = true; 
     }
 
     public PicProcessor(String programFileName) throws IOException
@@ -83,41 +83,7 @@ public class PicProcessor implements Processor
 
         while (isRunning && pcl.get13BitValue() < picProgram.length())
         {
-            if (interruptionHandler.hasInterruption())
-            {
-                Interruption interruption = interruptionHandler.getInterruption();
-                interruption.executeInterruption();
-                continue;
-            }
-
-            if (isSleeping)
-            {
-                // let the watchdog wakeup the processor
-                watchdog.onTick();
-                continue;
-            }
-
-            Command cmd = fetch(pcl.get13BitValue());
-
-            if (cmd == null) // case: Breakpoint
-                continue;
-
-            pcl.increment();
-            execute(cmd);
-
-            timerTick();
-
-            //System.out.println("---Executed " + cmd.toString() + "---");
-
-            guiHandler.repaintGUI();
-            try
-            {
-                Thread.sleep(cmdDelay);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            executeNextCommand();
         }
         isRunning = false;
     }
@@ -149,7 +115,8 @@ public class PicProcessor implements Processor
     {
         int cntPinCurState;
         timer0.onTick();
-        watchdog.onTick();
+        if (wdtEnabled)
+            watchdog.onTick();
         cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
         if (cntPinCurState != cntPinPrevState)
         {
@@ -162,11 +129,50 @@ public class PicProcessor implements Processor
     {
         if (pcl.get13BitValue() < picProgram.length())
         {
+            if (interruptionHandler.hasInterruption())
+            {
+                Interruption interruption = interruptionHandler.getInterruption();
+                interruption.executeInterruption();
+                return;
+            }
+
+            if (isSleeping)
+            {
+                // let the watchdog wakeup the processor
+                if (wdtEnabled)
+                    watchdog.onTick();
+                try
+                {
+                    Thread.sleep(cmdDelay);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                return;
+            }
+
             Command cmd = fetch(pcl.get13BitValue());
+
+            if (cmd == null) // case: Breakpoint
+                return;
+
             pcl.increment();
             execute(cmd);
+
             timerTick();
+
+            // System.out.println("---Executed " + cmd.toString() + "---");
+
             guiHandler.repaintGUI();
+            try
+            {
+                Thread.sleep(cmdDelay);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -214,7 +220,8 @@ public class PicProcessor implements Processor
         Optionreg optionReg = (Optionreg) picMemCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
         Trisa trisaReg = (Trisa) picMemCtrl.getSFR(SpecialFunctionRegister.TRISA);
         Trisb trisbReg = (Trisb) picMemCtrl.getSFR(SpecialFunctionRegister.TRISB);
-
+        Pcl pcl = (Pcl)picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+        
         switch (cause)
         {
             case POWER_ON:
@@ -228,15 +235,14 @@ public class PicProcessor implements Processor
                 interruptionHandler.reset();
                 watchdog.reset();
 
-                pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
-                timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
+                this.pcl = (Pcl) picMemCtrl.getSFR(SpecialFunctionRegister.PCL);
+                this.timer0 = (Tmr0) picMemCtrl.getSFR(SpecialFunctionRegister.TMR0);
 
                 cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
                 break;
             case MCLR:
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
-                if(pcl!=null)
-                    pcl.set13BitValue((short) 0);
+                pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
@@ -246,8 +252,7 @@ public class PicProcessor implements Processor
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
                 statusReg.clearBit(3);
                 statusReg.setBit(4);
-                if(pcl!=null)
-                	pcl.set13BitValue((short) 0);
+                pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
@@ -257,8 +262,7 @@ public class PicProcessor implements Processor
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
                 statusReg.setBit(3);
                 statusReg.clearBit(4);
-                if(pcl!=null)
-                    pcl.set13BitValue((short) 0);
+                pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
