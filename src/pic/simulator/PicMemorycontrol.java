@@ -83,7 +83,7 @@ public class PicMemorycontrol implements Memorycontrol
         initSFR();
     }
 
-    public void setAt(int address, byte value)
+    public void setAt(int address, short value)
     {
         if (isSFR(address))
         {
@@ -92,10 +92,10 @@ public class PicMemorycontrol implements Memorycontrol
             return;
         }
 
-        memory[address - gpBegin] = value;
+        memory[address - gpBegin] = (byte)(0xFF & value);
     }
 
-    public byte getAt(int address)
+    public short getAt(int address)
     {
         if (isSFR(address))
         {
@@ -105,7 +105,7 @@ public class PicMemorycontrol implements Memorycontrol
         if (isUnimplemented(address))
             return 0;
 
-        return memory[address - gpBegin];
+        return (short)memory[address - gpBegin];
     }
 
     /**
@@ -162,7 +162,7 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private int getActiveBank()
     {
-        byte status = statusReg.getValue();
+    	short status = statusReg.getValue();
         return (status & 0b100000) >> 5;
     }
 
@@ -197,7 +197,7 @@ public class PicMemorycontrol implements Memorycontrol
 
     public void clearBitAt(int address, short bit)
     {
-        byte val = getAt(address);
+        short val = getAt(address);
         val &= 0xFF - (1 << bit);
         setAt(address, val);
     }

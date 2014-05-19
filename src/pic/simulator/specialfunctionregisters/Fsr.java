@@ -4,7 +4,7 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Fsr extends SpecialFunctionRegister
 {
-    private byte value;
+    private short value;
 
 	public Fsr()
 	{
@@ -12,12 +12,12 @@ public class Fsr extends SpecialFunctionRegister
 	}
 	
 	@Override
-	public void setValue(byte value) {
+	public void setValue(short value) {
 		this.value = value;
 	}
 
 	@Override
-	public byte getValue() {
+	public short getValue() {
 		return value;
 	}
 

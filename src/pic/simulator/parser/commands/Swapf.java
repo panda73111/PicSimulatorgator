@@ -32,8 +32,8 @@ public class Swapf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte f 		= proc.getMemoryControl().getAt(arg0);		
-		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4)); // Awesome!
+		short f 	= proc.getMemoryControl().getAt(arg0);		
+		short res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4)); // Awesome!
 
 
 		if(arg1==0)

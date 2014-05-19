@@ -25,7 +25,7 @@ public class Tmr0 extends SpecialFunctionRegister
     public void onTick()
     {
         Optionreg optionReg = (Optionreg) memCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
-        byte options = optionReg.getValue();
+        short options = optionReg.getValue();
         if ((options & 0b10000) == 0)
         {
             // TMR0 operates as a timer
@@ -52,7 +52,7 @@ public class Tmr0 extends SpecialFunctionRegister
     public void onPinChange(int newState)
     {
         Optionreg optionReg = (Optionreg) memCtrl.getSFR(SpecialFunctionRegister.OPTION_REG);
-        byte options = optionReg.getValue();
+        short options = optionReg.getValue();
         if ((options & 0b10000) > 0)
         {
             // TMR0 operates as a counter
@@ -83,14 +83,14 @@ public class Tmr0 extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
         this.value = value;
         cyclesSinceWrite = 0;
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         return (byte) value;
     }

@@ -14,9 +14,9 @@ public class Indf extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
-        byte targetAddr = memCtrl.getAt(FSR);
+    	short targetAddr = memCtrl.getAt(FSR);
         if (targetAddr == SpecialFunctionRegister.INDF)
         {
             // prevent stack overflow
@@ -26,9 +26,9 @@ public class Indf extends SpecialFunctionRegister
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
-        byte targetAddr = memCtrl.getAt(FSR);
+    	short targetAddr = memCtrl.getAt(FSR);
         if (targetAddr == SpecialFunctionRegister.INDF)
         {
             // prevent stack overflow

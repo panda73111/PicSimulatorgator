@@ -5,12 +5,12 @@ import pic.simulator.SpecialFunctionRegister;
 public class Unimplemented extends SpecialFunctionRegister
 {
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         return 0;
     }

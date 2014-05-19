@@ -35,7 +35,10 @@ public class Subwf extends Command
 
 		int w 				= proc.workRegister;
 		int f				= proc.getMemoryControl().getAt(arg0);
+		
 		int res				= w-f;
+
+		
 		int resLowerNibble	= (w & 0x0F) - (f & 0x0F);
 		
 		

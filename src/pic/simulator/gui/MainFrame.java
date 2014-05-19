@@ -458,7 +458,7 @@ public class MainFrame extends JFrame implements PicGUI
     {
         for (int i = 0; i < PicMemorycontrol.gpLength; i++)
         {
-            byte byteValue = myProcessor.getMemoryControl().getAt(PicMemorycontrol.gpBegin + i);
+            short byteValue = myProcessor.getMemoryControl().getAt(PicMemorycontrol.gpBegin + i);
             gpTable.setValueAt(byteToHex(byteValue), i / gpTableColCount, i % gpTableColCount);
         }
     }
@@ -540,7 +540,7 @@ public class MainFrame extends JFrame implements PicGUI
     	}
     }
 
-    private String byteToHex(byte byteValue)
+    private String byteToHex(short byteValue)
     {
         String hexString = Integer.toHexString(byteValue & 0xFF) + "H";
         while (hexString.length() < 3)
@@ -550,7 +550,7 @@ public class MainFrame extends JFrame implements PicGUI
         return hexString;
     }
 
-    private String byteToBinary(byte byteValue)
+    private String byteToBinary(short byteValue)
     {
         String byteString = Integer.toBinaryString(byteValue & 0xFF) + "b";
         while (byteString.length() < 9)

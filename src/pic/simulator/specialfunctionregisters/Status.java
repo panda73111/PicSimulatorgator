@@ -4,7 +4,7 @@ import pic.simulator.SpecialFunctionRegister;
 
 public class Status extends SpecialFunctionRegister
 {
-    private byte value;
+    private short value;
 
     public Status()
     {
@@ -22,14 +22,14 @@ public class Status extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
         // disallow setting bits 3 and 4 by the program 
-        this.value = (byte) ((this.value & 0x18 ) | (value & 0xE7));
+        this.value = (short) ((this.value & 0x18 ) | (value & 0xE7));
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         return value;
     }

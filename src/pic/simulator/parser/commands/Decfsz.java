@@ -33,7 +33,7 @@ public class Decfsz extends Command
 	@Override
 	public void execute(PicProcessor proc) {
 		
-		byte f = proc.getMemoryControl().getAt(arg0);
+		short f = proc.getMemoryControl().getAt(arg0);
 		f--;
 		
 		if(arg1==0)
@@ -43,7 +43,7 @@ public class Decfsz extends Command
 
 		if(f==0)
 		{
-			byte pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
+			short pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
 			pcl++;
 			proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, pcl);
 		}

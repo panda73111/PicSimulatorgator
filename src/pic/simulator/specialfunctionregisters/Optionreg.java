@@ -6,7 +6,7 @@ public class Optionreg extends SpecialFunctionRegister
 {
 	public static final short INTEDG = 6;
 	
-    private byte value;
+    private short value;
 
 	public Optionreg()
 	{
@@ -14,12 +14,12 @@ public class Optionreg extends SpecialFunctionRegister
 	}
 	
 	@Override
-	public void setValue(byte value) {
+	public void setValue(short value) {
 		this.value = value;
 	}
 
 	@Override
-	public byte getValue() {
+	public short getValue() {
 		return value;
 	}
 

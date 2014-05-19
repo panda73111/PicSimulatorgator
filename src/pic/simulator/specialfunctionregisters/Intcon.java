@@ -18,7 +18,7 @@ public class Intcon extends SpecialFunctionRegister
 	public static final short PORTB_FLAG = 0;
 	
 	
-    private byte value;
+    private short value;
 
 	public Intcon(PicProcessor processor)
 	{
@@ -26,12 +26,12 @@ public class Intcon extends SpecialFunctionRegister
 	}
 	
 	@Override
-	public void setValue(byte value) {
+	public void setValue(short value) {
 		this.value = value;
 	}
 
 	@Override
-	public byte getValue() {
+	public short getValue() {
 		return value;
 	}
 

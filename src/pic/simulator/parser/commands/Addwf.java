@@ -35,9 +35,10 @@ public class Addwf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {	
-		byte val2 = proc.getMemoryControl().getAt(arg0);
+		int val2 = proc.getMemoryControl().getAt(arg0);
+		int w = proc.workRegister;
 		
-		int newValue	= ((int)proc.workRegister) + val2;
+		int newValue	= w + val2;
 		
 		boolean setDC 	= (((proc.workRegister&0x0F) + (val2&0x0F))&0x10) != 0;
 		boolean setC 	= (newValue&0x10000) != 0;

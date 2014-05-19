@@ -32,7 +32,7 @@ public class Iorwf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte f = proc.getMemoryControl().getAt(arg0);
+		short f = proc.getMemoryControl().getAt(arg0);
 		
 		byte val = (byte) (proc.workRegister | f);
 

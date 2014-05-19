@@ -45,9 +45,9 @@ public abstract class SpecialFunctionRegister
     public static final short STATUS_TO  = 4;
     public static final short STATUS_RP0 = 5;
 
-    public abstract void setValue(byte value);
+    public abstract void setValue(short val);
 
-    public abstract byte getValue();
+    public abstract short getValue();
 
     public abstract void reset();
 

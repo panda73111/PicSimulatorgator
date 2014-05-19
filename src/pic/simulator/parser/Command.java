@@ -101,7 +101,7 @@ public abstract class Command
         return null;
     }
 
-    public void affectZeroBit(PicProcessor proc, byte result)
+    public void affectZeroBit(PicProcessor proc, short result)
     {
         if (result == 0)
             proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);

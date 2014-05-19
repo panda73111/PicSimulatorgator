@@ -11,7 +11,7 @@ import pic.simulator.pins.Pin;
 public class Porta extends SpecialFunctionRegister
 {
     private final HashMap<Integer, IOPin> pins;
-    private byte                          value;
+    private short                          value;
 
     public Porta(PicProcessor processor)
     {
@@ -28,9 +28,9 @@ public class Porta extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
-        this.value = (byte) (value & 0x1f);
+        this.value = (short) (value & 0x1f);
 
         if ((value & 0b00001) > 0)
             pins.get(Pin.RA0).setInternally();
@@ -59,7 +59,7 @@ public class Porta extends SpecialFunctionRegister
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         value = 0;
         
