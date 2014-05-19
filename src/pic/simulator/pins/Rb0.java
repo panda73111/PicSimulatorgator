@@ -23,11 +23,11 @@ public class Rb0 extends IOPin
 		
 		super.setExternally();
 		
-		if(isInput && wasLow && intOnRisingEdge())
-		{
-			proc.getInterruptionHandler().causeInterruption(Interruption.RB0);
-		}
-		
+		//if (isInput)
+    		if(wasLow && intOnRisingEdge())
+    		{
+    			proc.getInterruptionHandler().causeInterruption(Interruption.RB0);
+    		}
 	}
 
 	@Override
@@ -37,10 +37,11 @@ public class Rb0 extends IOPin
 		
 		super.clearExternally();
 		
-		if(isInput && wasHigh && !intOnRisingEdge())
-		{
-			proc.getInterruptionHandler().causeInterruption(Interruption.RB0);
-		}
+		//if (isInput)
+    		if(wasHigh && !intOnRisingEdge())
+    		{
+    			proc.getInterruptionHandler().causeInterruption(Interruption.RB0);
+    		}
 	}
 	
 	private boolean intOnRisingEdge()

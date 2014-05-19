@@ -61,7 +61,24 @@ public class Porta extends SpecialFunctionRegister
     @Override
     public byte getValue()
     {
-        return value;
+        value = 0;
+        
+        if (pins.get(Pin.RA4).getInternalState() != Pin.LOW)
+            value |= 0b10000;
+        
+        if (pins.get(Pin.RA3).getInternalState() != Pin.LOW)
+            value |= 0b1000;
+        
+        if (pins.get(Pin.RA2).getInternalState() != Pin.LOW)
+            value |= 0b100;
+        
+        if (pins.get(Pin.RA1).getInternalState() != Pin.LOW)
+            value |= 0b10;
+        
+        if (pins.get(Pin.RA0).getInternalState() != Pin.LOW)
+            value |= 0b1;
+        
+        return  value;
     }
 
     @Override

@@ -79,6 +79,32 @@ public class Portb extends SpecialFunctionRegister
     @Override
     public byte getValue()
     {
+        value = 0;
+        
+        if (pins.get(Pin.RB7).getInternalState() != Pin.LOW)
+            value |= 0b10000000;
+        
+        if (pins.get(Pin.RB6).getInternalState() != Pin.LOW)
+            value |= 0b1000000;
+        
+        if (pins.get(Pin.RB5).getInternalState() != Pin.LOW)
+            value |= 0b100000;
+        
+        if (pins.get(Pin.RB4).getInternalState() != Pin.LOW)
+            value |= 0b10000;
+        
+        if (pins.get(Pin.RB3).getInternalState() != Pin.LOW)
+            value |= 0b1000;
+        
+        if (pins.get(Pin.RB2).getInternalState() != Pin.LOW)
+            value |= 0b100;
+        
+        if (pins.get(Pin.RB1).getInternalState() != Pin.LOW)
+            value |= 0b10;
+        
+        if (pins.get(Pin.RB0).getInternalState() != Pin.LOW)
+            value |= 0b1;
+        
         return value;
     }
 

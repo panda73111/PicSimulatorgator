@@ -37,7 +37,7 @@ public class IOPin extends Pin
     @Override
     public void setExternally()
     {
-        if (isInput)
+        //if (isInput)
         {
             externalState = Pin.HIGH;
             internalState = Pin.HIGH;
@@ -58,7 +58,7 @@ public class IOPin extends Pin
     @Override
     public void clearExternally()
     {
-        if (isInput)
+        //if (isInput)
         {
             externalState = Pin.LOW;
             internalState = Pin.LOW;

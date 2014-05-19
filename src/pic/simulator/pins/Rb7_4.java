@@ -21,10 +21,11 @@ public class Rb7_4 extends IOPin
 		
 		super.setExternally();
 		
-		if(isInput && wasLow)
-		{
-			proc.getInterruptionHandler().causeInterruption(Interruption.PORTB);
-		}
+		//if (isInput)
+    		if(wasLow)
+    		{
+    			proc.getInterruptionHandler().causeInterruption(Interruption.PORTB);
+    		}
 		
 	}
 
@@ -35,9 +36,10 @@ public class Rb7_4 extends IOPin
 		
 		super.clearExternally();
 		
-		if(isInput && wasHigh)
-		{
-			proc.getInterruptionHandler().causeInterruption(Interruption.PORTB);
-		}
+		//if (isInput)
+    		if(wasHigh)
+    		{
+    			proc.getInterruptionHandler().causeInterruption(Interruption.PORTB);
+    		}
 	}
 }
