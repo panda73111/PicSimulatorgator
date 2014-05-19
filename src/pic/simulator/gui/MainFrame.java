@@ -19,6 +19,7 @@ import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +40,10 @@ import pic.simulator.parser.Program;
 public class MainFrame extends JFrame implements PicGUI
 {
     private static final int    gpTableColCount = 8;
-
+    private static final String SLEEP_ON = "PIC schläft...";
+    private static final String SLEEP_OFF = "PIC schläft nicht.";
+    
+    
     Thread                      processorThread;
     private PicProcessor           myProcessor;
 
@@ -73,6 +77,14 @@ public class MainFrame extends JFrame implements PicGUI
     private JFormattedTextField quarzTextField;
     private JButton             btnApply;
 
+    private JPanel				watchdogPanel;
+    private JLabel				isSleepingText;
+    private JLabel				watchdogText;
+    private JCheckBox			cbEnableWatchdog;
+    private JCheckBox			cbStopOnWatchdog;
+    
+    private JPanel				rightPanel;
+    
     private IOPanel             ioPanel;
 
     public MainFrame(PicProcessor proc)
@@ -155,12 +167,14 @@ public class MainFrame extends JFrame implements PicGUI
         stackPanel.setMaximumSize(new Dimension(100, 200));
         upperPanel.add(stackPanel);
 
+
+        rightPanel= new JPanel(new GridLayout(2, 1, 0,5));
+        
         runtimePanel = new JPanel();
         runtimePanel.setLayout(new GridLayout(2, 3, 5, 5));
         runtimePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
         quarzTextField = new JFormattedTextField(new DecimalFormat("####.########"));
-        ;
         quarzTextField.setHorizontalAlignment(JTextField.RIGHT);
         btnApply = new JButton("Übernehmen");
 
@@ -172,8 +186,44 @@ public class MainFrame extends JFrame implements PicGUI
         runtimePanel.add(new JLabel("MHz"));
         runtimePanel.add(cycleLabel);
         runtimePanel.add(btnApply);
-        upperPanel.add(runtimePanel);
+        rightPanel.add(runtimePanel);
 
+
+        watchdogPanel = new JPanel(new GridLayout(4, 1));
+        isSleepingText = new JLabel(SLEEP_OFF);
+        watchdogText = new JLabel("Zeit bis Watchdog-Reset: 0ms");
+        
+        cbEnableWatchdog = new JCheckBox("Watchdog aktivieren");
+        cbEnableWatchdog.setSelected(true);
+        cbEnableWatchdog.addActionListener(new ActionListener()
+		{	
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				cbStopOnWatchdog.setEnabled(cbEnableWatchdog.isSelected());
+				watchdogText.setEnabled(cbEnableWatchdog.isSelected());
+				myProcessor.setWdtState(cbEnableWatchdog.isSelected());
+			}
+		});
+        cbStopOnWatchdog = new JCheckBox("Stop on Watchdog");
+        
+        cbStopOnWatchdog.addActionListener(new ActionListener()
+		{	
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				myProcessor.getWatchdog().enableStopOnWatchdog(cbStopOnWatchdog.isSelected());
+			}
+		});
+        watchdogPanel.add(isSleepingText);
+        watchdogPanel.add(watchdogText);
+        watchdogPanel.add(cbEnableWatchdog);
+        watchdogPanel.add(cbStopOnWatchdog);
+        rightPanel.add(watchdogPanel);
+        
+        
+        upperPanel.add(rightPanel);
+        
         contentPanel.add(upperPanel, BorderLayout.CENTER);
 
         programmPanel = new JPanel();
@@ -286,6 +336,7 @@ public class MainFrame extends JFrame implements PicGUI
         repaintIO();
         repaintStack();
         repaintRuntimeCounter();
+        repaintWDPanel();
         super.repaint();
     }
 
@@ -448,6 +499,21 @@ public class MainFrame extends JFrame implements PicGUI
             stackTable.setValueAt(new Integer(s.get(i)).toString(), i, 0);
         }
 
+    }
+    private void repaintWDPanel()
+    {
+    	if(myProcessor.isSleeping())
+    	{
+    		isSleepingText.setText(SLEEP_ON);
+    	}
+    	else
+    	{
+    		isSleepingText.setText(SLEEP_OFF);
+    	}
+    	if(myProcessor.isWdtEnabled())
+    	{
+    		watchdogText.setText("Zeit bis Watchdog-Reset: " + myProcessor.getWatchdog().getMillisLeft() + "ms");
+    	}
     }
 
     private String byteToHex(byte byteValue)

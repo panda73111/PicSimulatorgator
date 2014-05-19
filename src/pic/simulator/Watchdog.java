@@ -8,6 +8,7 @@ public class Watchdog
     private final PicProcessor proc;
     private int             ticks;
     private double          millisLeft;
+    private boolean stopOnWatchdog = false;
 
     public Watchdog(PicProcessor processor)
     {
@@ -34,6 +35,10 @@ public class Watchdog
             millisLeft = 0.0d;
             proc.reset(proc.isSleeping() ? PicProcessor.WDT_IN_SLEEP : PicProcessor.WDT);
             ticks = 0;
+            if(stopOnWatchdog)
+            {
+            	proc.stopProgramExecution();
+            }
             return;
         }
 
@@ -48,5 +53,9 @@ public class Watchdog
     public void reset()
     {
         ticks = 0;
+    }
+    public void enableStopOnWatchdog(boolean doStop)
+    {
+    	stopOnWatchdog = doStop;
     }
 }
