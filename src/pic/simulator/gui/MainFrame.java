@@ -348,17 +348,21 @@ public class MainFrame extends JFrame implements PicGUI
 
     private void repaintRuntimeCounter()
     {
-        double freq = myProcessor.getFrequency();
+        double procFreq = myProcessor.getFrequency();
         try
         {
-            freq = new Double(quarzTextField.getText());
+            double newFreq = new Double(quarzTextField.getText());
+            if (procFreq != newFreq)
+            {
+                myProcessor.setFrequency(newFreq);
+                procFreq = newFreq;
+            }
         }
         catch (Exception e)
         {
         }
         cycleLabel.setText(" " + myProcessor.getCycleCount() + " Zyklen");
-        runtimeLabel.setText(" " + (freq / 4.0d) * myProcessor.getCycleCount() + " \u00B5s");
-
+        runtimeLabel.setText(" " + (procFreq / 4.0d) * myProcessor.getCycleCount() + " \u00B5s");
     }
 
     private void initGPTable()
