@@ -28,8 +28,8 @@ public class Return extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		int val = proc.getMemoryControl().popStack();
-		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte) val);
+		short val = (short) proc.getMemoryControl().popStack();
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, val);
 	}
 
 	@Override

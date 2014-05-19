@@ -31,7 +31,7 @@ public class Retfie extends Command
 	public void execute(PicProcessor proc) 
 	{
 		int val = proc.getMemoryControl().popStack();
-		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte) val);
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (short) val);
 		proc.getMemoryControl().setBitAt(SpecialFunctionRegister.INTCON, Intcon.GENERAL_INTERRUPT_ENABLE);
 	}
 

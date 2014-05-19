@@ -31,8 +31,8 @@ public class Retlw extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		proc.workRegister = (byte) arg0;
-		byte value = (byte) proc.getMemoryControl().popStack();
+		proc.workRegister = (short) arg0;
+		short value = (short) proc.getMemoryControl().popStack();
 		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, value);
 	}
 

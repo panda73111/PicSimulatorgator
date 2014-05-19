@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import pic.simulator.interrupts.Interruption;
 import pic.simulator.specialfunctionregisters.Eeadr;
 import pic.simulator.specialfunctionregisters.Eecon1;
 import pic.simulator.specialfunctionregisters.Eecon2;
@@ -32,7 +33,7 @@ public class PicMemorycontrol implements Memorycontrol
     /**
      * The two dimensional array that contains the General-purpose registers.
      */
-    private byte[]                                    memory;
+    private short[]                                   memory;
 
     /**
      * A Hashmap that maps all addresses of special function registers to the
@@ -50,7 +51,7 @@ public class PicMemorycontrol implements Memorycontrol
     /**
      * A pointer to the processor class this memory unit belongs to.
      */
-    private PicProcessor                                 processor;
+    private PicProcessor                              processor;
 
     // These are just a bunch of constants for the PIC
 
@@ -68,13 +69,13 @@ public class PicMemorycontrol implements Memorycontrol
     public static final int                           maxStackSize            = 8;
     public static final short                         bankCount               = 2;
 
-    private final byte[]                              eepromData              = new byte[64];
+    private final short[]                             eepromData              = new short[64];
 
     private Status                                    statusReg;
 
     public PicMemorycontrol(PicProcessor proc)
     {
-        this.memory = new byte[gpLength];
+        this.memory = new short[gpLength];
         this.specialFunctionRegisters = new HashMap<>();
         this.specialFunctionRegisterSet = new HashSet<>();
         this.stack = new Stack<>();
@@ -92,7 +93,7 @@ public class PicMemorycontrol implements Memorycontrol
             return;
         }
 
-        memory[address - gpBegin] = (byte)(0xFF & value);
+        memory[address - gpBegin] = (short) (0xFF & value);
     }
 
     public short getAt(int address)
@@ -105,7 +106,7 @@ public class PicMemorycontrol implements Memorycontrol
         if (isUnimplemented(address))
             return 0;
 
-        return (short)memory[address - gpBegin];
+        return memory[address - gpBegin];
     }
 
     /**
@@ -150,7 +151,7 @@ public class PicMemorycontrol implements Memorycontrol
      *            The address of the specified byte
      * @return The byte at the given address
      */
-    protected byte getFromMemoryAt(int address)
+    protected short getFromMemoryAt(int address)
     {
         return memory[address];
     }
@@ -162,7 +163,7 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private int getActiveBank()
     {
-    	short status = statusReg.getValue();
+        short status = statusReg.getValue();
         return (status & 0b100000) >> 5;
     }
 
@@ -170,10 +171,10 @@ public class PicMemorycontrol implements Memorycontrol
     {
         if (stack.size() > maxStackSize)
         {
-        	processor.getGuiHandler().showError("Stackoverflow", "Stackoverflow");
-        	processor.stopProgramExecution();
-        	processor.reset(PicProcessor.POWER_ON);
-        	return false;
+            processor.getGuiHandler().showError("Stackoverflow", "Stackoverflow");
+            processor.stopProgramExecution();
+            processor.reset(PicProcessor.POWER_ON);
+            return false;
         }
         stack.push(value);
         return true;
@@ -290,7 +291,7 @@ public class PicMemorycontrol implements Memorycontrol
         specialFunctionRegisters.put(SpecialFunctionRegister.TRISB, sfr);
         specialFunctionRegisterSet.add(sfr);
 
-        sfr = new Eecon1(processor, this);
+        sfr = new Eecon1(this);
         specialFunctionRegisters.put(SpecialFunctionRegister.EECON1, sfr);
         specialFunctionRegisterSet.add(sfr);
 
@@ -327,7 +328,7 @@ public class PicMemorycontrol implements Memorycontrol
         }
     }
 
-    public byte getEepromByte(int index)
+    public short getEepromByte(int index)
     {
         if (index < 0 || index > eepromData.length)
             throw new IllegalArgumentException();
@@ -335,11 +336,40 @@ public class PicMemorycontrol implements Memorycontrol
         return eepromData[index];
     }
 
-    public void setEepromByte(int index, byte value)
+    public void setEepromByte(int index, short value)
     {
         if (index < 0 || index > eepromData.length)
             throw new IllegalArgumentException();
 
         eepromData[index] = value;
+    }
+
+    public void tryEepromWrite()
+    {
+        Eecon1 eecon1 = (Eecon1) getSFR(SpecialFunctionRegister.EECON1);
+        short eecon1Val = eecon1.getInternalValue();
+        // check for write attempt
+        if ((eecon1Val & 0b110) == 0b110)
+        {
+            // WR and WREN bits set
+            Eecon2 eecon2 = (Eecon2) getSFR(SpecialFunctionRegister.EECON2);
+            if (eecon2.isWriteAllowed())
+            {
+                // clear WRERR bit
+                eecon1Val &= ~0b1000;
+                // set WR bit, writing is in progress
+                eecon1Val |= 0b10;
+
+                short adr = getAt(SpecialFunctionRegister.EEADR);
+                short data = getAt(SpecialFunctionRegister.EEDATA);
+                setEepromByte(adr, data);
+
+                // write successful, clear WR bits
+                // TODO: timer to delay the write process
+                eecon1Val &= ~0b10;
+                eecon1.setValue(eecon1Val);
+                processor.getInterruptionHandler().causeInterruption(Interruption.EEPROM);
+            }
+        }
     }
 }
