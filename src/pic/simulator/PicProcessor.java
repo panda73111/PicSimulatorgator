@@ -78,41 +78,7 @@ public class PicProcessor implements Processor
 
         while (isRunning && pcl.get13BitValue() < picProgram.length())
         {
-            if (interruptionHandler.hasInterruption())
-            {
-                Interruption interruption = interruptionHandler.getInterruption();
-                interruption.executeInterruption();
-                continue;
-            }
-
-            if (isSleeping)
-            {
-                // let the watchdog wakeup the processor
-                watchdog.onTick();
-                continue;
-            }
-
-            Command cmd = fetch(pcl.get13BitValue());
-
-            if (cmd == null) // case: Breakpoint
-                continue;
-
-            pcl.increment();
-            execute(cmd);
-
-            timerTick();
-
-            //System.out.println("---Executed " + cmd.toString() + "---");
-
-            guiHandler.repaintGUI();
-            try
-            {
-                Thread.sleep(cmdDelay);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            executeNextCommand();
         }
         isRunning = false;
     }
@@ -144,7 +110,8 @@ public class PicProcessor implements Processor
     {
         int cntPinCurState;
         timer0.onTick();
-        watchdog.onTick();
+        if (wdtEnabled)
+            watchdog.onTick();
         cntPinCurState = pinHandler.getExternalPinState(Pin.RA4);
         if (cntPinCurState != cntPinPrevState)
         {
@@ -157,11 +124,50 @@ public class PicProcessor implements Processor
     {
         if (pcl.get13BitValue() < picProgram.length())
         {
+            if (interruptionHandler.hasInterruption())
+            {
+                Interruption interruption = interruptionHandler.getInterruption();
+                interruption.executeInterruption();
+                return;
+            }
+
+            if (isSleeping)
+            {
+                // let the watchdog wakeup the processor
+                if (wdtEnabled)
+                    watchdog.onTick();
+                try
+                {
+                    Thread.sleep(cmdDelay);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                return;
+            }
+
             Command cmd = fetch(pcl.get13BitValue());
+
+            if (cmd == null) // case: Breakpoint
+                return;
+
             pcl.increment();
             execute(cmd);
+
             timerTick();
+
+            // System.out.println("---Executed " + cmd.toString() + "---");
+
             guiHandler.repaintGUI();
+            try
+            {
+                Thread.sleep(cmdDelay);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
