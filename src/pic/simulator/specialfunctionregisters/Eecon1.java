@@ -9,7 +9,7 @@ public class Eecon1 extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
     private final PicProcessor        proc;
-    private byte                   value;
+    private short                   value;
 
     public Eecon1(PicProcessor proc, PicMemorycontrol memCtrl)
     {
@@ -19,9 +19,9 @@ public class Eecon1 extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
-        this.value = (byte) (value & 0b11100);
+        this.value = (short) (value & 0b11100);
 
         // check for read attempt
         if ((value & 0b1) != 0)
