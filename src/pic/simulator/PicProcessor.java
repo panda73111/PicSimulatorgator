@@ -64,6 +64,11 @@ public class PicProcessor implements Processor
         this();
         picProgram = new Program(programFileName);
     }
+    public PicProcessor(Program p)
+    {
+        this();
+        picProgram = p;
+    }
 
     public void executeProgram()
     {
@@ -230,7 +235,8 @@ public class PicProcessor implements Processor
                 break;
             case MCLR:
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
-                pcl.set13BitValue((short) 0);
+                if(pcl!=null)
+                    pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
@@ -240,7 +246,8 @@ public class PicProcessor implements Processor
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
                 statusReg.clearBit(3);
                 statusReg.setBit(4);
-                pcl.set13BitValue((short) 0);
+                if(pcl!=null)
+                	pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();
@@ -250,7 +257,8 @@ public class PicProcessor implements Processor
                 statusReg.setValue((byte) (statusReg.getValue() & 0x7));
                 statusReg.setBit(3);
                 statusReg.clearBit(4);
-                pcl.set13BitValue((short) 0);
+                if(pcl!=null)
+                    pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
                 trisaReg.reset();

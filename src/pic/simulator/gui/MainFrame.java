@@ -125,9 +125,6 @@ public class MainFrame extends JFrame implements PicGUI
         initStack();
         initRuntimeCounter();
 
-        if (proc != null) // This is done to make the GUI designer work
-            proc.getGuiHandler().registerGUIElement(this);
-
         resetProcessor();
     }
 
@@ -252,9 +249,11 @@ public class MainFrame extends JFrame implements PicGUI
 
     private void resetProcessor()
     {
-        myProcessor.stopProgramExecution();
-        processorThread = null;
-        myProcessor.reset(PicProcessor.POWER_ON);
+    	Program p = myProcessor.getProgram();
+    	myProcessor = new PicProcessor(p);
+    	myProcessor.reset(PicProcessor.POWER_ON);
+    	processorThread = null;
+    	myProcessor.getGuiHandler().registerGUIElement(this);
         repaintGUI();
     }
 
@@ -494,9 +493,12 @@ public class MainFrame extends JFrame implements PicGUI
 
         ColorCellRenderer.colorIndex = s.size();
 
-        for (int i = 0; i < s.size() && i < PicMemorycontrol.maxStackSize; i++)
+        for (int i = 0;  i < PicMemorycontrol.maxStackSize; i++)
         {
-            stackTable.setValueAt(new Integer(s.get(i)).toString(), i, 0);
+        	if(i < s.size())
+        		stackTable.setValueAt(new Integer(s.get(i)).toString(), i, 0);
+        	else
+        		stackTable.setValueAt("", i, 0);
         }
 
     }
