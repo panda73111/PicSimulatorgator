@@ -40,12 +40,11 @@ import pic.simulator.parser.Program;
 public class MainFrame extends JFrame implements PicGUI
 {
     private static final int    gpTableColCount = 8;
-    private static final String SLEEP_ON = "PIC schläft...";
-    private static final String SLEEP_OFF = "PIC schläft nicht.";
-    
-    
+    private static final String SLEEP_ON        = "PIC schläft...";
+    private static final String SLEEP_OFF       = "PIC schläft nicht.";
+
     Thread                      processorThread;
-    private PicProcessor           myProcessor;
+    private PicProcessor        myProcessor;
 
     private JPanel              mainPanel;
     private JTable              gpTable;
@@ -77,14 +76,14 @@ public class MainFrame extends JFrame implements PicGUI
     private JFormattedTextField quarzTextField;
     private JButton             btnApply;
 
-    private JPanel				watchdogPanel;
-    private JLabel				isSleepingText;
-    private JLabel				watchdogText;
-    private JCheckBox			cbEnableWatchdog;
-    private JCheckBox			cbStopOnWatchdog;
-    
-    private JPanel				rightPanel;
-    
+    private JPanel              watchdogPanel;
+    private JLabel              isSleepingText;
+    private JLabel              watchdogText;
+    private JCheckBox           cbEnableWatchdog;
+    private JCheckBox           cbStopOnWatchdog;
+
+    private JPanel              rightPanel;
+
     private IOPanel             ioPanel;
 
     public MainFrame(PicProcessor proc)
@@ -137,12 +136,11 @@ public class MainFrame extends JFrame implements PicGUI
 
         JPanel upperPanel = new JPanel();
 
-
         ioPanel = new IOPanel(myProcessor.getPinHandler());
         ioPanel.setPreferredSize(new Dimension(150, 175));
         ioPanel.setMaximumSize(new Dimension(150, 175));
         upperPanel.add(ioPanel);
-        
+
         JPanel gpPanel = new JPanel();
         gpPanel.add(new JLabel("General purpose registers"));
 
@@ -153,7 +151,6 @@ public class MainFrame extends JFrame implements PicGUI
         gpPanel.setPreferredSize(new Dimension(200, 200));
         gpPanel.setMaximumSize(new Dimension(200, 200));
         upperPanel.add(gpPanel);
-
 
         sfrTable = new JTable(new DefaultTableModel(8, 3));
         upperPanel.add(sfrTable);
@@ -167,9 +164,8 @@ public class MainFrame extends JFrame implements PicGUI
         stackPanel.setMaximumSize(new Dimension(100, 200));
         upperPanel.add(stackPanel);
 
+        rightPanel = new JPanel(new GridLayout(2, 1, 0, 5));
 
-        rightPanel= new JPanel(new GridLayout(2, 1, 0,5));
-        
         runtimePanel = new JPanel();
         runtimePanel.setLayout(new GridLayout(2, 3, 5, 5));
         runtimePanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -188,42 +184,40 @@ public class MainFrame extends JFrame implements PicGUI
         runtimePanel.add(btnApply);
         rightPanel.add(runtimePanel);
 
-
         watchdogPanel = new JPanel(new GridLayout(4, 1));
         isSleepingText = new JLabel(SLEEP_OFF);
         watchdogText = new JLabel("Zeit bis Watchdog-Reset: 0ms");
-        
+
         cbEnableWatchdog = new JCheckBox("Watchdog aktivieren");
         cbEnableWatchdog.setSelected(true);
         cbEnableWatchdog.addActionListener(new ActionListener()
-		{	
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				cbStopOnWatchdog.setEnabled(cbEnableWatchdog.isSelected());
-				watchdogText.setEnabled(cbEnableWatchdog.isSelected());
-				myProcessor.setWdtState(cbEnableWatchdog.isSelected());
-			}
-		});
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0)
+            {
+                cbStopOnWatchdog.setEnabled(cbEnableWatchdog.isSelected());
+                watchdogText.setEnabled(cbEnableWatchdog.isSelected());
+                myProcessor.setWdtState(cbEnableWatchdog.isSelected());
+            }
+        });
         cbStopOnWatchdog = new JCheckBox("Stop on Watchdog");
-        
+
         cbStopOnWatchdog.addActionListener(new ActionListener()
-		{	
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				myProcessor.getWatchdog().enableStopOnWatchdog(cbStopOnWatchdog.isSelected());
-			}
-		});
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0)
+            {
+                myProcessor.getWatchdog().enableStopOnWatchdog(cbStopOnWatchdog.isSelected());
+            }
+        });
         watchdogPanel.add(isSleepingText);
         watchdogPanel.add(watchdogText);
         watchdogPanel.add(cbEnableWatchdog);
         watchdogPanel.add(cbStopOnWatchdog);
         rightPanel.add(watchdogPanel);
-        
-        
+
         upperPanel.add(rightPanel);
-        
+
         contentPanel.add(upperPanel, BorderLayout.CENTER);
 
         programmPanel = new JPanel();
@@ -239,7 +233,7 @@ public class MainFrame extends JFrame implements PicGUI
         debugButtonPanel.add(btnStart);
         debugButtonPanel.add(btnStop);
         debugButtonPanel.add(btnStep);
-        
+
         programmTable = new JTable(new DefaultTableModel(10, 2));
         scrollPane = new JScrollPane(programmTable);
         programmPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), 200));
@@ -349,16 +343,21 @@ public class MainFrame extends JFrame implements PicGUI
 
     private void repaintRuntimeCounter()
     {
-        double freq = myProcessor.getFrequency();
+        double procFreq = myProcessor.getFrequency();
         try
         {
-            freq = new Double(quarzTextField.getText());
+            double newFreq = new Double(quarzTextField.getText());
+            if (procFreq != newFreq)
+            {
+                myProcessor.setFrequency(newFreq);
+                procFreq = newFreq;
+            }
         }
         catch (Exception e)
         {
         }
         cycleLabel.setText(" " + myProcessor.getCycleCount() + " Zyklen");
-        runtimeLabel.setText(" " + (freq / 4.0d) * myProcessor.getCycleCount() + " \u00B5s");
+        runtimeLabel.setText(" " + (procFreq / 4.0d) * myProcessor.getCycleCount() + " \u00B5s");
 
     }
 
@@ -501,20 +500,22 @@ public class MainFrame extends JFrame implements PicGUI
         }
 
     }
+
     private void repaintWDPanel()
     {
-    	if(myProcessor.isSleeping())
-    	{
-    		isSleepingText.setText(SLEEP_ON);
-    	}
-    	else
-    	{
-    		isSleepingText.setText(SLEEP_OFF);
-    	}
-    	if(myProcessor.isWdtEnabled())
-    	{
-    		watchdogText.setText("Zeit bis Watchdog-Reset: " + myProcessor.getWatchdog().getMillisLeft() + "ms");
-    	}
+        if (myProcessor.isSleeping())
+        {
+            isSleepingText.setText(SLEEP_ON);
+        }
+        else
+        {
+            isSleepingText.setText(SLEEP_OFF);
+        }
+        if (myProcessor.isWdtEnabled())
+        {
+            String millisLeft = String.format("%1$,.2f", myProcessor.getWatchdog().getMillisLeft());
+            watchdogText.setText("Zeit bis Watchdog-Reset: " + millisLeft + "ms");
+        }
     }
 
     private String byteToHex(byte byteValue)
