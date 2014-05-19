@@ -6,10 +6,10 @@ import pic.simulator.interrupts.Interruption;
 
 public class InterruptionHandler
 {
-    final Processor                   myProcessor;
+    final PicProcessor                   myProcessor;
     final PriorityQueue<Interruption> interruptionQueue;
 
-    public InterruptionHandler(Processor proc)
+    public InterruptionHandler(PicProcessor proc)
     {
         myProcessor = proc;
         interruptionQueue = new PriorityQueue<>();

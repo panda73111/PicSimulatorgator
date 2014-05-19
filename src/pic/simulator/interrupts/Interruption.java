@@ -1,7 +1,7 @@
 package pic.simulator.interrupts;
 
 import pic.simulator.PicMemorycontrol;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.specialfunctionregisters.Intcon;
 import pic.simulator.specialfunctionregisters.Pcl;
@@ -14,9 +14,9 @@ public class Interruption implements Comparable<Interruption>
     public static final int EEPROM = 3;
 
     private int             cause;
-    private Processor       proc;
+    private PicProcessor       proc;
 
-    public Interruption(Processor proc, int cause)
+    public Interruption(PicProcessor proc, int cause)
     {
         this.proc = proc;
         this.cause = cause;

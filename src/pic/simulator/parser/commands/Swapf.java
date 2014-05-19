@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 
 import pic.simulator.parser.Command;
 
@@ -31,7 +31,7 @@ public class Swapf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 		byte f 		= proc.getMemoryControl().getAt(arg0);		
 		byte res 	= (byte) (((0xF0 & f) >> 4) + ((0x0F & f) << 4)); // Awesome!
 

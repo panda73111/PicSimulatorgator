@@ -5,11 +5,11 @@ public class Watchdog
 {
     public static final int timeoutMillis = 18; // without prescaling!
 
-    private final Processor proc;
+    private final PicProcessor proc;
     private int             ticks;
     private double          millisLeft;
 
-    public Watchdog(Processor processor)
+    public Watchdog(PicProcessor processor)
     {
         this.proc = processor;
     }
@@ -32,7 +32,7 @@ public class Watchdog
         if (millisPassed >= millisToPass)
         {
             millisLeft = 0.0d;
-            proc.reset(proc.isSleeping() ? Processor.WDT_IN_SLEEP : Processor.WDT);
+            proc.reset(proc.isSleeping() ? PicProcessor.WDT_IN_SLEEP : PicProcessor.WDT);
             ticks = 0;
             return;
         }

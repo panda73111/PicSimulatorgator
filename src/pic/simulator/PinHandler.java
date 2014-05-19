@@ -4,7 +4,7 @@ import pic.simulator.pins.Pin;
 
 public interface PinHandler {
 	
-    public void setupPins(Processor proc);
+    public void setupPins(PicProcessor proc);
 
     public Pin getPin(int pin);
 

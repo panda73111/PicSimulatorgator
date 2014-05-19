@@ -3,7 +3,7 @@ package pic.simulator.specialfunctionregisters;
 import java.util.HashMap;
 
 import pic.simulator.PinHandler;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.pins.IOPin;
 import pic.simulator.pins.Pin;
@@ -13,7 +13,7 @@ public class Porta extends SpecialFunctionRegister
     private final HashMap<Integer, IOPin> pins;
     private byte                          value;
 
-    public Porta(Processor processor)
+    public Porta(PicProcessor processor)
     {
         this.pins = new HashMap<Integer, IOPin>();
 

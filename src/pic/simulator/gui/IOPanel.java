@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import pic.simulator.PinHandler;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.pins.Pin;
 
 @SuppressWarnings("serial")
@@ -107,7 +107,7 @@ public class IOPanel extends JPanel
     	else
     		ioHandler.clearPinExternally(ioButton.ID);
     }
-    public void repaint(Processor proc)
+    public void repaint(PicProcessor proc)
     {
     	PinHandler p = proc.getPinHandler();
     	for(int i=0; i<p.getPinCount(); i++)

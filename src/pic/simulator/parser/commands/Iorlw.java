@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.parser.Command;
 
 public class Iorlw extends Command
@@ -29,7 +29,7 @@ public class Iorlw extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 		byte val = (byte) (proc.workRegister | arg0);
 		
 		proc.workRegister = val;

@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
@@ -31,7 +31,7 @@ public class Decfsz extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 		
 		byte f = proc.getMemoryControl().getAt(arg0);
 		f--;

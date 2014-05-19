@@ -1,17 +1,17 @@
 package pic.simulator.specialfunctionregisters;
 
 import pic.simulator.PicMemorycontrol;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.interrupts.Interruption;
 
 public class Eecon1 extends SpecialFunctionRegister
 {
     private final PicMemorycontrol memCtrl;
-    private final Processor        proc;
+    private final PicProcessor        proc;
     private byte                   value;
 
-    public Eecon1(Processor proc, PicMemorycontrol memCtrl)
+    public Eecon1(PicProcessor proc, PicMemorycontrol memCtrl)
     {
         this.memCtrl = memCtrl;
         this.proc = proc;

@@ -1,15 +1,15 @@
 package pic.simulator.pins;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.interrupts.Interruption;
 import pic.simulator.specialfunctionregisters.Optionreg;
 
 public class Rb0 extends IOPin
 {
-	Processor proc;
+	PicProcessor proc;
 	
-	public Rb0(String name, int id, Processor proc)
+	public Rb0(String name, int id, PicProcessor proc)
 	{
 		super(name, id);
 		this.proc = proc;

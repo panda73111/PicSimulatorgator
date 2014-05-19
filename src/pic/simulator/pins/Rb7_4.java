@@ -1,13 +1,13 @@
 package pic.simulator.pins;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.interrupts.Interruption;
 
 public class Rb7_4 extends IOPin
 {
-	Processor proc;
+	PicProcessor proc;
 	
-	public Rb7_4(String name, int id, Processor proc)
+	public Rb7_4(String name, int id, PicProcessor proc)
 	{
 		super(name, id);
 		this.proc = proc;

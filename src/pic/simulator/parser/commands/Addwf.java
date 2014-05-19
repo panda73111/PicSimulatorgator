@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
@@ -34,7 +34,7 @@ public class Addwf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {	
+	public void execute(PicProcessor proc) {	
 		byte val2 = proc.getMemoryControl().getAt(arg0);
 		
 		int newValue	= ((int)proc.workRegister) + val2;

@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
@@ -31,7 +31,7 @@ public class Subwf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 
 		int w 				= proc.workRegister;
 		int f				= proc.getMemoryControl().getAt(arg0);

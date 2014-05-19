@@ -31,7 +31,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pic.simulator.PicMemorycontrol;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Program;
 
@@ -41,7 +41,7 @@ public class MainFrame extends JFrame implements PicGUI
     private static final int    gpTableColCount = 8;
 
     Thread                      processorThread;
-    private Processor           myProcessor;
+    private PicProcessor           myProcessor;
 
     private JPanel              mainPanel;
     private JTable              gpTable;
@@ -59,6 +59,7 @@ public class MainFrame extends JFrame implements PicGUI
     private JButton             btnStop;
     private JButton             btnStep;
     private JButton             btnStart;
+    private JButton             btnHelp;
 
     private JPanel              contentPanel;
 
@@ -70,11 +71,11 @@ public class MainFrame extends JFrame implements PicGUI
     private JLabel              runtimeLabel;
     private JLabel              cycleLabel;
     private JFormattedTextField quarzTextField;
-    private JButton             applyButton;
+    private JButton             btnApply;
 
     private IOPanel             ioPanel;
 
-    public MainFrame(Processor proc)
+    public MainFrame(PicProcessor proc)
     {
         myProcessor = proc;
 
@@ -96,10 +97,12 @@ public class MainFrame extends JFrame implements PicGUI
         buttonPanel.setLayout(new GridLayout(1, 3, 0, 10));
 
         btnReset = new JButton("Reset");
+        btnHelp = new JButton("Hilfe");
         btnOpenProgram = new JButton("Öffnen");
 
         buttonPanel.add(btnOpenProgram);
         buttonPanel.add(btnReset);
+        buttonPanel.add(btnHelp);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -122,6 +125,12 @@ public class MainFrame extends JFrame implements PicGUI
 
         JPanel upperPanel = new JPanel();
 
+
+        ioPanel = new IOPanel(myProcessor.getPinHandler());
+        ioPanel.setPreferredSize(new Dimension(150, 175));
+        ioPanel.setMaximumSize(new Dimension(150, 175));
+        upperPanel.add(ioPanel);
+        
         JPanel gpPanel = new JPanel();
         gpPanel.add(new JLabel("General purpose registers"));
 
@@ -133,10 +142,6 @@ public class MainFrame extends JFrame implements PicGUI
         gpPanel.setMaximumSize(new Dimension(200, 200));
         upperPanel.add(gpPanel);
 
-        ioPanel = new IOPanel(myProcessor.getPinHandler());
-        ioPanel.setPreferredSize(new Dimension(150, 175));
-        ioPanel.setMaximumSize(new Dimension(150, 175));
-        upperPanel.add(ioPanel);
 
         sfrTable = new JTable(new DefaultTableModel(8, 3));
         upperPanel.add(sfrTable);
@@ -157,7 +162,7 @@ public class MainFrame extends JFrame implements PicGUI
         quarzTextField = new JFormattedTextField(new DecimalFormat("####.########"));
         ;
         quarzTextField.setHorizontalAlignment(JTextField.RIGHT);
-        applyButton = new JButton("Übernehmen");
+        btnApply = new JButton("Übernehmen");
 
         runtimeLabel = new JLabel();
         cycleLabel = new JLabel();
@@ -166,7 +171,7 @@ public class MainFrame extends JFrame implements PicGUI
         runtimePanel.add(quarzTextField);
         runtimePanel.add(new JLabel("MHz"));
         runtimePanel.add(cycleLabel);
-        runtimePanel.add(applyButton);
+        runtimePanel.add(btnApply);
         upperPanel.add(runtimePanel);
 
         contentPanel.add(upperPanel, BorderLayout.CENTER);
@@ -184,7 +189,7 @@ public class MainFrame extends JFrame implements PicGUI
         debugButtonPanel.add(btnStart);
         debugButtonPanel.add(btnStop);
         debugButtonPanel.add(btnStep);
-
+        
         programmTable = new JTable(new DefaultTableModel(10, 2));
         scrollPane = new JScrollPane(programmTable);
         programmPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), 200));
@@ -199,7 +204,7 @@ public class MainFrame extends JFrame implements PicGUI
     {
         myProcessor.stopProgramExecution();
         processorThread = null;
-        myProcessor.Reset(Processor.POWER_ON);
+        myProcessor.reset(PicProcessor.POWER_ON);
         repaintGUI();
     }
 
@@ -263,7 +268,7 @@ public class MainFrame extends JFrame implements PicGUI
                 }
             }
         });
-        applyButton.addActionListener(new ActionListener()
+        btnApply.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent arg0)

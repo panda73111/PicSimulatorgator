@@ -1,7 +1,7 @@
 package pic.simulator.parser.commands;
 
 import pic.simulator.PicMemorycontrol;
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 import pic.simulator.specialfunctionregisters.Pcl;
@@ -36,7 +36,7 @@ public class Call extends Command
     }
 
     @Override
-    public void execute(Processor proc)
+    public void execute(PicProcessor proc)
     {
         PicMemorycontrol memCtrl = (PicMemorycontrol) proc.getMemoryControl();
         Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);

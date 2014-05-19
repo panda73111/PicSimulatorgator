@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
 
@@ -30,7 +30,7 @@ public class Retlw extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 		proc.workRegister = (byte) arg0;
 		byte value = (byte) proc.getMemoryControl().popStack();
 		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, value);

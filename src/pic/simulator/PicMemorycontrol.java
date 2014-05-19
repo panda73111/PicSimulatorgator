@@ -50,7 +50,7 @@ public class PicMemorycontrol implements Memorycontrol
     /**
      * A pointer to the processor class this memory unit belongs to.
      */
-    private Processor                                 processor;
+    private PicProcessor                                 processor;
 
     // These are just a bunch of constants for the PIC
 
@@ -72,7 +72,7 @@ public class PicMemorycontrol implements Memorycontrol
 
     private Status                                    statusReg;
 
-    public PicMemorycontrol(Processor proc)
+    public PicMemorycontrol(PicProcessor proc)
     {
         this.memory = new byte[gpLength];
         this.specialFunctionRegisters = new HashMap<>();

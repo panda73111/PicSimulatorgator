@@ -1,6 +1,6 @@
 package pic.simulator.specialfunctionregisters;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 
 public class Intcon extends SpecialFunctionRegister
@@ -20,7 +20,7 @@ public class Intcon extends SpecialFunctionRegister
 	
     private byte value;
 
-	public Intcon(Processor processor)
+	public Intcon(PicProcessor processor)
 	{
 		reset();
 	}

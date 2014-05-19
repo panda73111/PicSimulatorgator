@@ -1,12 +1,12 @@
 package pic.simulator.pins;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 
 public class MclrPin extends Pin
 {
-    private final Processor processor;
+    private final PicProcessor processor;
     
-    public MclrPin(String name, int id, Processor processor)
+    public MclrPin(String name, int id, PicProcessor processor)
     {
         super(name, id);
         
@@ -34,7 +34,7 @@ public class MclrPin extends Pin
     public void clearExternally()
     {
         externalState = Pin.LOW;
-        processor.Reset(processor.isSleeping() ? Processor.MCLR_IN_SLEEP : Processor.MCLR);
+        processor.reset(processor.isSleeping() ? PicProcessor.MCLR_IN_SLEEP : PicProcessor.MCLR);
     }
 
 }

@@ -1,6 +1,6 @@
 package pic.simulator.parser;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.commands.*;
 
@@ -101,7 +101,7 @@ public abstract class Command
         return null;
     }
 
-    public void affectZeroBit(Processor proc, byte result)
+    public void affectZeroBit(PicProcessor proc, byte result)
     {
         if (result == 0)
             proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
@@ -119,7 +119,7 @@ public abstract class Command
 
     public abstract short getArg1();
 
-    public abstract void execute(Processor processor);
+    public abstract void execute(PicProcessor processor);
 
     @Override
     public String toString()

@@ -12,13 +12,13 @@ public class PicPinHandler implements PinHandler
 {
     private HashMap<Integer, Pin> pins;
 
-    public PicPinHandler(Processor proc)
+    public PicPinHandler(PicProcessor proc)
     {
         pins = new HashMap<>();
         setupPins(proc);
     }
 
-    public void setupPins(Processor proc)
+    public void setupPins(PicProcessor proc)
     {
         pins.put(Pin.RA0, new IOPin("RA0", Pin.RA0));
         pins.put(Pin.RA1, new IOPin("RA1", Pin.RA1));

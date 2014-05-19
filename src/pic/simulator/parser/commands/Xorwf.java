@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 import pic.simulator.parser.Command;
 
 public class Xorwf extends Command
@@ -30,7 +30,7 @@ public class Xorwf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
+	public void execute(PicProcessor proc) {
 		
 		byte res = (byte) (proc.workRegister ^ proc.getMemoryControl().getAt(arg0));
 		

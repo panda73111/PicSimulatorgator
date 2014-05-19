@@ -1,6 +1,6 @@
 package pic.simulator.parser.commands;
 
-import pic.simulator.Processor;
+import pic.simulator.PicProcessor;
 
 import pic.simulator.parser.Command;
 
@@ -31,11 +31,8 @@ public class Bsf extends Command
 	}
 
 	@Override
-	public void execute(Processor proc) {
-		byte val = proc.getMemoryControl().getAt(arg0);
-		val |= (1<<arg1);
-		proc.getMemoryControl().setAt(arg0, val);
-
+	public void execute(PicProcessor proc) {
+		proc.getMemoryControl().setBitAt(arg0, arg1);
 	}
 
 	@Override

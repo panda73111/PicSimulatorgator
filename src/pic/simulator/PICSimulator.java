@@ -28,11 +28,11 @@ public class PICSimulator
     	
     	UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     	
-    	final Processor processor;
+    	final PicProcessor processor;
     	if(args.length==1)
-    		processor = new Processor(args[0]);
+    		processor = new PicProcessor(args[0]);
     	else
-    		processor = new Processor();
+    		processor = new PicProcessor();
     		
     	EventQueue.invokeLater(new Runnable() {
 			public void run() {
