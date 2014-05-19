@@ -31,7 +31,7 @@ public class Goto extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (byte)arg0);
+		proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, (short)arg0);
 	}
 
 	@Override

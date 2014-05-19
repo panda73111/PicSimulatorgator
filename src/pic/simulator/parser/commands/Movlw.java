@@ -32,7 +32,7 @@ public class Movlw extends Command
 	@Override
 	public void execute(PicProcessor proc) 
 	{
-		byte result = (byte) arg0;
+	    short result = (short) arg0;
 		proc.workRegister = result;
 	}
 

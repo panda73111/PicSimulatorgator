@@ -92,7 +92,7 @@ public class Tmr0 extends SpecialFunctionRegister
     @Override
     public short getValue()
     {
-        return (byte) value;
+        return value;
     }
 
     @Override

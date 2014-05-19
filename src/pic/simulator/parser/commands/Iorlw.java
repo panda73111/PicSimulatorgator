@@ -30,7 +30,7 @@ public class Iorlw extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte val = (byte) (proc.workRegister | arg0);
+		short val = (short) (proc.workRegister | arg0);
 		
 		proc.workRegister = val;
 		

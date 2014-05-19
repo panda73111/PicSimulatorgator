@@ -33,7 +33,7 @@ public class PicMemorycontrol implements Memorycontrol
     /**
      * The two dimensional array that contains the General-purpose registers.
      */
-    private byte[]                                    memory;
+    private short[]                                   memory;
 
     /**
      * A Hashmap that maps all addresses of special function registers to the
@@ -69,13 +69,13 @@ public class PicMemorycontrol implements Memorycontrol
     public static final int                           maxStackSize            = 8;
     public static final short                         bankCount               = 2;
 
-    private final byte[]                              eepromData              = new byte[64];
+    private final short[]                             eepromData              = new short[64];
 
     private Status                                    statusReg;
 
     public PicMemorycontrol(PicProcessor proc)
     {
-        this.memory = new byte[gpLength];
+        this.memory = new short[gpLength];
         this.specialFunctionRegisters = new HashMap<>();
         this.specialFunctionRegisterSet = new HashSet<>();
         this.stack = new Stack<>();
@@ -93,7 +93,7 @@ public class PicMemorycontrol implements Memorycontrol
             return;
         }
 
-        memory[address - gpBegin] = (byte)(0xFF & value);
+        memory[address - gpBegin] = (short) (0xFF & value);
     }
 
     public short getAt(int address)
@@ -106,7 +106,7 @@ public class PicMemorycontrol implements Memorycontrol
         if (isUnimplemented(address))
             return 0;
 
-        return (short)memory[address - gpBegin];
+        return memory[address - gpBegin];
     }
 
     /**
@@ -151,7 +151,7 @@ public class PicMemorycontrol implements Memorycontrol
      *            The address of the specified byte
      * @return The byte at the given address
      */
-    protected byte getFromMemoryAt(int address)
+    protected short getFromMemoryAt(int address)
     {
         return memory[address];
     }
@@ -163,7 +163,7 @@ public class PicMemorycontrol implements Memorycontrol
      */
     private int getActiveBank()
     {
-    	short status = statusReg.getValue();
+        short status = statusReg.getValue();
         return (status & 0b100000) >> 5;
     }
 
@@ -328,7 +328,7 @@ public class PicMemorycontrol implements Memorycontrol
         }
     }
 
-    public byte getEepromByte(int index)
+    public short getEepromByte(int index)
     {
         if (index < 0 || index > eepromData.length)
             throw new IllegalArgumentException();
@@ -336,7 +336,7 @@ public class PicMemorycontrol implements Memorycontrol
         return eepromData[index];
     }
 
-    public void setEepromByte(int index, byte value)
+    public void setEepromByte(int index, short value)
     {
         if (index < 0 || index > eepromData.length)
             throw new IllegalArgumentException();
@@ -347,7 +347,7 @@ public class PicMemorycontrol implements Memorycontrol
     public void tryEepromWrite()
     {
         Eecon1 eecon1 = (Eecon1) getSFR(SpecialFunctionRegister.EECON1);
-        byte eecon1Val = eecon1.getValue();
+        short eecon1Val = eecon1.getInternalValue();
         // check for write attempt
         if ((eecon1Val & 0b110) == 0b110)
         {
@@ -360,8 +360,8 @@ public class PicMemorycontrol implements Memorycontrol
                 // set WR bit, writing is in progress
                 eecon1Val |= 0b10;
 
-                byte adr = getAt(SpecialFunctionRegister.EEADR);
-                byte data = getAt(SpecialFunctionRegister.EEDATA);
+                short adr = getAt(SpecialFunctionRegister.EEADR);
+                short data = getAt(SpecialFunctionRegister.EEDATA);
                 setEepromByte(adr, data);
 
                 // write successful, clear WR bits

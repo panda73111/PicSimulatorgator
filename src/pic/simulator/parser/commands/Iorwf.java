@@ -34,7 +34,7 @@ public class Iorwf extends Command
 	public void execute(PicProcessor proc) {
 		short f = proc.getMemoryControl().getAt(arg0);
 		
-		byte val = (byte) (proc.workRegister | f);
+		short val = (short) (proc.workRegister | f);
 
 		if(arg1==0)
 			proc.workRegister = val;

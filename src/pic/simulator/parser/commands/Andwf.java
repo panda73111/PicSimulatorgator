@@ -33,7 +33,7 @@ public class Andwf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte newValue = (byte) (proc.workRegister & proc.getMemoryControl().getAt(arg0));
+		short newValue = (short) (proc.workRegister & proc.getMemoryControl().getAt(arg0));
 		
 		if(arg1==0)
 			proc.workRegister = newValue;
