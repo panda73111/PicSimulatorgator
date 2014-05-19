@@ -31,7 +31,7 @@ public class Decf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte val = proc.getMemoryControl().getAt(arg0);
+		short val = proc.getMemoryControl().getAt(arg0);
 		val--;
 
 		if(arg1==0)

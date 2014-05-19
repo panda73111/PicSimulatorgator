@@ -14,7 +14,7 @@ public class Pclath extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
         Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
         short oldPclVal = pcl.get13BitValue();
@@ -23,7 +23,7 @@ public class Pclath extends SpecialFunctionRegister
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         // not readable
         return 0;

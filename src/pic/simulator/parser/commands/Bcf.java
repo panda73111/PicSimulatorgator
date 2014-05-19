@@ -32,7 +32,7 @@ public class Bcf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte val = proc.getMemoryControl().getAt(arg0);
+		short val = proc.getMemoryControl().getAt(arg0);
 		val &= 0xFF-(1<<arg1);
 		proc.getMemoryControl().setAt(arg0, val);
 	}

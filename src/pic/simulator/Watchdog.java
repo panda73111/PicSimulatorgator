@@ -22,7 +22,7 @@ public class Watchdog
         double millisPassed = 0.004d / proc.getFrequency() * ticks;
         int millisToPass = timeoutMillis;
 
-        byte options = proc.getMemoryControl().getAt(SpecialFunctionRegister.OPTION_REG);
+        short options = proc.getMemoryControl().getAt(SpecialFunctionRegister.OPTION_REG);
         if ((options & 0b100) != 0)
         {
             // the Prescaler is assigned to the WDT

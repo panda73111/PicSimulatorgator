@@ -13,7 +13,7 @@ public class Pcl extends SpecialFunctionRegister
 
     public void increment()
     {
-        value = (byte) ((value + 1) & 0x1FFF);
+        value = (short) ((value + 1) & 0x1FFF);
     }
 
     public short get13BitValue()
@@ -27,13 +27,13 @@ public class Pcl extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
         this.value = value;
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         return (byte) value;
     }

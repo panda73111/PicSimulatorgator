@@ -2,6 +2,7 @@ package pic.simulator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -326,6 +328,21 @@ public class MainFrame extends JFrame implements PicGUI
                 repaintRuntimeCounter();
             }
         });
+        btnHelp.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0)
+            {
+            	if (Desktop.isDesktopSupported()) {
+            	    try {
+            	        File myFile = new File("Dokumentation.pdf");
+            	        Desktop.getDesktop().open(myFile);
+            	    } catch (Exception ex) {
+            	        // no application registered for PDFs
+            	    }
+            	}
+            }
+        });
     }
 
     public void repaintGUI()
@@ -441,7 +458,7 @@ public class MainFrame extends JFrame implements PicGUI
     {
         for (int i = 0; i < PicMemorycontrol.gpLength; i++)
         {
-            byte byteValue = myProcessor.getMemoryControl().getAt(PicMemorycontrol.gpBegin + i);
+            short byteValue = myProcessor.getMemoryControl().getAt(PicMemorycontrol.gpBegin + i);
             gpTable.setValueAt(byteToHex(byteValue), i / gpTableColCount, i % gpTableColCount);
         }
     }
@@ -523,7 +540,7 @@ public class MainFrame extends JFrame implements PicGUI
     	}
     }
 
-    private String byteToHex(byte byteValue)
+    private String byteToHex(short byteValue)
     {
         String hexString = Integer.toHexString(byteValue & 0xFF) + "H";
         while (hexString.length() < 3)
@@ -533,7 +550,7 @@ public class MainFrame extends JFrame implements PicGUI
         return hexString;
     }
 
-    private String byteToBinary(byte byteValue)
+    private String byteToBinary(short byteValue)
     {
         String byteString = Integer.toBinaryString(byteValue & 0xFF) + "b";
         while (byteString.length() < 9)

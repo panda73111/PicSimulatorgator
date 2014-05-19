@@ -32,7 +32,7 @@ public class Comf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte val = proc.getMemoryControl().getAt(arg0);
+		short val = proc.getMemoryControl().getAt(arg0);
 		val^=0xFF;
 		
 		if(arg1==0)

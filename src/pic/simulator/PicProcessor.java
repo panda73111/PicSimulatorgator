@@ -35,7 +35,7 @@ public class PicProcessor implements Processor
 
     private long                cycleCount    = 0;
     public long                 cmdDelay      = 0;
-    public byte                 workRegister  = 0x00;
+    public short                workRegister  = 0x00;
     private boolean             isRunning     = false;
     private boolean             isSleeping    = false;
     private double              frequency     = 4.0f; // in MHz

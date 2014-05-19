@@ -13,7 +13,7 @@ public interface Memorycontrol {
 	 * @param value
 	 *            The new value of the byte
 	 */
-	public void setAt(int address, byte value);
+	public void setAt(int address, short value);
 
 	/**
 	 * Returns the value of a specific byte from the memory-unit.
@@ -22,7 +22,7 @@ public interface Memorycontrol {
 	 *            The address of the specified value
 	 * @return The value of the byte at the given address
 	 */
-	public byte getAt(int address);
+	public short getAt(int address);
 
 	/**
 	 * Pushes a value to the stack

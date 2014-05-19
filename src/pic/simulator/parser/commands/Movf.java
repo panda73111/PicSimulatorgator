@@ -32,7 +32,7 @@ public class Movf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		byte f = proc.getMemoryControl().getAt(arg0);
+		short f = proc.getMemoryControl().getAt(arg0);
 		
 		if(arg1==0)
 		{

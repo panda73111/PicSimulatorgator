@@ -28,7 +28,7 @@ public class Trisa extends SpecialFunctionRegister
     }
 
     @Override
-    public void setValue(byte value)
+    public void setValue(short value)
     {
         this.value = (byte) (value & 0x1f);
 
@@ -59,7 +59,7 @@ public class Trisa extends SpecialFunctionRegister
     }
 
     @Override
-    public byte getValue()
+    public short getValue()
     {
         return value;
     }
@@ -67,7 +67,7 @@ public class Trisa extends SpecialFunctionRegister
     @Override
     public void reset()
     {
-        value = 0;
+        value = (byte)0xFF;
 
         for (IOPin pin : pins.values())
             pin.setToOutput();
