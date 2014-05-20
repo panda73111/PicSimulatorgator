@@ -39,9 +39,9 @@ public class Addlw extends Command
         short newValue = (short) (proc.workRegister + arg0);
 
         boolean setDC = (((proc.workRegister & 0x0F) + (arg0 & 0x0F)) & 0x10) != 0;
-        boolean setC = (newValue & 0x10000) != 0;
+        boolean setC = (newValue & 0x1FF) != 0;
 
-        proc.workRegister = newValue;
+        proc.workRegister = (short) (0xFF & newValue);
 
         if (setDC)
             proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);

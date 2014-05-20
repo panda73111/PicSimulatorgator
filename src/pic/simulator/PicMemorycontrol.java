@@ -106,7 +106,7 @@ public class PicMemorycontrol implements Memorycontrol
         if (isUnimplemented(address))
             return 0;
 
-        return memory[address - gpBegin];
+        return (short)(0xFF & memory[address - gpBegin]);
     }
 
     /**
@@ -192,7 +192,7 @@ public class PicMemorycontrol implements Memorycontrol
 
     public void setBitAt(int address, short bit)
     {
-        byte val = (byte) (getAt(address) | (1 << bit));
+        short val = (short) (getAt(address) | (1 << bit));
         setAt(address, val);
     }
 
@@ -317,7 +317,7 @@ public class PicMemorycontrol implements Memorycontrol
 
     public void clearGP()
     {
-        Arrays.fill(memory, (byte) 0);
+        Arrays.fill(memory, (short) 0);
     }
 
     public void reset()

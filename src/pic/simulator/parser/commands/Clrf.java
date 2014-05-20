@@ -31,7 +31,7 @@ public class Clrf extends Command
 
 	@Override
 	public void execute(PicProcessor proc) {
-		proc.getMemoryControl().setAt(arg0, (byte) 0);
+		proc.getMemoryControl().setAt(arg0, (short) 0);
 		proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
 	}
 

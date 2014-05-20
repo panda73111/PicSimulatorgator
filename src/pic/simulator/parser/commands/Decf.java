@@ -33,7 +33,8 @@ public class Decf extends Command
 	public void execute(PicProcessor proc) {
 		short val = proc.getMemoryControl().getAt(arg0);
 		val--;
-
+		val&=0xFF;
+		
 		if(arg1==0)
 			proc.workRegister = val;
 		else

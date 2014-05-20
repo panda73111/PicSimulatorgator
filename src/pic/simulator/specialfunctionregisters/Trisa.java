@@ -11,7 +11,7 @@ import pic.simulator.pins.Pin;
 public class Trisa extends SpecialFunctionRegister
 {
     private final HashMap<Integer, IOPin> pins;
-    private byte                          value;
+    private short                          value;
 
     public Trisa(PicProcessor processor)
     {
@@ -30,7 +30,7 @@ public class Trisa extends SpecialFunctionRegister
     @Override
     public void setValue(short value)
     {
-        this.value = (byte) (value & 0x1f);
+        this.value = (short) (value & 0x1f);
 
         if ((value & 0b00001) > 0)
             pins.get(Pin.RA0).setToInput();
@@ -67,7 +67,7 @@ public class Trisa extends SpecialFunctionRegister
     @Override
     public void reset()
     {
-        value = (byte)0xFF;
+        value = 0xFF;
 
         for (IOPin pin : pins.values())
             pin.setToOutput();

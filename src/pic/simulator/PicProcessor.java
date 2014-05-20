@@ -241,7 +241,7 @@ public class PicProcessor implements Processor
                 cntPinPrevState = pinHandler.getExternalPinState(Pin.RA4);
                 break;
             case MCLR:
-                statusReg.setValue((byte) (statusReg.getValue() & 0x7));
+                statusReg.setValue((short) (statusReg.getValue() & 0x7));
                 pcl.set13BitValue((short) 0);
                 intconReg.reset();
                 optionReg.reset();
@@ -249,7 +249,7 @@ public class PicProcessor implements Processor
                 trisbReg.reset();
                 break;
             case MCLR_IN_SLEEP:
-                statusReg.setValue((byte) (statusReg.getValue() & 0x7));
+                statusReg.setValue((short) (statusReg.getValue() & 0x7));
                 statusReg.clearBit(3);
                 statusReg.setBit(4);
                 pcl.set13BitValue((short) 0);
@@ -259,7 +259,7 @@ public class PicProcessor implements Processor
                 trisbReg.reset();
                 break;
             case WDT:
-                statusReg.setValue((byte) (statusReg.getValue() & 0x7));
+                statusReg.setValue((short) (statusReg.getValue() & 0x7));
                 statusReg.setBit(3);
                 statusReg.clearBit(4);
                 pcl.set13BitValue((short) 0);

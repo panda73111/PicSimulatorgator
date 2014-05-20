@@ -32,8 +32,7 @@ public class Movlw extends Command
 	@Override
 	public void execute(PicProcessor proc) 
 	{
-	    short result = (short) arg0;
-		proc.workRegister = result;
+		proc.workRegister = arg0;
 	}
 
 	@Override

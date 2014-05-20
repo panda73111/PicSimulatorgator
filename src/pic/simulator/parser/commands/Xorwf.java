@@ -32,12 +32,13 @@ public class Xorwf extends Command
 	@Override
 	public void execute(PicProcessor proc) {
 		
-		byte res = (byte) (proc.workRegister ^ proc.getMemoryControl().getAt(arg0));
+		short res = (short) (proc.workRegister ^ proc.getMemoryControl().getAt(arg0));
+		res&=0xFF; // should be unnecessary
 		
 		if(arg1==0)
-			proc.workRegister=(byte) res;
+			proc.workRegister = res;
 		else
-			proc.getMemoryControl().setAt(arg0,(byte) res);
+			proc.getMemoryControl().setAt(arg0,res);
 		
 		affectZeroBit(proc, res);
 

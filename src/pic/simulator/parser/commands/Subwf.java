@@ -45,9 +45,11 @@ public class Subwf extends Command
 
         int resLowerNibble = (w & 0x0F) - (f & 0x0F);
 
-        boolean setC = res < 0;
-        boolean setDC = resLowerNibble < 0;
+        boolean setC  = (res & 0x100) != 0;
+        boolean setDC = (resLowerNibble & 0x10) != 0;
 
+        res &= 0xFF;
+        
         if (arg1 == 0)
             proc.workRegister = (short) res;
         else

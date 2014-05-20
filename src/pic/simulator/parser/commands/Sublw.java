@@ -36,15 +36,13 @@ public class Sublw extends Command
     @Override
     public void execute(PicProcessor proc)
     {
-
         short w = proc.workRegister;
         short res = (short) (w - arg0);
-        int resLowerNibble = (w & 0x0F) - (arg0 & 0x0F);
 
-        boolean setC = res < 0;
-        boolean setDC = resLowerNibble < 0;
+        boolean setDC = (((proc.workRegister & 0x0F) + (arg0 & 0x0F)) & 0x10) != 0;
+        boolean setC = (res & 0x1FF) != 0;
 
-        proc.workRegister = (short) res;
+        proc.workRegister = (short) (0xFF & res);
 
         affectZeroBit(proc, (short) res);
 

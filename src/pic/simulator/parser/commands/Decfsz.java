@@ -35,6 +35,7 @@ public class Decfsz extends Command
 		
 		short f = proc.getMemoryControl().getAt(arg0);
 		f--;
+		f&=0xFF;
 		
 		if(arg1==0)
 			proc.workRegister = f;

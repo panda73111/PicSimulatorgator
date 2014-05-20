@@ -43,6 +43,8 @@ public class Addwf extends Command
 		boolean setDC 	= (((proc.workRegister&0x0F) + (val2&0x0F))&0x10) != 0;
 		boolean setC 	= (newValue&0x10000) != 0;
 		
+		newValue &= 0xFF;
+		
 		if(arg1==0)
 			proc.workRegister= newValue;
 		else

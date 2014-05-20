@@ -35,7 +35,7 @@ public class Pcl extends SpecialFunctionRegister
     @Override
     public short getValue()
     {
-        return (byte) value;
+        return value;
     }
 
     @Override
