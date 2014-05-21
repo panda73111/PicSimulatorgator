@@ -1,14 +1,13 @@
 package pic.simulator;
 
-
 public class Watchdog
 {
-    public static final int timeoutMillis = 18; // without prescaling!
+    public static final int    timeoutMillis  = 18;   // without prescaling!
 
     private final PicProcessor proc;
-    private int             ticks;
-    private double          millisLeft;
-    private boolean stopOnWatchdog = false;
+    private int                ticks;
+    private double             millisLeft;
+    private boolean            stopOnWatchdog = false;
 
     public Watchdog(PicProcessor processor)
     {
@@ -35,9 +34,9 @@ public class Watchdog
             millisLeft = 0.0d;
             proc.reset(proc.isSleeping() ? PicProcessor.WDT_IN_SLEEP : PicProcessor.WDT);
             ticks = 0;
-            if(stopOnWatchdog)
+            if (stopOnWatchdog)
             {
-            	proc.stopProgramExecution();
+                proc.stopProgramExecution();
             }
             return;
         }
@@ -54,8 +53,20 @@ public class Watchdog
     {
         ticks = 0;
     }
+
     public void enableStopOnWatchdog(boolean doStop)
     {
-    	stopOnWatchdog = doStop;
+        stopOnWatchdog = doStop;
+    }
+
+    public void resetPrescaler()
+    {
+        Memorycontrol memCtrl = proc.getMemoryControl();
+        short options = memCtrl.getAt(SpecialFunctionRegister.OPTION_REG);
+        if ((options & 0b100) != 0)
+        {
+            // the Prescaler is assigned to the WDT, reset it
+            memCtrl.setAt(SpecialFunctionRegister.OPTION_REG, (short) (options & 0xFC));
+        }
     }
 }
