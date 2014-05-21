@@ -5,57 +5,63 @@ import pic.simulator.parser.Command;
 
 public class Andwf extends Command
 {
-	private static final short argumentCount = 2;
-	private static final short cycleCount = 1;
-	private int cmdNumber;
-	
-	private short arg0, arg1;
-	
-	public Andwf(int cmdNumber, short arg0, short arg1) {
-		this.cmdNumber = cmdNumber;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-	}
+    private static final short argumentCount = 2;
+    private static final short cycleCount    = 1;
+    private int                cmdNumber;
 
-	public short getArgumentCount()
-	{
-		return argumentCount;
-	}
-	
-	public short getCycleCount()
-	{
-		return cycleCount;
-	}
+    private short              arg0, arg1;
 
-	public int getCmdNumber() {
-		return cmdNumber;
-	}
+    public Andwf(int cmdNumber, short arg0, short arg1)
+    {
+        this.cmdNumber = cmdNumber;
+        this.arg0 = arg0;
+        this.arg1 = arg1;
+    }
 
-	@Override
-	public void execute(PicProcessor proc) {
-		short newValue = (short) (proc.workRegister & proc.getMemoryControl().getAt(arg0));
-		
-		if(arg1==0)
-			proc.workRegister = newValue;
-		else
-			proc.getMemoryControl().setAt(arg0, newValue);
-		
-		affectZeroBit(proc, newValue);
-		
-	}
+    public short getArgumentCount()
+    {
+        return argumentCount;
+    }
 
-	@Override
-	public String getCmdName() {
-		return getClass().getSimpleName().toLowerCase();
-	}
+    public short getCycleCount()
+    {
+        return cycleCount;
+    }
 
-	@Override
-	public short getArg0() {
-		return arg0;
-	}
+    public int getCmdNumber()
+    {
+        return cmdNumber;
+    }
 
-	@Override
-	public short getArg1() {
-		return arg1;
-	}
+    @Override
+    public void execute(PicProcessor proc)
+    {
+        short newValue = (short) (proc.workRegister & proc.getMemoryControl().getAt(arg0) & 0xFF);
+
+        if (arg1 == 0)
+            proc.workRegister = newValue;
+        else
+            proc.getMemoryControl().setAt(arg0, newValue);
+
+        affectZeroBit(proc, newValue);
+
+    }
+
+    @Override
+    public String getCmdName()
+    {
+        return getClass().getSimpleName().toLowerCase();
+    }
+
+    @Override
+    public short getArg0()
+    {
+        return arg0;
+    }
+
+    @Override
+    public short getArg1()
+    {
+        return arg1;
+    }
 }

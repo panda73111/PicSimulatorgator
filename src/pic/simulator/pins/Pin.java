@@ -10,7 +10,6 @@ public abstract class Pin
     public static final int RB1	 = 7;
     public static final int RB2  = 8;
     public static final int RB3	 = 9;
-
     public static final int RB4  = 10;
     public static final int RB5  = 11;
     public static final int RB6  = 12;
@@ -23,7 +22,6 @@ public abstract class Pin
     
     public static final int LOW  = 0;
     public static final int HIGH = 1;
-    public static final int HI_Z = 2;
 
     protected final String  name;
     protected final int     id;

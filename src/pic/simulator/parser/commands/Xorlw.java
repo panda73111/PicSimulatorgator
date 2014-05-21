@@ -35,12 +35,13 @@ public class Xorlw extends Command
     @Override
     public void execute(PicProcessor proc)
     {
-        short res = (short) (proc.workRegister ^ arg0);
+        short val2 = (short) (arg0 & 0xFF);
+        short w = (short) (proc.workRegister & 0xFF);
+        short res = (short) (w ^ val2);
 
         proc.workRegister = res;
 
         affectZeroBit(proc, res);
-
     }
 
     @Override

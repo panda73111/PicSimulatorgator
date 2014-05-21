@@ -14,7 +14,7 @@ public class IOPin extends Pin
     public void setToInput()
     {
         isInput = true;
-        externalState = Pin.HI_Z;
+        // externalState = Pin.HI_Z;
     }
 
     public void setToOutput()
@@ -28,16 +28,16 @@ public class IOPin extends Pin
     {
         internalState = Pin.HIGH;
 
-        if (isInput)
-            externalState = Pin.HI_Z;
-        else
-            externalState = Pin.HIGH;
+        // if (isInput)
+        // externalState = Pin.HI_Z;
+        // else
+        externalState = Pin.HIGH;
     }
 
     @Override
     public void setExternally()
     {
-        //if (isInput)
+        // if (isInput)
         {
             externalState = Pin.HIGH;
             internalState = Pin.HIGH;
@@ -49,16 +49,16 @@ public class IOPin extends Pin
     {
         internalState = Pin.LOW;
 
-        if (isInput)
-            externalState = Pin.HI_Z;
-        else
-            externalState = Pin.LOW;
+        // if (isInput)
+        // externalState = Pin.HI_Z;
+        // else
+        externalState = Pin.LOW;
     }
 
     @Override
     public void clearExternally()
     {
-        //if (isInput)
+        // if (isInput)
         {
             externalState = Pin.LOW;
             internalState = Pin.LOW;

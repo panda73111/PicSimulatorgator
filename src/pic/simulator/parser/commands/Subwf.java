@@ -37,19 +37,18 @@ public class Subwf extends Command
     @Override
     public void execute(PicProcessor proc)
     {
+        short w = (short) (proc.workRegister & 0xFF);
+        short f = (short) (proc.getMemoryControl().getAt(arg0) & 0xFF);
 
-        short w = proc.workRegister;
-        short f = proc.getMemoryControl().getAt(arg0);
-
-        short res = (short) (w - f);
+        short res = (short) ((f - w) & 0x1FF);
 
         int resLowerNibble = (w & 0x0F) - (f & 0x0F);
 
-        boolean setC  = (res & 0x100) != 0;
+        boolean setC = (res & 0x100) != 0;
         boolean setDC = (resLowerNibble & 0x10) != 0;
 
         res &= 0xFF;
-        
+
         if (arg1 == 0)
             proc.workRegister = (short) res;
         else

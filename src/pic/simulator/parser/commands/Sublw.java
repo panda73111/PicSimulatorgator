@@ -36,8 +36,9 @@ public class Sublw extends Command
     @Override
     public void execute(PicProcessor proc)
     {
-        short w = proc.workRegister;
-        short res = (short) (w - arg0);
+        short w = (short) (proc.workRegister & 0xFF);
+        short val2 = (short) (arg0 & 0xFF);
+        short res = (short) ((val2 - w) & 0xFF);
 
         boolean setDC = (((proc.workRegister & 0x0F) + (arg0 & 0x0F)) & 0x10) != 0;
         boolean setC = (res & 0x1FF) != 0;

@@ -137,7 +137,7 @@ public class MainFrame extends JFrame implements PicGUI
         JPanel upperPanel = new JPanel();
 
 
-        ioPanel = new IOPanel(myProcessor.getPinHandler());
+        ioPanel = new IOPanel(myProcessor);
         ioPanel.setPreferredSize(new Dimension(150, 175));
         ioPanel.setMaximumSize(new Dimension(150, 175));
         upperPanel.add(ioPanel);
@@ -251,8 +251,6 @@ public class MainFrame extends JFrame implements PicGUI
 
     private void resetProcessor()
     {
-    	Program p = myProcessor.getProgram();
-    	myProcessor = new PicProcessor(p);
     	myProcessor.reset(PicProcessor.POWER_ON);
     	processorThread = null;
     	myProcessor.getGuiHandler().registerGUIElement(this);

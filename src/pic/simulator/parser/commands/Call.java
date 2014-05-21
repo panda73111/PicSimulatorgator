@@ -42,9 +42,9 @@ public class Call extends Command
         Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
 
         short oldPclVal = pcl.get13BitValue();
-        if(!proc.getMemoryControl().pushStack(oldPclVal))
-        	// If stackoverflow
-        	return;
+        if (!proc.getMemoryControl().pushStack(oldPclVal))
+            // If stackoverflow
+            return;
 
         short newPclVal = (short) ((oldPclVal & 0x1800) | (arg0 & 0x07FF));
         pcl.set13BitValue(newPclVal);

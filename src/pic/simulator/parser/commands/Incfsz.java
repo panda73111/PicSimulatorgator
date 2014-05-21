@@ -1,66 +1,76 @@
 package pic.simulator.parser.commands;
 
+import pic.simulator.PicMemorycontrol;
 import pic.simulator.PicProcessor;
 import pic.simulator.SpecialFunctionRegister;
 import pic.simulator.parser.Command;
+import pic.simulator.specialfunctionregisters.Pcl;
 
 public class Incfsz extends Command
 {
-	private static final short argumentCount = 2;
-	private static final short cycleCount = 1;
-	private int cmdNumber;
+    private static final short argumentCount = 2;
+    private static final short cycleCount    = 1;
+    private int                cmdNumber;
 
-	private short arg0, arg1;
+    private short              arg0, arg1;
 
-	public Incfsz(int cmdNumber, short arg0, short arg1) {
-		this.cmdNumber = cmdNumber;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-	}
+    public Incfsz(int cmdNumber, short arg0, short arg1)
+    {
+        this.cmdNumber = cmdNumber;
+        this.arg0 = arg0;
+        this.arg1 = arg1;
+    }
 
-	public short getArgumentCount() {
-		return argumentCount;
-	}
+    public short getArgumentCount()
+    {
+        return argumentCount;
+    }
 
-	public short getCycleCount() {
-		return cycleCount;
-	}
+    public short getCycleCount()
+    {
+        return cycleCount;
+    }
 
-	public int getCmdNumber() {
-		return cmdNumber;
-	}
+    public int getCmdNumber()
+    {
+        return cmdNumber;
+    }
 
-	@Override
-	public void execute(PicProcessor proc) {
-		short f = proc.getMemoryControl().getAt(arg0);
-		f++;
-		f&=0xFF;
-		
-		if(arg1==0)
-			proc.workRegister = f;
-		else
-			proc.getMemoryControl().setAt(arg0, f);
+    @Override
+    public void execute(PicProcessor proc)
+    {
+        short f = (short) (proc.getMemoryControl().getAt(arg0) & 0xFF);
+        f++;
+        f &= 0xFF;
 
-		if(f==0)
-		{
-			short pcl = proc.getMemoryControl().getAt(SpecialFunctionRegister.PCL);
-			pcl++;
-			proc.getMemoryControl().setAt(SpecialFunctionRegister.PCL, pcl);
-		}
-	}
+        if (arg1 == 0)
+            proc.workRegister = f;
+        else
+            proc.getMemoryControl().setAt(arg0, f);
 
-	@Override
-	public String getCmdName() {
-		return getClass().getSimpleName().toLowerCase();
-	}
+        if (f == 0)
+        {
+            PicMemorycontrol memCtrl = (PicMemorycontrol) proc.getMemoryControl();
+            Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
+            pcl.increment();
+        }
+    }
 
-	@Override
-	public short getArg0() {
-		return arg0;
-	}
+    @Override
+    public String getCmdName()
+    {
+        return getClass().getSimpleName().toLowerCase();
+    }
 
-	@Override
-	public short getArg1() {
-		return arg1;
-	}
+    @Override
+    public short getArg0()
+    {
+        return arg0;
+    }
+
+    @Override
+    public short getArg1()
+    {
+        return arg1;
+    }
 }
