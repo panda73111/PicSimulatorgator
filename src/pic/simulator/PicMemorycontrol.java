@@ -360,13 +360,14 @@ public class PicMemorycontrol implements Memorycontrol
                 // set WR bit, writing is in progress
                 eecon1Val |= 0b10;
 
-                short adr = getAt(SpecialFunctionRegister.EEADR);
-                short data = getAt(SpecialFunctionRegister.EEDATA);
+                short adr = getSFR(SpecialFunctionRegister.EEADR).getValue();
+                short data = getSFR(SpecialFunctionRegister.EEDATA).getValue();
                 setEepromByte(adr, data);
 
-                // write successful, clear WR bits
+                // write successful, clear WR bits, set EEIF bit
                 // TODO: timer to delay the write process
                 eecon1Val &= ~0b10;
+                eecon1Val |= 0b10000;
                 eecon1.setValue(eecon1Val);
                 processor.getInterruptionHandler().causeInterruption(Interruption.EEPROM);
             }
