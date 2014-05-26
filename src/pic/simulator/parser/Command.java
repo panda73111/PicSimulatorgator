@@ -127,11 +127,11 @@ public abstract class Command
         switch (getArgumentCount())
         {
             case 2:
-                return String.format("[Command=%s,arg0=0x%04X,arg1=0x%04X]", getCmdName(), getArg0(), getArg1());
+                return String.format("%s 0x%04X, 0x%04X", getCmdName(), getArg0(), getArg1());
             case 1:
-                return String.format("[Command=%s,arg0=0x%04X]", getCmdName(), getArg0());
+                return String.format("%s 0x%04X", getCmdName(), getArg0());
             default:
-                return String.format("[Command=%s]", getCmdName());
+                return String.format("%s", getCmdName());
         }
     }
 }
