@@ -29,7 +29,7 @@ public class Pcl extends SpecialFunctionRegister
     @Override
     public void setValue(short value)
     {
-        this.value = value;
+    	this.value = (short) ((this.value & 0x1F00) |( value & 0xFF));
     }
 
     @Override

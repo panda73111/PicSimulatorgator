@@ -26,7 +26,8 @@ public class Pclath extends SpecialFunctionRegister
     public short getValue()
     {
         // not readable
-        return 0;
+        Pcl pcl = (Pcl) memCtrl.getSFR(SpecialFunctionRegister.PCL);
+        return (short) ((pcl.get13BitValue() >>8) & 0xFF) ;
     }
 
     @Override
