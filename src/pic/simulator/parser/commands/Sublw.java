@@ -38,10 +38,12 @@ public class Sublw extends Command
     {
         short w = (short) (proc.workRegister & 0xFF);
         short val2 = (short) (arg0 & 0xFF);
-        short res = (short) ((val2 - w) & 0xFF);
+
+        short compW = (short) (0xFF & (((~w)+1)));
+        short res = (short) (val2 + compW);
 
         boolean setDC = (((proc.workRegister & 0x0F) + (arg0 & 0x0F)) & 0x10) != 0;
-        boolean setC = (res & 0x1FF) != 0;
+        boolean setC = (res & 0x100) != 0;
 
         proc.workRegister = (short) (0xFF & res);
 

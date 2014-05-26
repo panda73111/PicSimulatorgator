@@ -40,7 +40,8 @@ public class Subwf extends Command
         short w = (short) (proc.workRegister & 0xFF);
         short f = (short) (proc.getMemoryControl().getAt(arg0) & 0xFF);
 
-        short res = (short) ((f - w) & 0x1FF);
+        short compW = (short) (0xFF & (((~w)+1)));
+        short res = (short) (f + compW);
 
         int resLowerNibble = (w & 0x0F) - (f & 0x0F);
 
@@ -56,6 +57,17 @@ public class Subwf extends Command
 
         affectZeroBit(proc, (short) res);
 
+        if(res==0)
+        {
+            proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_Z);
+            proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_C);
+            proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);
+        }
+        else
+        {
+            proc.getMemoryControl().clearStatusBit(SpecialFunctionRegister.STATUS_Z);
+        }
+        
         if (setDC)
             proc.getMemoryControl().setStatusBit(SpecialFunctionRegister.STATUS_DC);
         else
