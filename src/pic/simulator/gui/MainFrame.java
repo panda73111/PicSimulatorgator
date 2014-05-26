@@ -251,8 +251,13 @@ public class MainFrame extends JFrame implements PicGUI
 
     private void resetProcessor()
     {
+    	if(processorThread!=null)
+    	{
+    		myProcessor.stopProgramExecution();
+    		while(processorThread.isAlive()){}
+    		processorThread = null;
+    	}
     	myProcessor.reset(PicProcessor.POWER_ON);
-    	processorThread = null;
     	myProcessor.getGuiHandler().registerGUIElement(this);
         repaintGUI();
     }
